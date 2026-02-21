@@ -10,8 +10,21 @@ class RewardService {
 
   // ─── Reward CRUD ────────────────────────────────────────────────────────────
 
+  /// Creates a new reward whose progress is pre-seeded with the user's current
+  /// point balance (capped at [pointCost]). This means rewards added after
+  /// points have been earned immediately reflect realistic progress.
   Reward addReward({required String name, required double pointCost}) {
-    final reward = Reward(name: name, pointCost: pointCost);
+    final currentBalance = _storage.getUser().pointBalance;
+    final initialProgress = currentBalance.clamp(0.0, pointCost);
+    final initialStatus = initialProgress >= pointCost
+        ? RewardStatus.unlocked
+        : RewardStatus.locked;
+    final reward = Reward(
+      name: name,
+      pointCost: pointCost,
+      progressPoints: initialProgress,
+      status: initialStatus,
+    );
     final id = _storage.saveReward(reward);
     return reward.copyWith(id: id);
   }

@@ -65,25 +65,94 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<void> _confirmReset(BuildContext context) async {
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: AppColors.surfaceHigh,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.lg)),
-        title: const Text('Reset Semua Data?', style: AppText.title),
-        content: const Text(
-          'Semua aktivitas, reward, dan transaksi akan dihapus permanen. '
-          'Aksi ini tidak dapat dibatalkan.',
-          style: AppText.body,
+      barrierColor: Colors.black.withValues(alpha: 0.65),
+      builder: (ctx) => Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+        child: Container(
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(AppRadius.lg),
+            border: Border.all(color: AppColors.glassBorder),
+          ),
+          padding: const EdgeInsets.all(AppSpacing.lg),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // ── Warning icon ─────────────────────────────────────────
+              Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  color: AppColors.error.withValues(alpha: 0.12),
+                  shape: BoxShape.circle,
+                  border: Border.all(color: AppColors.error.withValues(alpha: 0.3), width: 1.5),
+                ),
+                child: const Icon(Icons.delete_outline_rounded, color: AppColors.error, size: 28),
+              ),
+
+              const SizedBox(height: AppSpacing.md),
+
+              // ── Title ────────────────────────────────────────────────
+              const Text('Reset Semua Data?', style: AppText.title, textAlign: TextAlign.center),
+
+              const SizedBox(height: AppSpacing.sm),
+
+              // ── Body ─────────────────────────────────────────────────
+              const Text(
+                'Semua aktivitas, reward, dan transaksi akan dihapus permanen. Aksi ini tidak dapat dibatalkan.',
+                style: AppText.body,
+                textAlign: TextAlign.center,
+              ),
+
+              const SizedBox(height: AppSpacing.lg),
+
+              // ── Actions ──────────────────────────────────────────────
+              Row(
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () => Navigator.pop(ctx, false),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 13),
+                        decoration: BoxDecoration(
+                          color: AppColors.surfaceHigh,
+                          borderRadius: BorderRadius.circular(AppRadius.md),
+                          border: Border.all(color: AppColors.glassBorder),
+                        ),
+                        alignment: Alignment.center,
+                        child: const Text('Batal', style: AppText.title),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.sm),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () => Navigator.pop(ctx, true),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 13),
+                        decoration: BoxDecoration(
+                          color: AppColors.error.withValues(alpha: 0.14),
+                          borderRadius: BorderRadius.circular(AppRadius.md),
+                          border: Border.all(color: AppColors.error.withValues(alpha: 0.45)),
+                        ),
+                        alignment: Alignment.center,
+                        child: const Text(
+                          'Reset',
+                          style: TextStyle(
+                            color: AppColors.error,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Batal', style: TextStyle(color: AppColors.textSecondary)),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Reset', style: TextStyle(color: AppColors.error)),
-          ),
-        ],
       ),
     );
 
