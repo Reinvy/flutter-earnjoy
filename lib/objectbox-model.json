@@ -1,0 +1,179 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:8378760439597630669",
+      "lastPropertyId": "6:1403280911222085861",
+      "name": "Activity",
+      "properties": [
+        {
+          "id": "1:7772246141248055056",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:4080407065618840883",
+          "name": "title",
+          "type": 9
+        },
+        {
+          "id": "3:4594496594359212475",
+          "name": "category",
+          "type": 9
+        },
+        {
+          "id": "4:7513824692520123819",
+          "name": "durationMinutes",
+          "type": 6
+        },
+        {
+          "id": "5:27286234648009627",
+          "name": "points",
+          "type": 8
+        },
+        {
+          "id": "6:1403280911222085861",
+          "name": "createdAt",
+          "type": 10
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "2:5487446234309648229",
+      "lastPropertyId": "5:3914125864764322844",
+      "name": "Reward",
+      "properties": [
+        {
+          "id": "1:7472004344713075909",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:5499429455482712066",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "3:3178946732621124752",
+          "name": "pointCost",
+          "type": 8
+        },
+        {
+          "id": "4:8379259909218420528",
+          "name": "progressPoints",
+          "type": 8
+        },
+        {
+          "id": "5:3914125864764322844",
+          "name": "status",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "3:6377268452563949099",
+      "lastPropertyId": "5:6286497967629381569",
+      "name": "Transaction",
+      "properties": [
+        {
+          "id": "1:610560911539123597",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:2418023367115731835",
+          "name": "type",
+          "type": 9
+        },
+        {
+          "id": "3:6049398446034040945",
+          "name": "amount",
+          "type": 8
+        },
+        {
+          "id": "4:7929448825758007320",
+          "name": "date",
+          "type": 10
+        },
+        {
+          "id": "5:6286497967629381569",
+          "name": "label",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "4:2329469739092839643",
+      "lastPropertyId": "9:4748938019423360325",
+      "name": "User",
+      "properties": [
+        {
+          "id": "1:1526713463288711543",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:5746880915655654037",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "3:738847706527232748",
+          "name": "pointBalance",
+          "type": 8
+        },
+        {
+          "id": "4:9080414185014505392",
+          "name": "streak",
+          "type": 6
+        },
+        {
+          "id": "5:8242654423560653371",
+          "name": "monthlyBudget",
+          "type": 8
+        },
+        {
+          "id": "6:6811716288641014415",
+          "name": "burnoutScore",
+          "type": 8
+        },
+        {
+          "id": "7:4552032114663684726",
+          "name": "adjustmentFactor",
+          "type": 8
+        },
+        {
+          "id": "8:6882565821372985067",
+          "name": "disciplineScore",
+          "type": 8
+        },
+        {
+          "id": "9:4748938019423360325",
+          "name": "lastActivityDate",
+          "type": 10
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "4:2329469739092839643",
+  "lastIndexId": "0:0",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
+  "retiredRelationUids": [],
+  "version": 1
+}
