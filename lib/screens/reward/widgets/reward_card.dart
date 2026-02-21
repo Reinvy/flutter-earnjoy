@@ -69,7 +69,8 @@ class RewardCard extends StatelessWidget {
               ),
 
               // Delete button
-              if (onDelete != null)
+              if (onDelete != null && !
+              isRedeemed)
                 GestureDetector(
                   onTap: onDelete,
                   child: const Padding(
