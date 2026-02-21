@@ -6,16 +6,25 @@ import '../../../models/reward.dart';
 
 class RewardCard extends StatelessWidget {
   final Reward reward;
+
+  /// The user's current point balance — used to compute progress and unlock state.
+  final double userBalance;
   final VoidCallback? onRedeem;
   final VoidCallback? onDelete;
 
-  const RewardCard({super.key, required this.reward, this.onRedeem, this.onDelete});
+  const RewardCard({
+    super.key,
+    required this.reward,
+    required this.userBalance,
+    this.onRedeem,
+    this.onDelete,
+  });
 
   @override
   Widget build(BuildContext context) {
     final isRedeemed = reward.isRedeemed;
-    final isUnlocked = reward.isUnlocked;
-    final progress = reward.progressFraction;
+    final isUnlocked = reward.canRedeemWithBalance(userBalance);
+    final progress = reward.progressFractionForBalance(userBalance);
 
     return Container(
       padding: const EdgeInsets.all(AppSpacing.md),
@@ -78,7 +87,7 @@ class RewardCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '${reward.progressPoints.toPointsLabel} / ${reward.pointCost.toPointsLabel} pts',
+                '${userBalance.clamp(0.0, reward.pointCost).toPointsLabel} / ${reward.pointCost.toPointsLabel} pts',
                 style: AppText.caption,
               ),
               Text(
@@ -128,19 +137,19 @@ class RewardCard extends StatelessWidget {
 
   Color get _iconBgColor {
     if (reward.isRedeemed) return AppColors.success.withValues(alpha: 0.15);
-    if (reward.isUnlocked) return AppColors.primary.withValues(alpha: 0.15);
+    if (reward.canRedeemWithBalance(userBalance)) return AppColors.primary.withValues(alpha: 0.15);
     return AppColors.surfaceHigh;
   }
 
   Color get _iconColor {
     if (reward.isRedeemed) return AppColors.success;
-    if (reward.isUnlocked) return AppColors.primary;
+    if (reward.canRedeemWithBalance(userBalance)) return AppColors.primary;
     return AppColors.textDisabled;
   }
 
   IconData get _iconData {
     if (reward.isRedeemed) return Icons.check_circle;
-    if (reward.isUnlocked) return Icons.lock_open;
+    if (reward.canRedeemWithBalance(userBalance)) return Icons.lock_open;
     return Icons.lock;
   }
 }

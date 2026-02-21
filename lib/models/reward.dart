@@ -1,6 +1,7 @@
 import 'package:objectbox/objectbox.dart';
 
-/// status constants
+/// status constants — only 'locked' (default) and 'redeemed' are meaningful now.
+/// 'unlocked' is derived at runtime from pointBalance >= pointCost.
 class RewardStatus {
   static const locked = 'locked';
   static const unlocked = 'unlocked';
@@ -14,9 +15,13 @@ class Reward {
 
   String name;
   double pointCost;
+
+  // Kept for ObjectBox schema compatibility — no longer written or read for
+  // progress display. Progress is now computed from user.pointBalance.
   double progressPoints;
 
-  /// 'locked' | 'unlocked' | 'redeemed'
+  /// 'locked' | 'redeemed'
+  /// ('unlocked' is never stored; unlock = balance >= pointCost, computed live)
   String status;
 
   Reward({
@@ -27,12 +32,16 @@ class Reward {
     this.status = RewardStatus.locked,
   });
 
-  bool get isLocked => status == RewardStatus.locked;
-  bool get isUnlocked => status == RewardStatus.unlocked;
+  bool get isLocked => !isRedeemed;
+  bool get isUnlocked => !isRedeemed; // kept for compatibility; real check needs balance
   bool get isRedeemed => status == RewardStatus.redeemed;
 
-  double get progressFraction =>
-      (pointCost > 0) ? (progressPoints / pointCost).clamp(0.0, 1.0) : 0.0;
+  /// Whether the reward can be redeemed given the user's current [balance].
+  bool canRedeemWithBalance(double balance) => !isRedeemed && balance >= pointCost;
+
+  /// Progress fraction in [0.0, 1.0] based on user's current [balance].
+  double progressFractionForBalance(double balance) =>
+      pointCost > 0 ? (balance / pointCost).clamp(0.0, 1.0) : 0.0;
 
   Reward copyWith({
     int? id,

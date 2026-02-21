@@ -104,6 +104,7 @@ class _RewardScreenState extends State<RewardScreen> with TickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     final rewards = context.watch<RewardProvider>().rewards;
+    final userBalance = context.select<UserProvider, double>((p) => p.user.pointBalance);
 
     return Stack(
       children: [
@@ -124,7 +125,9 @@ class _RewardScreenState extends State<RewardScreen> with TickerProviderStateMix
                         // ── Header ─────────────────────────────────────────
                         _Header(
                           totalRewards: rewards.length,
-                          unlockedCount: rewards.where((r) => r.isUnlocked).length,
+                          unlockedCount: rewards
+                              .where((r) => r.canRedeemWithBalance(userBalance))
+                              .length,
                         ),
 
                         const SizedBox(height: AppSpacing.sectionGap),
@@ -140,7 +143,8 @@ class _RewardScreenState extends State<RewardScreen> with TickerProviderStateMix
                               padding: const EdgeInsets.only(bottom: AppSpacing.sm),
                               child: RewardCard(
                                 reward: r,
-                                onRedeem: r.isUnlocked
+                                userBalance: userBalance,
+                                onRedeem: r.canRedeemWithBalance(userBalance)
                                     ? () => _onRedeem(context, r.id, r.name)
                                     : null,
                                 onDelete: () => context.read<RewardProvider>().deleteReward(r.id),

@@ -4,7 +4,6 @@ import '../models/activity.dart';
 import '../models/transaction.dart';
 import '../services/activity_service.dart';
 import '../services/point_engine.dart';
-import '../services/reward_service.dart';
 import '../services/storage_service.dart';
 import 'reward_provider.dart';
 import 'user_provider.dart';
@@ -12,7 +11,6 @@ import 'user_provider.dart';
 class ActivityProvider extends ChangeNotifier {
   final StorageService _storage;
   late final ActivityService _activityService;
-  late final RewardService _rewardService;
   UserProvider? _userProvider;
   RewardProvider? _rewardProvider;
 
@@ -20,7 +18,6 @@ class ActivityProvider extends ChangeNotifier {
 
   ActivityProvider(this._storage) {
     _activityService = ActivityService(_storage);
-    _rewardService = RewardService(_storage);
     loadTodayActivities();
   }
 
@@ -94,10 +91,7 @@ class ActivityProvider extends ChangeNotifier {
     // Update user balance + streak
     _userProvider!.updateAfterActivity(points);
 
-    // Propagate earned points to reward progress bars
-    _rewardService.distributePoints(points);
-
-    // Notify RewardProvider so the UI reflects unlocked rewards immediately
+    // Notify RewardProvider so UI reflects updated balance immediately
     _rewardProvider?.refresh();
 
     // Refresh local activity list

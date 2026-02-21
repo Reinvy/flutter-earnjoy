@@ -10,21 +10,8 @@ class RewardService {
 
   // ─── Reward CRUD ────────────────────────────────────────────────────────────
 
-  /// Creates a new reward whose progress is pre-seeded with the user's current
-  /// point balance (capped at [pointCost]). This means rewards added after
-  /// points have been earned immediately reflect realistic progress.
   Reward addReward({required String name, required double pointCost}) {
-    final currentBalance = _storage.getUser().pointBalance;
-    final initialProgress = currentBalance.clamp(0.0, pointCost);
-    final initialStatus = initialProgress >= pointCost
-        ? RewardStatus.unlocked
-        : RewardStatus.locked;
-    final reward = Reward(
-      name: name,
-      pointCost: pointCost,
-      progressPoints: initialProgress,
-      status: initialStatus,
-    );
+    final reward = Reward(name: name, pointCost: pointCost);
     final id = _storage.saveReward(reward);
     return reward.copyWith(id: id);
   }
@@ -33,33 +20,15 @@ class RewardService {
 
   bool deleteReward(int id) => _storage.deleteReward(id);
 
-  // ─── Progress ───────────────────────────────────────────────────────────────
-
-  /// Distribute newly earned [points] across all non-redeemed rewards
-  /// proportionally (each reward gets the same absolute amount, capped at its
-  /// own pointCost). Call this after every activity log.
-  void distributePoints(double points) {
-    final rewards = getRewards().where((r) => !r.isRedeemed).toList();
-    if (rewards.isEmpty) return;
-
-    for (final reward in rewards) {
-      final newProgress = (reward.progressPoints + points).clamp(0.0, reward.pointCost);
-      final newStatus = newProgress >= reward.pointCost
-          ? RewardStatus.unlocked
-          : RewardStatus.locked;
-      _storage.saveReward(reward.copyWith(progressPoints: newProgress, status: newStatus));
-    }
-  }
-
   // ─── Redeem ─────────────────────────────────────────────────────────────────
 
   /// Attempts to redeem [rewardId].
-  /// Returns `true` on success, `false` if balance is insufficient or budget
-  /// exceeded.
+  /// Returns `true` on success, `false` if already redeemed, balance is
+  /// insufficient, or monthly budget is exceeded.
   bool redeemReward(int rewardId) {
     final reward = _storage.getReward(rewardId);
     if (reward == null) return false;
-    if (!reward.isUnlocked) return false;
+    if (reward.isRedeemed) return false;
 
     final user = _storage.getUser();
     if (user.pointBalance < reward.pointCost) return false;
