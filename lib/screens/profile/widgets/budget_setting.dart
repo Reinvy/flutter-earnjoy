@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../../core/extensions.dart';
+
 import '../../../core/theme.dart';
 import '../../../models/user.dart';
 
@@ -102,7 +104,7 @@ class BudgetSetting extends StatelessWidget {
                         Text(
                           user.monthlyBudget == 0
                               ? 'Unlimited'
-                              : '${user.monthlyBudget.toStringAsFixed(0)} pts',
+                              : '${user.monthlyBudget.toPointsLabel} pts',
                           style: AppText.title,
                         ),
                         const SizedBox(width: 6),

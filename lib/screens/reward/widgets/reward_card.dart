@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/extensions.dart';
 import '../../../core/theme.dart';
 import '../../../models/reward.dart';
 
@@ -77,7 +78,7 @@ class RewardCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '${reward.progressPoints.toStringAsFixed(0)} / ${reward.pointCost.toStringAsFixed(0)} pts',
+                '${reward.progressPoints.toPointsLabel} / ${reward.pointCost.toPointsLabel} pts',
                 style: AppText.caption,
               ),
               Text(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/extensions.dart';
 import '../../../core/theme.dart';
 import '../../../models/user.dart';
 
@@ -102,7 +103,7 @@ class UserHeader extends StatelessWidget {
                 ),
 
               const SizedBox(height: 2),
-              Text('${totalEarned.toStringAsFixed(0)} pts earned all-time', style: AppText.caption),
+              Text('${totalEarned.toPointsLabel} pts earned all-time', style: AppText.caption),
             ],
           ),
         ),

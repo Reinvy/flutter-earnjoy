@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../../core/extensions.dart';
 import '../../../core/theme.dart';
 import '../../../core/widgets/gradient_button.dart';
 import 'onboarding_text_field.dart';
@@ -148,7 +149,7 @@ class OnboardingPage2 extends StatelessWidget {
                       const SizedBox(height: 2),
                       Text(
                         calculatedBudget > 0
-                            ? '${calculatedBudget.toStringAsFixed(0)} pts/bulan'
+                            ? '${calculatedBudget.toPointsLabel} pts/bulan'
                             : 'Isi penghasilan untuk menghitung',
                         style: AppText.title.copyWith(
                           color: calculatedBudget > 0 ? AppColors.primary : AppColors.textDisabled,

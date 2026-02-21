@@ -191,13 +191,24 @@ class StorageService {
     return const JsonEncoder.withIndent('  ').convert(data);
   }
 
-  /// Clears all data and re-seeds the default user.
+  /// Clears all activity/reward/transaction data and resets point stats,
+  /// but preserves the user's profile (name, onboarding, income, budget).
   void resetAllData() {
+    final existingUser = getUser();
     _activityBox.removeAll();
     _rewardBox.removeAll();
     _transactionBox.removeAll();
     _userBox.removeAll();
-    _seedUserIfEmpty();
+    // Re-create the user keeping profile settings; reset point stats to zero.
+    final resetUser = User(
+      id: 0,
+      name: existingUser.name,
+      onboardingDone: existingUser.onboardingDone,
+      income: existingUser.income,
+      rewardPercentage: existingUser.rewardPercentage,
+      monthlyBudget: existingUser.monthlyBudget,
+    );
+    _userBox.put(resetUser);
   }
 
   void close() => _store.close();

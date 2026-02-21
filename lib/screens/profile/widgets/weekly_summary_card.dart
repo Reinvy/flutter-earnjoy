@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/extensions.dart';
+
 import '../../../core/theme.dart';
 
 class WeeklySummaryCard extends StatelessWidget {
@@ -34,9 +36,7 @@ class WeeklySummaryCard extends StatelessWidget {
           _VerticalDivider(),
           _StatItem(
             label: 'Points',
-            value: pointsEarned >= 1000
-                ? '${(pointsEarned / 1000).toStringAsFixed(1)}k'
-                : pointsEarned.toStringAsFixed(0),
+            value: pointsEarned.toPointsLabel,
             icon: Icons.star_outline,
             color: AppColors.warning,
           ),

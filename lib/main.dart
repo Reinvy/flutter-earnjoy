@@ -25,25 +25,37 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final onboardingDone = storageService.getUser().onboardingDone;
-
     return MultiProvider(
       providers: [
         Provider<StorageService>.value(value: storageService),
         ChangeNotifierProvider(create: (_) => UserProvider(storageService)),
         ChangeNotifierProvider(create: (_) => RewardProvider(storageService)),
-        ChangeNotifierProxyProvider<UserProvider, ActivityProvider>(
+        ChangeNotifierProxyProvider2<UserProvider, RewardProvider, ActivityProvider>(
           create: (_) => ActivityProvider(storageService),
-          update: (_, userProvider, activityProvider) =>
-              activityProvider!..setUserProvider(userProvider),
+          update: (_, userProvider, rewardProvider, activityProvider) => activityProvider!
+            ..setUserProvider(userProvider)
+            ..setRewardProvider(rewardProvider),
         ),
       ],
       child: MaterialApp(
         title: 'EarnJoy',
         debugShowCheckedModeBanner: false,
         theme: buildAppTheme(),
-        home: onboardingDone ? const MainShell() : const OnboardingScreen(),
+        home: const _RootRouter(),
       ),
     );
+  }
+}
+
+/// Reactive router — watches [UserProvider] so routing stays in sync with
+/// persisted state (onboarding done / data reset) without needing
+/// manual Navigator calls.
+class _RootRouter extends StatelessWidget {
+  const _RootRouter();
+
+  @override
+  Widget build(BuildContext context) {
+    final onboardingDone = context.select<UserProvider, bool>((p) => p.user.onboardingDone);
+    return onboardingDone ? const MainShell() : const OnboardingScreen();
   }
 }

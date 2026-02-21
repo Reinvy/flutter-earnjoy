@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 
 import '../../core/theme.dart';
 import '../../providers/user_provider.dart';
-import '../shell/main_shell.dart';
 import 'widgets/onboarding_page1.dart';
 import 'widgets/onboarding_page2.dart';
 import 'widgets/onboarding_page3.dart';
@@ -55,7 +54,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       monthlyBudget: income * _rewardPercentage,
     );
     HapticFeedback.heavyImpact();
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => const MainShell()));
+    // _RootRouter will automatically navigate to MainShell when onboardingDone becomes true
   }
 
   @override

@@ -6,6 +6,7 @@ import '../services/activity_service.dart';
 import '../services/point_engine.dart';
 import '../services/reward_service.dart';
 import '../services/storage_service.dart';
+import 'reward_provider.dart';
 import 'user_provider.dart';
 
 class ActivityProvider extends ChangeNotifier {
@@ -13,6 +14,7 @@ class ActivityProvider extends ChangeNotifier {
   late final ActivityService _activityService;
   late final RewardService _rewardService;
   UserProvider? _userProvider;
+  RewardProvider? _rewardProvider;
 
   List<Activity> _todayActivities = [];
 
@@ -24,9 +26,14 @@ class ActivityProvider extends ChangeNotifier {
 
   List<Activity> get todayActivities => List.unmodifiable(_todayActivities);
 
-  /// Called by [ChangeNotifierProxyProvider] each time [UserProvider] updates.
+  /// Called by [ChangeNotifierProxyProvider2] each time [UserProvider] updates.
   void setUserProvider(UserProvider userProvider) {
     _userProvider = userProvider;
+  }
+
+  /// Called by [ChangeNotifierProxyProvider2] each time [RewardProvider] updates.
+  void setRewardProvider(RewardProvider rewardProvider) {
+    _rewardProvider = rewardProvider;
   }
 
   void loadTodayActivities() {
@@ -89,6 +96,9 @@ class ActivityProvider extends ChangeNotifier {
 
     // Propagate earned points to reward progress bars
     _rewardService.distributePoints(points);
+
+    // Notify RewardProvider so the UI reflects unlocked rewards immediately
+    _rewardProvider?.refresh();
 
     // Refresh local activity list
     _todayActivities = _activityService.getTodayActivities();

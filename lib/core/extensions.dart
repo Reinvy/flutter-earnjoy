@@ -34,10 +34,20 @@ extension IntExtensions on int {
 }
 
 extension DoubleExtensions on double {
+  /// Returns the number formatted with dot thousand-separators (Indonesian style).
+  /// e.g. 1000000 → "1.000.000", 2500 → "2.500", 500 → "500"
   String get toPointsLabel {
-    if (this >= 1000) {
-      return '${(this / 1000).toStringAsFixed(1)}k';
+    final n = round();
+    if (n == 0) return '0';
+    final isNegative = n < 0;
+    final digits = n.abs().toString();
+    final buffer = StringBuffer();
+    final startLen = digits.length % 3;
+    if (startLen > 0) buffer.write(digits.substring(0, startLen));
+    for (int i = startLen; i < digits.length; i += 3) {
+      if (buffer.isNotEmpty) buffer.write('.');
+      buffer.write(digits.substring(i, i + 3));
     }
-    return toStringAsFixed(0);
+    return isNegative ? '-${buffer.toString()}' : buffer.toString();
   }
 }
