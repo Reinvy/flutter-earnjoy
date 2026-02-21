@@ -151,6 +151,9 @@ class StorageService {
         'burnoutScore': user.burnoutScore,
         'adjustmentFactor': user.adjustmentFactor,
         'disciplineScore': user.disciplineScore,
+        'income': user.income,
+        'rewardPercentage': user.rewardPercentage,
+        'onboardingDone': user.onboardingDone,
       },
       'activities': activities
           .map(

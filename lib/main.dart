@@ -5,6 +5,7 @@ import 'core/theme.dart';
 import 'providers/activity_provider.dart';
 import 'providers/reward_provider.dart';
 import 'providers/user_provider.dart';
+import 'screens/onboarding/onboarding_screen.dart';
 import 'screens/shell/main_shell.dart';
 import 'services/storage_service.dart';
 
@@ -24,6 +25,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final onboardingDone = storageService.getUser().onboardingDone;
+
     return MultiProvider(
       providers: [
         Provider<StorageService>.value(value: storageService),
@@ -39,7 +42,7 @@ class MyApp extends StatelessWidget {
         title: 'EarnJoy',
         debugShowCheckedModeBanner: false,
         theme: buildAppTheme(),
-        home: const MainShell(),
+        home: onboardingDone ? const MainShell() : const OnboardingScreen(),
       ),
     );
   }

@@ -15,6 +15,15 @@ class User {
   @Property(type: PropertyType.date)
   DateTime lastActivityDate;
 
+  // Onboarding fields
+  bool onboardingDone;
+  double income;
+  double rewardPercentage;
+
+  // Weekly difficulty adjustment tracking
+  @Property(type: PropertyType.date)
+  DateTime lastWeeklyAdjustmentDate;
+
   User({
     this.id = 0,
     this.name = 'User',
@@ -25,7 +34,12 @@ class User {
     this.adjustmentFactor = 1.0,
     this.disciplineScore = 0.0,
     DateTime? lastActivityDate,
-  }) : lastActivityDate = lastActivityDate ?? DateTime(2000);
+    this.onboardingDone = false,
+    this.income = 0.0,
+    this.rewardPercentage = 0.1,
+    DateTime? lastWeeklyAdjustmentDate,
+  }) : lastActivityDate = lastActivityDate ?? DateTime(2000),
+       lastWeeklyAdjustmentDate = lastWeeklyAdjustmentDate ?? DateTime(2000);
 
   User copyWith({
     int? id,
@@ -37,6 +51,10 @@ class User {
     double? adjustmentFactor,
     double? disciplineScore,
     DateTime? lastActivityDate,
+    bool? onboardingDone,
+    double? income,
+    double? rewardPercentage,
+    DateTime? lastWeeklyAdjustmentDate,
   }) {
     return User(
       id: id ?? this.id,
@@ -48,6 +66,10 @@ class User {
       adjustmentFactor: adjustmentFactor ?? this.adjustmentFactor,
       disciplineScore: disciplineScore ?? this.disciplineScore,
       lastActivityDate: lastActivityDate ?? this.lastActivityDate,
+      onboardingDone: onboardingDone ?? this.onboardingDone,
+      income: income ?? this.income,
+      rewardPercentage: rewardPercentage ?? this.rewardPercentage,
+      lastWeeklyAdjustmentDate: lastWeeklyAdjustmentDate ?? this.lastWeeklyAdjustmentDate,
     );
   }
 }

@@ -151,7 +151,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
     id: const obx_int.IdUid(4, 2329469739092839643),
     name: 'User',
-    lastPropertyId: const obx_int.IdUid(9, 4748938019423360325),
+    lastPropertyId: const obx_int.IdUid(13, 8683160586099615495),
     flags: 0,
     properties: <obx_int.ModelProperty>[
       obx_int.ModelProperty(
@@ -205,6 +205,30 @@ final _entities = <obx_int.ModelEntity>[
       obx_int.ModelProperty(
         id: const obx_int.IdUid(9, 4748938019423360325),
         name: 'lastActivityDate',
+        type: 10,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(10, 4169637164274842401),
+        name: 'onboardingDone',
+        type: 1,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(11, 4428244356466403435),
+        name: 'income',
+        type: 8,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(12, 775868884036182860),
+        name: 'rewardPercentage',
+        type: 8,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(13, 8683160586099615495),
+        name: 'lastWeeklyAdjustmentDate',
         type: 10,
         flags: 0,
       ),
@@ -452,7 +476,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
       },
       objectToFB: (User object, fb.Builder fbb) {
         final nameOffset = fbb.writeString(object.name);
-        fbb.startTable(10);
+        fbb.startTable(14);
         fbb.addInt64(0, object.id);
         fbb.addOffset(1, nameOffset);
         fbb.addFloat64(2, object.pointBalance);
@@ -462,6 +486,13 @@ obx_int.ModelDefinition getObjectBoxModel() {
         fbb.addFloat64(6, object.adjustmentFactor);
         fbb.addFloat64(7, object.disciplineScore);
         fbb.addInt64(8, object.lastActivityDate.millisecondsSinceEpoch);
+        fbb.addBool(9, object.onboardingDone);
+        fbb.addFloat64(10, object.income);
+        fbb.addFloat64(11, object.rewardPercentage);
+        fbb.addInt64(
+          12,
+          object.lastWeeklyAdjustmentDate.millisecondsSinceEpoch,
+        );
         fbb.finish(fbb.endTable());
         return object.id;
       },
@@ -516,6 +547,28 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final lastActivityDateParam = DateTime.fromMillisecondsSinceEpoch(
           const fb.Int64Reader().vTableGet(buffer, rootOffset, 20, 0),
         );
+        final onboardingDoneParam = const fb.BoolReader().vTableGet(
+          buffer,
+          rootOffset,
+          22,
+          false,
+        );
+        final incomeParam = const fb.Float64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          24,
+          0,
+        );
+        final rewardPercentageParam = const fb.Float64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          26,
+          0,
+        );
+        final lastWeeklyAdjustmentDateParam =
+            DateTime.fromMillisecondsSinceEpoch(
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 28, 0),
+            );
         final object = User(
           id: idParam,
           name: nameParam,
@@ -526,6 +579,10 @@ obx_int.ModelDefinition getObjectBoxModel() {
           adjustmentFactor: adjustmentFactorParam,
           disciplineScore: disciplineScoreParam,
           lastActivityDate: lastActivityDateParam,
+          onboardingDone: onboardingDoneParam,
+          income: incomeParam,
+          rewardPercentage: rewardPercentageParam,
+          lastWeeklyAdjustmentDate: lastWeeklyAdjustmentDateParam,
         );
 
         return object;
@@ -666,5 +723,25 @@ class User_ {
   /// See [User.lastActivityDate].
   static final lastActivityDate = obx.QueryDateProperty<User>(
     _entities[3].properties[8],
+  );
+
+  /// See [User.onboardingDone].
+  static final onboardingDone = obx.QueryBooleanProperty<User>(
+    _entities[3].properties[9],
+  );
+
+  /// See [User.income].
+  static final income = obx.QueryDoubleProperty<User>(
+    _entities[3].properties[10],
+  );
+
+  /// See [User.rewardPercentage].
+  static final rewardPercentage = obx.QueryDoubleProperty<User>(
+    _entities[3].properties[11],
+  );
+
+  /// See [User.lastWeeklyAdjustmentDate].
+  static final lastWeeklyAdjustmentDate = obx.QueryDateProperty<User>(
+    _entities[3].properties[12],
   );
 }
