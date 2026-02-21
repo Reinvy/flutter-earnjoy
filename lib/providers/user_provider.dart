@@ -64,4 +64,18 @@ class UserProvider extends ChangeNotifier {
     _storage.saveUser(_user);
     notifyListeners();
   }
+
+  void updateName(String name) {
+    final trimmed = name.trim();
+    if (trimmed.isEmpty) return;
+    _user = _user.copyWith(name: trimmed);
+    _storage.saveUser(_user);
+    notifyListeners();
+  }
+
+  void updateMonthlyBudget(double budget) {
+    _user = _user.copyWith(monthlyBudget: budget.clamp(0.0, double.infinity));
+    _storage.saveUser(_user);
+    notifyListeners();
+  }
 }

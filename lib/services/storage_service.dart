@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import '../models/activity.dart';
 import '../models/reward.dart';
 import '../models/transaction.dart';
@@ -103,6 +105,96 @@ class StorageService {
               t.date.day == now.day,
         )
         .fold(0.0, (sum, t) => sum + t.amount);
+  }
+
+  // ─── Profile helpers ────────────────────────────────────────────────────────
+
+  /// All-time total points earned (sum of all earn transactions).
+  double getTotalEarnedPoints() {
+    return getAllTransactions().where((t) => t.isEarn).fold(0.0, (sum, t) => sum + t.amount);
+  }
+
+  /// Number of activities logged in the last 7 days.
+  int getWeeklyActivitiesCount() {
+    final cutoff = DateTime.now().subtract(const Duration(days: 7));
+    return getAllActivities().where((a) => a.createdAt.isAfter(cutoff)).length;
+  }
+
+  /// Points earned in the last 7 days.
+  double getWeeklyEarnedPoints() {
+    final cutoff = DateTime.now().subtract(const Duration(days: 7));
+    return getAllTransactions()
+        .where((t) => t.isEarn && t.date.isAfter(cutoff))
+        .fold(0.0, (sum, t) => sum + t.amount);
+  }
+
+  /// Rewards redeemed in the last 7 days.
+  int getWeeklyRedeemedCount() {
+    final cutoff = DateTime.now().subtract(const Duration(days: 7));
+    return getAllTransactions().where((t) => t.isRedeem && t.date.isAfter(cutoff)).length;
+  }
+
+  /// Exports all data as a JSON string.
+  String exportJson() {
+    final user = getUser();
+    final activities = getAllActivities();
+    final rewards = getAllRewards();
+    final transactions = getAllTransactions();
+
+    final data = {
+      'exportedAt': DateTime.now().toIso8601String(),
+      'user': {
+        'name': user.name,
+        'pointBalance': user.pointBalance,
+        'streak': user.streak,
+        'monthlyBudget': user.monthlyBudget,
+        'burnoutScore': user.burnoutScore,
+        'adjustmentFactor': user.adjustmentFactor,
+        'disciplineScore': user.disciplineScore,
+      },
+      'activities': activities
+          .map(
+            (a) => {
+              'title': a.title,
+              'category': a.category,
+              'durationMinutes': a.durationMinutes,
+              'points': a.points,
+              'createdAt': a.createdAt.toIso8601String(),
+            },
+          )
+          .toList(),
+      'rewards': rewards
+          .map(
+            (r) => {
+              'name': r.name,
+              'pointCost': r.pointCost,
+              'progressPoints': r.progressPoints,
+              'status': r.status,
+            },
+          )
+          .toList(),
+      'transactions': transactions
+          .map(
+            (t) => {
+              'type': t.type,
+              'amount': t.amount,
+              'label': t.label,
+              'date': t.date.toIso8601String(),
+            },
+          )
+          .toList(),
+    };
+
+    return const JsonEncoder.withIndent('  ').convert(data);
+  }
+
+  /// Clears all data and re-seeds the default user.
+  void resetAllData() {
+    _activityBox.removeAll();
+    _rewardBox.removeAll();
+    _transactionBox.removeAll();
+    _userBox.removeAll();
+    _seedUserIfEmpty();
   }
 
   void close() => _store.close();
