@@ -151,8 +151,7 @@ class OnboardingPage2 extends StatelessWidget {
                             ? '${calculatedBudget.toStringAsFixed(0)} pts/bulan'
                             : 'Isi penghasilan untuk menghitung',
                         style: AppText.title.copyWith(
-                          color:
-                              calculatedBudget > 0 ? AppColors.primary : AppColors.textDisabled,
+                          color: calculatedBudget > 0 ? AppColors.primary : AppColors.textDisabled,
                         ),
                       ),
                     ],
