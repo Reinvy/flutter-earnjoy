@@ -36,7 +36,7 @@ class StorageService {
   int saveUser(User user) => _userBox.put(user);
 
   User _createDefaultUser() {
-    final user = User(id: 1);
+    final user = User(id: 0); // 0 = let ObjectBox auto-assign (will become 1)
     _userBox.put(user);
     return user;
   }
