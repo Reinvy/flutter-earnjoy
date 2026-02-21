@@ -21,11 +21,13 @@ Every reward stays locked until you've accumulated enough points to deserve it, 
 ## Features
 
 ### Activity System
+
 - Quick-add preset activities (Study 30m, Work 1h, Gym 45m) in one tap
 - Manual activity input with title, duration, and category
 - Activity categories: Work, Study, Health, Hobby, Fun — each with a different point weight
 
 ### Point System
+
 - Points calculated using a formula:
   ```
   points = base × duration × categoryWeight × streakBonus × adjustmentFactor
@@ -36,17 +38,20 @@ Every reward stays locked until you've accumulated enough points to deserve it, 
 - Cooldown between identical activity logs
 
 ### Reward System
+
 - Create a personal wishlist with custom point costs
 - Per-reward progress bar — see exactly how close you are
 - Reward redeem only unlocks when balance ≥ point cost
 - Monthly budget cap to prevent overspending
 
 ### Smart Engine
+
 - Adjustment factor based on activity history
 - Burnout detection via discipline score tracking
 - Streak reset if no activity logged the previous day
 
 ### Emotional Feedback
+
 - Haptic feedback on every point earn (`mediumImpact`) and redeem (`heavyImpact`)
 - Counter animation on point balance
 - Micro scale animation on activity cards (1.0 → 1.03 → 1.0)
@@ -56,11 +61,11 @@ Every reward stays locked until you've accumulated enough points to deserve it, 
 
 ## Screens
 
-| Screen | Purpose |
-|--------|---------|
-| **Home** | Point balance, streak counter, quick-add activity, daily progress bar, today's activity list |
-| **Reward** | Wishlist management, per-reward progress, redeem action with celebration overlay |
-| **Profile** | User settings, monthly budget control, weekly summary, JSON data export |
+| Screen      | Purpose                                                                                      |
+| ----------- | -------------------------------------------------------------------------------------------- |
+| **Home**    | Point balance, streak counter, quick-add activity, daily progress bar, today's activity list |
+| **Reward**  | Wishlist management, per-reward progress, redeem action with celebration overlay             |
+| **Profile** | User settings, monthly budget control, weekly summary, JSON data export                      |
 
 Every core action is reachable in ≤ 2 taps.
 
@@ -68,12 +73,12 @@ Every core action is reachable in ≤ 2 taps.
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|------------|
-| Framework | Flutter 3.x (Dart) |
-| State Management | `provider` — `ChangeNotifier` |
-| Local Storage | ObjectBox (offline-first, NoSQL) |
-| Architecture | Services + Providers (pragmatic clean arch) |
+| Layer            | Technology                                  |
+| ---------------- | ------------------------------------------- |
+| Framework        | Flutter 3.x (Dart)                          |
+| State Management | `provider` — `ChangeNotifier`               |
+| Local Storage    | ObjectBox (offline-first, NoSQL)            |
+| Architecture     | Services + Providers (pragmatic clean arch) |
 
 ---
 
@@ -169,7 +174,7 @@ No hardcoded colors, sizes, or spacing anywhere in widget code.
 ## Point Formula Reference
 
 | Category | Weight |
-|----------|--------|
+| -------- | ------ |
 | Work     | 1.3    |
 | Study    | 1.2    |
 | Health   | 1.1    |
