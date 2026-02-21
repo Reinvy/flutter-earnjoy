@@ -128,5 +128,22 @@ ThemeData buildAppTheme() {
       bodySmall: AppText.caption,
     ),
     useMaterial3: true,
+    navigationBarTheme: NavigationBarThemeData(
+      backgroundColor: AppColors.surfaceHigh,
+      indicatorColor: AppColors.primaryDim,
+      iconTheme: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
+          return const IconThemeData(color: AppColors.primary);
+        }
+        return const IconThemeData(color: AppColors.textSecondary);
+      }),
+      labelTextStyle: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
+          return AppText.caption.copyWith(color: AppColors.primary);
+        }
+        return AppText.caption;
+      }),
+      surfaceTintColor: Colors.transparent,
+    ),
   );
 }

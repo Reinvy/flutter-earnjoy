@@ -13,9 +13,35 @@ class UserProvider extends ChangeNotifier {
 
   User get user => _user;
 
+  /// Whether the burnout threshold has been hit (score >= 3 consecutive misses).
+  bool get isBurnedOut => _user.burnoutScore >= 3;
+
   void loadUser() {
     _user = _storage.getUser();
+    _checkAndResetStreak();
     notifyListeners();
+  }
+
+  /// Auto-resets streak and increments burnoutScore if the user missed yesterday.
+  /// Called silently on every app launch via [loadUser].
+  void _checkAndResetStreak() {
+    // New/default users (lastActivityDate == year 2000) are skipped
+    if (_user.lastActivityDate.year < 2001) return;
+    if (_user.streak == 0) return;
+
+    final now = DateTime.now();
+    final last = _user.lastActivityDate;
+    final isToday = last.year == now.year && last.month == now.month && last.day == now.day;
+    final yesterday = now.subtract(const Duration(days: 1));
+    final wasYesterday =
+        last.year == yesterday.year && last.month == yesterday.month && last.day == yesterday.day;
+
+    if (!isToday && !wasYesterday) {
+      // Missed at least one day — streak broken
+      final newBurnout = (_user.burnoutScore + 1).clamp(0.0, 10.0);
+      _user = _user.copyWith(streak: 0, burnoutScore: newBurnout);
+      _storage.saveUser(_user);
+    }
   }
 
   void updateBalance(double delta) {
@@ -44,11 +70,26 @@ class UserProvider extends ChangeNotifier {
       newStreak = 1; // streak broken — current activity starts a fresh streak
     }
 
+    // Recover burnout when streak is being maintained
+    double newBurnout = _user.burnoutScore;
+    if (wasYesterday && newBurnout > 0) {
+      newBurnout = (newBurnout - 1).clamp(0.0, 10.0);
+    }
+
     _user = _user.copyWith(
-      pointBalance: _user.pointBalance + pointsDelta,
+      pointBalance: (_user.pointBalance + pointsDelta).clamp(0.0, double.infinity),
       streak: newStreak,
       lastActivityDate: now,
+      burnoutScore: newBurnout,
     );
+    _storage.saveUser(_user);
+    notifyListeners();
+  }
+
+  /// Dismisses the burnout notice by resetting the score.
+  void dismissBurnout() {
+    if (_user.burnoutScore <= 0) return;
+    _user = _user.copyWith(burnoutScore: 0);
     _storage.saveUser(_user);
     notifyListeners();
   }

@@ -5,7 +5,7 @@ import 'core/theme.dart';
 import 'providers/activity_provider.dart';
 import 'providers/reward_provider.dart';
 import 'providers/user_provider.dart';
-import 'screens/home/home_screen.dart';
+import 'screens/shell/main_shell.dart';
 import 'services/storage_service.dart';
 
 Future<void> main() async {
@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
         title: 'EarnJoy',
         debugShowCheckedModeBanner: false,
         theme: buildAppTheme(),
-        home: const HomeScreen(),
+        home: const MainShell(),
       ),
     );
   }

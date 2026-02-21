@@ -69,6 +69,8 @@ class RewardService {
   // ─── Budget ─────────────────────────────────────────────────────────────────
 
   bool isMonthlyBudgetExceeded(User user) {
+    // monthlyBudget == 0 means unlimited
+    if (user.monthlyBudget <= 0) return false;
     final redeemed = _storage.getMonthlyRedeemedPoints();
     return redeemed >= user.monthlyBudget;
   }

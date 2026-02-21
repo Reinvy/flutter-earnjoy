@@ -17,9 +17,11 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = context.watch<UserProvider>().user;
+    final userProvider = context.watch<UserProvider>();
+    final user = userProvider.user;
     final todayActivities = context.watch<ActivityProvider>().todayActivities;
     final todayEarned = todayActivities.fold<double>(0, (s, a) => s + a.points);
+    final isBurnedOut = userProvider.isBurnedOut;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -50,6 +52,14 @@ class HomeScreen extends StatelessWidget {
                     ),
 
                     const SizedBox(height: AppSpacing.sectionGap),
+
+                    // ── Burnout notice ───────────────────────────────────
+                    if (isBurnedOut) ...[
+                      _BurnoutBanner(
+                        onDismiss: () => context.read<UserProvider>().dismissBurnout(),
+                      ),
+                      const SizedBox(height: AppSpacing.md),
+                    ],
 
                     // ── Today's activity list ────────────────────────────
                     const Text("Today's Activities", style: AppText.title),
@@ -253,6 +263,47 @@ class _EmptyActivitiesState extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _BurnoutBanner extends StatelessWidget {
+  final VoidCallback onDismiss;
+  const _BurnoutBanner({required this.onDismiss});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.md),
+      decoration: BoxDecoration(
+        color: AppColors.warning.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(AppRadius.md),
+        border: Border.all(color: AppColors.warning.withValues(alpha: 0.4)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Icon(Icons.warning_amber_rounded, color: AppColors.warning, size: 20),
+          const SizedBox(width: AppSpacing.sm),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Burnout terdeteksi', style: AppText.title.copyWith(color: AppColors.warning)),
+                const SizedBox(height: 2),
+                const Text(
+                  'Kamu melewatkan beberapa hari. Mulai kembali dengan aktivitas ringan!',
+                  style: AppText.body,
+                ),
+              ],
+            ),
+          ),
+          GestureDetector(
+            onTap: onDismiss,
+            child: const Icon(Icons.close, size: 16, color: AppColors.textDisabled),
+          ),
+        ],
       ),
     );
   }
