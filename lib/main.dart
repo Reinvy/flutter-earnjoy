@@ -1,13 +1,13 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'core/theme.dart';
-import 'providers/activity_provider.dart';
-import 'providers/reward_provider.dart';
-import 'providers/user_provider.dart';
-import 'screens/onboarding/onboarding_screen.dart';
-import 'screens/shell/main_shell.dart';
-import 'services/storage_service.dart';
+import 'package:earnjoy/core/theme.dart';
+import 'package:earnjoy/presentation/providers/activity_provider.dart';
+import 'package:earnjoy/presentation/providers/reward_provider.dart';
+import 'package:earnjoy/presentation/providers/user_provider.dart';
+import 'package:earnjoy/presentation/screens/onboarding/onboarding_screen.dart';
+import 'package:earnjoy/presentation/screens/shell/main_shell.dart';
+import 'package:earnjoy/data/datasources/storage_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-/// Reactive router — watches [UserProvider] so routing stays in sync with
+/// Reactive router that watches [UserProvider] so routing stays in sync with
 /// persisted state (onboarding done / data reset) without needing
 /// manual Navigator calls.
 class _RootRouter extends StatelessWidget {

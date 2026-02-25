@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 class AppColors {
   // Background
@@ -11,7 +11,7 @@ class AppColors {
   static const primaryLight = Color(0xFFB8B0FF);
   static const primaryDim = Color(0x288B7FF5);
 
-  // Accent pair untuk gradient — hanya dipakai via AppGradients
+  // Accent pair untuk gradient - hanya dipakai via AppGradients
   static const gradientStart = Color(0xFF8B7FF5);
   static const gradientEnd = Color(0xFF5EC4F0);
 
@@ -37,7 +37,7 @@ class AppGradients {
     end: Alignment.bottomRight,
   );
 
-  // Subtle glow background — di belakang angka besar
+  // Subtle glow background - di belakang angka besar
   static const heroGlow = RadialGradient(
     colors: [Color(0x338B7FF5), Color(0x00000000)],
     radius: 0.85,

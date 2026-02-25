@@ -14,10 +14,13 @@ import 'package:objectbox/internal.dart'
 import 'package:objectbox/objectbox.dart' as obx;
 import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 
-import 'models/activity.dart';
-import 'models/reward.dart';
-import 'models/transaction.dart';
-import 'models/user.dart';
+import 'data/models/activity.dart';
+import 'data/models/badge.dart';
+import 'data/models/category.dart';
+import 'data/models/quest.dart';
+import 'data/models/reward.dart';
+import 'data/models/transaction.dart';
+import 'data/models/user.dart';
 
 export 'package:objectbox/objectbox.dart'; // so that callers only have to import this file
 
@@ -25,7 +28,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
     id: const obx_int.IdUid(1, 8378760439597630669),
     name: 'Activity',
-    lastPropertyId: const obx_int.IdUid(6, 1403280911222085861),
+    lastPropertyId: const obx_int.IdUid(7, 8269014644489575122),
     flags: 0,
     properties: <obx_int.ModelProperty>[
       obx_int.ModelProperty(
@@ -37,12 +40,6 @@ final _entities = <obx_int.ModelEntity>[
       obx_int.ModelProperty(
         id: const obx_int.IdUid(2, 4080407065618840883),
         name: 'title',
-        type: 9,
-        flags: 0,
-      ),
-      obx_int.ModelProperty(
-        id: const obx_int.IdUid(3, 4594496594359212475),
-        name: 'category',
         type: 9,
         flags: 0,
       ),
@@ -63,6 +60,14 @@ final _entities = <obx_int.ModelEntity>[
         name: 'createdAt',
         type: 10,
         flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(7, 8269014644489575122),
+        name: 'categoryId',
+        type: 11,
+        flags: 520,
+        indexId: const obx_int.IdUid(1, 3911332620656891733),
+        relationTarget: 'Category',
       ),
     ],
     relations: <obx_int.ModelRelation>[],
@@ -236,6 +241,144 @@ final _entities = <obx_int.ModelEntity>[
     relations: <obx_int.ModelRelation>[],
     backlinks: <obx_int.ModelBacklink>[],
   ),
+  obx_int.ModelEntity(
+    id: const obx_int.IdUid(5, 3322047366399380042),
+    name: 'Badge',
+    lastPropertyId: const obx_int.IdUid(5, 5874067951615650337),
+    flags: 0,
+    properties: <obx_int.ModelProperty>[
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(1, 8153145288076872618),
+        name: 'id',
+        type: 6,
+        flags: 1,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(2, 2759936791084830019),
+        name: 'name',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(3, 1793264907511378251),
+        name: 'description',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(4, 1344440584892728241),
+        name: 'icon',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(5, 5874067951615650337),
+        name: 'unlockedAt',
+        type: 10,
+        flags: 0,
+      ),
+    ],
+    relations: <obx_int.ModelRelation>[],
+    backlinks: <obx_int.ModelBacklink>[],
+  ),
+  obx_int.ModelEntity(
+    id: const obx_int.IdUid(6, 2640218046937028971),
+    name: 'Category',
+    lastPropertyId: const obx_int.IdUid(5, 7265396781866812993),
+    flags: 0,
+    properties: <obx_int.ModelProperty>[
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(1, 4352459434270688408),
+        name: 'id',
+        type: 6,
+        flags: 1,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(2, 3149154721878129159),
+        name: 'name',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(3, 3431854584732876063),
+        name: 'weight',
+        type: 8,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(4, 7775013380014703493),
+        name: 'isNegative',
+        type: 1,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(5, 7265396781866812993),
+        name: 'icon',
+        type: 9,
+        flags: 0,
+      ),
+    ],
+    relations: <obx_int.ModelRelation>[],
+    backlinks: <obx_int.ModelBacklink>[],
+  ),
+  obx_int.ModelEntity(
+    id: const obx_int.IdUid(7, 7567813523073515485),
+    name: 'Quest',
+    lastPropertyId: const obx_int.IdUid(8, 152670071877584968),
+    flags: 0,
+    properties: <obx_int.ModelProperty>[
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(1, 7371158289919641552),
+        name: 'id',
+        type: 6,
+        flags: 1,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(2, 6040200239087109432),
+        name: 'title',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(3, 2175402730683762936),
+        name: 'description',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(4, 6070520624509161020),
+        name: 'targetCount',
+        type: 6,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(5, 2990638843911408226),
+        name: 'currentCount',
+        type: 6,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(6, 3127731869596257500),
+        name: 'bonusPoints',
+        type: 8,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(7, 7426645031311613286),
+        name: 'isCompleted',
+        type: 1,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(8, 152670071877584968),
+        name: 'date',
+        type: 10,
+        flags: 0,
+      ),
+    ],
+    relations: <obx_int.ModelRelation>[],
+    backlinks: <obx_int.ModelBacklink>[],
+  ),
 ];
 
 /// Shortcut for [obx.Store.new] that passes [getObjectBoxModel] and for Flutter
@@ -276,13 +419,13 @@ Future<obx.Store> openStore({
 obx_int.ModelDefinition getObjectBoxModel() {
   final model = obx_int.ModelInfo(
     entities: _entities,
-    lastEntityId: const obx_int.IdUid(4, 2329469739092839643),
-    lastIndexId: const obx_int.IdUid(0, 0),
+    lastEntityId: const obx_int.IdUid(7, 7567813523073515485),
+    lastIndexId: const obx_int.IdUid(1, 3911332620656891733),
     lastRelationId: const obx_int.IdUid(0, 0),
     lastSequenceId: const obx_int.IdUid(0, 0),
     retiredEntityUids: const [],
     retiredIndexUids: const [],
-    retiredPropertyUids: const [],
+    retiredPropertyUids: const [4594496594359212475],
     retiredRelationUids: const [],
     modelVersion: 5,
     modelVersionParserMinimum: 5,
@@ -292,7 +435,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
   final bindings = <Type, obx_int.EntityDefinition>{
     Activity: obx_int.EntityDefinition<Activity>(
       model: _entities[0],
-      toOneRelations: (Activity object) => [],
+      toOneRelations: (Activity object) => [object.category],
       toManyRelations: (Activity object) => {},
       getId: (Activity object) => object.id,
       setId: (Activity object, int id) {
@@ -300,14 +443,13 @@ obx_int.ModelDefinition getObjectBoxModel() {
       },
       objectToFB: (Activity object, fb.Builder fbb) {
         final titleOffset = fbb.writeString(object.title);
-        final categoryOffset = fbb.writeString(object.category);
-        fbb.startTable(7);
+        fbb.startTable(8);
         fbb.addInt64(0, object.id);
         fbb.addOffset(1, titleOffset);
-        fbb.addOffset(2, categoryOffset);
         fbb.addInt64(3, object.durationMinutes);
         fbb.addFloat64(4, object.points);
         fbb.addInt64(5, object.createdAt.millisecondsSinceEpoch);
+        fbb.addInt64(6, object.category.targetId);
         fbb.finish(fbb.endTable());
         return object.id;
       },
@@ -323,9 +465,6 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final titleParam = const fb.StringReader(
           asciiOptimization: true,
         ).vTableGet(buffer, rootOffset, 6, '');
-        final categoryParam = const fb.StringReader(
-          asciiOptimization: true,
-        ).vTableGet(buffer, rootOffset, 8, '');
         final durationMinutesParam = const fb.Int64Reader().vTableGet(
           buffer,
           rootOffset,
@@ -344,12 +483,17 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final object = Activity(
           id: idParam,
           title: titleParam,
-          category: categoryParam,
           durationMinutes: durationMinutesParam,
           points: pointsParam,
           createdAt: createdAtParam,
         );
-
+        object.category.targetId = const fb.Int64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          16,
+          0,
+        );
+        object.category.attach(store);
         return object;
       },
     ),
@@ -588,6 +732,201 @@ obx_int.ModelDefinition getObjectBoxModel() {
         return object;
       },
     ),
+    Badge: obx_int.EntityDefinition<Badge>(
+      model: _entities[4],
+      toOneRelations: (Badge object) => [],
+      toManyRelations: (Badge object) => {},
+      getId: (Badge object) => object.id,
+      setId: (Badge object, int id) {
+        object.id = id;
+      },
+      objectToFB: (Badge object, fb.Builder fbb) {
+        final nameOffset = fbb.writeString(object.name);
+        final descriptionOffset = fbb.writeString(object.description);
+        final iconOffset = fbb.writeString(object.icon);
+        fbb.startTable(6);
+        fbb.addInt64(0, object.id);
+        fbb.addOffset(1, nameOffset);
+        fbb.addOffset(2, descriptionOffset);
+        fbb.addOffset(3, iconOffset);
+        fbb.addInt64(4, object.unlockedAt?.millisecondsSinceEpoch);
+        fbb.finish(fbb.endTable());
+        return object.id;
+      },
+      objectFromFB: (obx.Store store, ByteData fbData) {
+        final buffer = fb.BufferContext(fbData);
+        final rootOffset = buffer.derefObject(0);
+        final unlockedAtValue = const fb.Int64Reader().vTableGetNullable(
+          buffer,
+          rootOffset,
+          12,
+        );
+        final idParam = const fb.Int64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          4,
+          0,
+        );
+        final nameParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 6, '');
+        final descriptionParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 8, '');
+        final iconParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 10, '');
+        final unlockedAtParam = unlockedAtValue == null
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(unlockedAtValue);
+        final object = Badge(
+          id: idParam,
+          name: nameParam,
+          description: descriptionParam,
+          icon: iconParam,
+          unlockedAt: unlockedAtParam,
+        );
+
+        return object;
+      },
+    ),
+    Category: obx_int.EntityDefinition<Category>(
+      model: _entities[5],
+      toOneRelations: (Category object) => [],
+      toManyRelations: (Category object) => {},
+      getId: (Category object) => object.id,
+      setId: (Category object, int id) {
+        object.id = id;
+      },
+      objectToFB: (Category object, fb.Builder fbb) {
+        final nameOffset = fbb.writeString(object.name);
+        final iconOffset = fbb.writeString(object.icon);
+        fbb.startTable(6);
+        fbb.addInt64(0, object.id);
+        fbb.addOffset(1, nameOffset);
+        fbb.addFloat64(2, object.weight);
+        fbb.addBool(3, object.isNegative);
+        fbb.addOffset(4, iconOffset);
+        fbb.finish(fbb.endTable());
+        return object.id;
+      },
+      objectFromFB: (obx.Store store, ByteData fbData) {
+        final buffer = fb.BufferContext(fbData);
+        final rootOffset = buffer.derefObject(0);
+        final idParam = const fb.Int64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          4,
+          0,
+        );
+        final nameParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 6, '');
+        final weightParam = const fb.Float64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          8,
+          0,
+        );
+        final isNegativeParam = const fb.BoolReader().vTableGet(
+          buffer,
+          rootOffset,
+          10,
+          false,
+        );
+        final iconParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 12, '');
+        final object = Category(
+          id: idParam,
+          name: nameParam,
+          weight: weightParam,
+          isNegative: isNegativeParam,
+          icon: iconParam,
+        );
+
+        return object;
+      },
+    ),
+    Quest: obx_int.EntityDefinition<Quest>(
+      model: _entities[6],
+      toOneRelations: (Quest object) => [],
+      toManyRelations: (Quest object) => {},
+      getId: (Quest object) => object.id,
+      setId: (Quest object, int id) {
+        object.id = id;
+      },
+      objectToFB: (Quest object, fb.Builder fbb) {
+        final titleOffset = fbb.writeString(object.title);
+        final descriptionOffset = fbb.writeString(object.description);
+        fbb.startTable(9);
+        fbb.addInt64(0, object.id);
+        fbb.addOffset(1, titleOffset);
+        fbb.addOffset(2, descriptionOffset);
+        fbb.addInt64(3, object.targetCount);
+        fbb.addInt64(4, object.currentCount);
+        fbb.addFloat64(5, object.bonusPoints);
+        fbb.addBool(6, object.isCompleted);
+        fbb.addInt64(7, object.date.millisecondsSinceEpoch);
+        fbb.finish(fbb.endTable());
+        return object.id;
+      },
+      objectFromFB: (obx.Store store, ByteData fbData) {
+        final buffer = fb.BufferContext(fbData);
+        final rootOffset = buffer.derefObject(0);
+        final idParam = const fb.Int64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          4,
+          0,
+        );
+        final titleParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 6, '');
+        final descriptionParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 8, '');
+        final targetCountParam = const fb.Int64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          10,
+          0,
+        );
+        final currentCountParam = const fb.Int64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          12,
+          0,
+        );
+        final bonusPointsParam = const fb.Float64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          14,
+          0,
+        );
+        final isCompletedParam = const fb.BoolReader().vTableGet(
+          buffer,
+          rootOffset,
+          16,
+          false,
+        );
+        final dateParam = DateTime.fromMillisecondsSinceEpoch(
+          const fb.Int64Reader().vTableGet(buffer, rootOffset, 18, 0),
+        );
+        final object = Quest(
+          id: idParam,
+          title: titleParam,
+          description: descriptionParam,
+          targetCount: targetCountParam,
+          currentCount: currentCountParam,
+          bonusPoints: bonusPointsParam,
+          isCompleted: isCompletedParam,
+          date: dateParam,
+        );
+
+        return object;
+      },
+    ),
   };
 
   return obx_int.ModelDefinition(model, bindings);
@@ -605,23 +944,23 @@ class Activity_ {
     _entities[0].properties[1],
   );
 
-  /// See [Activity.category].
-  static final category = obx.QueryStringProperty<Activity>(
-    _entities[0].properties[2],
-  );
-
   /// See [Activity.durationMinutes].
   static final durationMinutes = obx.QueryIntegerProperty<Activity>(
-    _entities[0].properties[3],
+    _entities[0].properties[2],
   );
 
   /// See [Activity.points].
   static final points = obx.QueryDoubleProperty<Activity>(
-    _entities[0].properties[4],
+    _entities[0].properties[3],
   );
 
   /// See [Activity.createdAt].
   static final createdAt = obx.QueryDateProperty<Activity>(
+    _entities[0].properties[4],
+  );
+
+  /// See [Activity.category].
+  static final category = obx.QueryRelationToOne<Activity, Category>(
     _entities[0].properties[5],
   );
 }
@@ -744,4 +1083,97 @@ class User_ {
   static final lastWeeklyAdjustmentDate = obx.QueryDateProperty<User>(
     _entities[3].properties[12],
   );
+}
+
+/// [Badge] entity fields to define ObjectBox queries.
+class Badge_ {
+  /// See [Badge.id].
+  static final id = obx.QueryIntegerProperty<Badge>(_entities[4].properties[0]);
+
+  /// See [Badge.name].
+  static final name = obx.QueryStringProperty<Badge>(
+    _entities[4].properties[1],
+  );
+
+  /// See [Badge.description].
+  static final description = obx.QueryStringProperty<Badge>(
+    _entities[4].properties[2],
+  );
+
+  /// See [Badge.icon].
+  static final icon = obx.QueryStringProperty<Badge>(
+    _entities[4].properties[3],
+  );
+
+  /// See [Badge.unlockedAt].
+  static final unlockedAt = obx.QueryDateProperty<Badge>(
+    _entities[4].properties[4],
+  );
+}
+
+/// [Category] entity fields to define ObjectBox queries.
+class Category_ {
+  /// See [Category.id].
+  static final id = obx.QueryIntegerProperty<Category>(
+    _entities[5].properties[0],
+  );
+
+  /// See [Category.name].
+  static final name = obx.QueryStringProperty<Category>(
+    _entities[5].properties[1],
+  );
+
+  /// See [Category.weight].
+  static final weight = obx.QueryDoubleProperty<Category>(
+    _entities[5].properties[2],
+  );
+
+  /// See [Category.isNegative].
+  static final isNegative = obx.QueryBooleanProperty<Category>(
+    _entities[5].properties[3],
+  );
+
+  /// See [Category.icon].
+  static final icon = obx.QueryStringProperty<Category>(
+    _entities[5].properties[4],
+  );
+}
+
+/// [Quest] entity fields to define ObjectBox queries.
+class Quest_ {
+  /// See [Quest.id].
+  static final id = obx.QueryIntegerProperty<Quest>(_entities[6].properties[0]);
+
+  /// See [Quest.title].
+  static final title = obx.QueryStringProperty<Quest>(
+    _entities[6].properties[1],
+  );
+
+  /// See [Quest.description].
+  static final description = obx.QueryStringProperty<Quest>(
+    _entities[6].properties[2],
+  );
+
+  /// See [Quest.targetCount].
+  static final targetCount = obx.QueryIntegerProperty<Quest>(
+    _entities[6].properties[3],
+  );
+
+  /// See [Quest.currentCount].
+  static final currentCount = obx.QueryIntegerProperty<Quest>(
+    _entities[6].properties[4],
+  );
+
+  /// See [Quest.bonusPoints].
+  static final bonusPoints = obx.QueryDoubleProperty<Quest>(
+    _entities[6].properties[5],
+  );
+
+  /// See [Quest.isCompleted].
+  static final isCompleted = obx.QueryBooleanProperty<Quest>(
+    _entities[6].properties[6],
+  );
+
+  /// See [Quest.date].
+  static final date = obx.QueryDateProperty<Quest>(_entities[6].properties[7]);
 }

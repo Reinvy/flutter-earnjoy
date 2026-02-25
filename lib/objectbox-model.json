@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:8378760439597630669",
-      "lastPropertyId": "6:1403280911222085861",
+      "lastPropertyId": "7:8269014644489575122",
       "name": "Activity",
       "properties": [
         {
@@ -17,11 +17,6 @@
         {
           "id": "2:4080407065618840883",
           "name": "title",
-          "type": 9
-        },
-        {
-          "id": "3:4594496594359212475",
-          "name": "category",
           "type": 9
         },
         {
@@ -38,6 +33,14 @@
           "id": "6:1403280911222085861",
           "name": "createdAt",
           "type": 10
+        },
+        {
+          "id": "7:8269014644489575122",
+          "name": "categoryId",
+          "indexId": "1:3911332620656891733",
+          "type": 11,
+          "flags": 520,
+          "relationTarget": "Category"
         }
       ],
       "relations": []
@@ -183,17 +186,136 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "5:3322047366399380042",
+      "lastPropertyId": "5:5874067951615650337",
+      "name": "Badge",
+      "properties": [
+        {
+          "id": "1:8153145288076872618",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:2759936791084830019",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "3:1793264907511378251",
+          "name": "description",
+          "type": 9
+        },
+        {
+          "id": "4:1344440584892728241",
+          "name": "icon",
+          "type": 9
+        },
+        {
+          "id": "5:5874067951615650337",
+          "name": "unlockedAt",
+          "type": 10
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "6:2640218046937028971",
+      "lastPropertyId": "5:7265396781866812993",
+      "name": "Category",
+      "properties": [
+        {
+          "id": "1:4352459434270688408",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:3149154721878129159",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "3:3431854584732876063",
+          "name": "weight",
+          "type": 8
+        },
+        {
+          "id": "4:7775013380014703493",
+          "name": "isNegative",
+          "type": 1
+        },
+        {
+          "id": "5:7265396781866812993",
+          "name": "icon",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "7:7567813523073515485",
+      "lastPropertyId": "8:152670071877584968",
+      "name": "Quest",
+      "properties": [
+        {
+          "id": "1:7371158289919641552",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:6040200239087109432",
+          "name": "title",
+          "type": 9
+        },
+        {
+          "id": "3:2175402730683762936",
+          "name": "description",
+          "type": 9
+        },
+        {
+          "id": "4:6070520624509161020",
+          "name": "targetCount",
+          "type": 6
+        },
+        {
+          "id": "5:2990638843911408226",
+          "name": "currentCount",
+          "type": 6
+        },
+        {
+          "id": "6:3127731869596257500",
+          "name": "bonusPoints",
+          "type": 8
+        },
+        {
+          "id": "7:7426645031311613286",
+          "name": "isCompleted",
+          "type": 1
+        },
+        {
+          "id": "8:152670071877584968",
+          "name": "date",
+          "type": 10
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "4:2329469739092839643",
-  "lastIndexId": "0:0",
+  "lastEntityId": "7:7567813523073515485",
+  "lastIndexId": "1:3911332620656891733",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,
   "retiredEntityUids": [],
   "retiredIndexUids": [],
-  "retiredPropertyUids": [],
+  "retiredPropertyUids": [
+    4594496594359212475
+  ],
   "retiredRelationUids": [],
   "version": 1
 }
