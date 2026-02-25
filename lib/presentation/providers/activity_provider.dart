@@ -1,6 +1,8 @@
-﻿import 'package:flutter/foundation.dart';
+﻿import 'package:flutter/foundation.dart' hide Category;
 
 import 'package:earnjoy/data/models/activity.dart';
+import 'package:earnjoy/data/models/activity_preset.dart';
+import 'package:earnjoy/data/models/category.dart';
 import 'package:earnjoy/data/models/transaction.dart';
 import 'package:earnjoy/domain/usecases/activity_service.dart';
 import 'package:earnjoy/domain/usecases/point_engine.dart';
@@ -15,13 +17,19 @@ class ActivityProvider extends ChangeNotifier {
   RewardProvider? _rewardProvider;
 
   List<Activity> _todayActivities = [];
+  List<ActivityPreset> _presets = [];
+  List<Category> _categories = [];
 
   ActivityProvider(this._storage) {
     _activityService = ActivityService(_storage);
     loadTodayActivities();
+    loadPresets();
+    loadCategories();
   }
 
   List<Activity> get todayActivities => List.unmodifiable(_todayActivities);
+  List<ActivityPreset> get presets => List.unmodifiable(_presets);
+  List<Category> get categories => List.unmodifiable(_categories);
 
   /// Called by [ChangeNotifierProxyProvider2] each time [UserProvider] updates.
   void setUserProvider(UserProvider userProvider) {
@@ -38,21 +46,28 @@ class ActivityProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void loadPresets() {
+    _presets = _storage.getAllActivityPresets();
+    notifyListeners();
+  }
+
+  void loadCategories() {
+    _categories = _storage.getAllCategories();
+    notifyListeners();
+  }
+
+  // ─── Activity Logging ──────────────────────────────────────────────────────
+
   /// Returns the earned points on success, or `null` if blocked.
   ///
-  /// Blocks when:
-  /// - [_userProvider] not yet injected
-  /// - cooldown is active for [category]
-  /// - daily point cap already reached
+  /// No longer blocks for same-category. Repeated same-category logs today
+  /// automatically receive diminishing returns (penalty) from [PointEngine].
   double? logActivity({
     required String title,
     required int categoryId,
     required int durationMinutes,
   }) {
     if (_userProvider == null) return null;
-
-    // Anti-cheat: same-category cooldown
-    if (_activityService.isCooldownActive(categoryId)) return null;
 
     // Anti-cheat: daily cap
     final todayEarned = _storage.getTodayEarnedPoints();
@@ -70,7 +85,7 @@ class ActivityProvider extends ChangeNotifier {
       adjustmentFactor: user.adjustmentFactor,
     );
 
-    // Diminishing returns for repeated same-category today
+    // Penalty: diminishing returns for repeated same-category today
     final countToday = _activityService.categoryCountToday(categoryId);
     points = PointEngine.applyDiminishingReturn(points, countToday);
 
@@ -107,10 +122,71 @@ class ActivityProvider extends ChangeNotifier {
     return points;
   }
 
-  bool isCooldownActive(int categoryId) => _activityService.isCooldownActive(categoryId);
+  /// How many penalty steps applied for [categoryId] today (0 = full points).
+  int penaltyCountForCategory(int categoryId) => _activityService.categoryCountToday(categoryId);
 
-  int cooldownRemainingMinutes(int categoryId) =>
-      _activityService.cooldownRemainingMinutes(categoryId);
+  // ─── ActivityPreset CRUD ──────────────────────────────────────────────────
+
+  ActivityPreset addPreset({
+    required String title,
+    required int categoryId,
+    required int durationMinutes,
+  }) {
+    final category = _storage.getCategory(categoryId);
+    final preset = ActivityPreset(title: title, durationMinutes: durationMinutes, isDefault: false);
+    preset.category.target = category;
+    _storage.saveActivityPreset(preset);
+    _presets = _storage.getAllActivityPresets();
+    notifyListeners();
+    return preset;
+  }
+
+  bool deletePreset(int id) {
+    final result = _storage.deleteActivityPreset(id);
+    if (result) {
+      _presets = _storage.getAllActivityPresets();
+      notifyListeners();
+    }
+    return result;
+  }
+
+  // ─── Category CRUD ────────────────────────────────────────────────────────
+
+  Category addCategory({
+    required String name,
+    required double weight,
+    required bool isNegative,
+    required String icon,
+  }) {
+    final category = Category(name: name, weight: weight, isNegative: isNegative, icon: icon);
+    _storage.saveCategory(category);
+    _categories = _storage.getAllCategories();
+    notifyListeners();
+    return category;
+  }
+
+  void updateCategory(Category updated) {
+    _storage.saveCategory(updated);
+    _categories = _storage.getAllCategories();
+    notifyListeners();
+  }
+
+  /// Delete category and all linked presets.
+  bool deleteCategory(int id) {
+    final linkedPresets = _presets.where((p) => p.category.targetId == id).toList();
+    for (final p in linkedPresets) {
+      _storage.deleteActivityPreset(p.id);
+    }
+    final result = _storage.deleteCategory(id);
+    if (result) {
+      _categories = _storage.getAllCategories();
+      _presets = _storage.getAllActivityPresets();
+      notifyListeners();
+    }
+    return result;
+  }
+
+  // ─── Helpers ─────────────────────────────────────────────────────────────
 
   /// Returns the ObjectBox id for the category with [name], or `null` when not found.
   int? getCategoryIdByName(String name) {

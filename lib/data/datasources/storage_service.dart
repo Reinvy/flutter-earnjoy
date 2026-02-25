@@ -1,6 +1,7 @@
 ﻿import 'dart:convert';
 
 import 'package:earnjoy/data/models/activity.dart';
+import 'package:earnjoy/data/models/activity_preset.dart';
 import 'package:earnjoy/data/models/reward.dart';
 import 'package:earnjoy/data/models/transaction.dart';
 import 'package:earnjoy/data/models/user.dart';
@@ -18,6 +19,7 @@ class StorageService {
     _store = await openStore();
     _seedUserIfEmpty();
     _seedCategoriesIfEmpty();
+    _seedActivityPresetsIfEmpty();
   }
 
   Store get store => _store;
@@ -29,6 +31,7 @@ class StorageService {
   Box<Category> get _categoryBox => _store.box<Category>();
   Box<Quest> get _questBox => _store.box<Quest>();
   Box<Badge> get _badgeBox => _store.box<Badge>();
+  Box<ActivityPreset> get _presetBox => _store.box<ActivityPreset>();
 
   /// Returns the single app user (id=1), creating a default one if absent.
   User getUser() {
@@ -67,6 +70,34 @@ class StorageService {
           icon: d['icon'] as String,
         ),
       );
+    }
+  }
+
+  void _seedActivityPresetsIfEmpty() {
+    if (_presetBox.count() > 0) return;
+    // Map category name → default presets
+    const defaults = [
+      {'title': 'Study Session', 'category': 'Study', 'duration': 30},
+      {'title': 'Deep Work', 'category': 'Work', 'duration': 60},
+      {'title': 'Workout / Gym', 'category': 'Health', 'duration': 45},
+      {'title': 'Reading', 'category': 'Hobby', 'duration': 30},
+      {'title': 'Morning Run', 'category': 'Health', 'duration': 30},
+      {'title': 'Creative Project', 'category': 'Hobby', 'duration': 60},
+      {'title': 'Online Course', 'category': 'Study', 'duration': 45},
+      {'title': 'Game / Fun Time', 'category': 'Fun', 'duration': 30},
+      {'title': 'Doomscrolling', 'category': 'Doomscroll', 'duration': 30},
+    ];
+    final categories = getAllCategories();
+    for (final d in defaults) {
+      final cat = categories.where((c) => c.name == d['category']).firstOrNull;
+      if (cat == null) continue;
+      final preset = ActivityPreset(
+        title: d['title'] as String,
+        durationMinutes: d['duration'] as int,
+        isDefault: true,
+      );
+      preset.category.target = cat;
+      _presetBox.put(preset);
     }
   }
 
@@ -236,6 +267,13 @@ class StorageService {
   List<Category> getAllCategories() => _categoryBox.getAll();
   Category? getCategory(int id) => _categoryBox.get(id);
   bool deleteCategory(int id) => _categoryBox.remove(id);
+
+  // ─── ActivityPreset ─────────────────────────────────────────────────────────
+
+  int saveActivityPreset(ActivityPreset preset) => _presetBox.put(preset);
+  List<ActivityPreset> getAllActivityPresets() => _presetBox.getAll();
+  ActivityPreset? getActivityPreset(int id) => _presetBox.get(id);
+  bool deleteActivityPreset(int id) => _presetBox.remove(id);
 
   // ─── Quest ──────────────────────────────────────────────────────────────────
 

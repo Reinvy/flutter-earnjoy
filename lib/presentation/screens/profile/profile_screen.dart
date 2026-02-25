@@ -4,10 +4,12 @@ import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 import 'package:earnjoy/core/theme.dart';
+import 'package:earnjoy/presentation/providers/activity_provider.dart';
 import 'package:earnjoy/presentation/providers/user_provider.dart';
 import 'package:earnjoy/data/datasources/storage_service.dart';
 import 'widgets/action_tile.dart';
 import 'widgets/budget_setting.dart';
+import 'widgets/category_manager.dart';
 import 'widgets/user_header.dart';
 import 'widgets/weekly_summary_card.dart';
 
@@ -122,6 +124,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   });
                 },
                 onSave: _saveBudget,
+              ),
+
+              const SizedBox(height: AppSpacing.sectionGap),
+
+              const Text('Categories', style: AppText.title),
+              const SizedBox(height: AppSpacing.xs),
+              Text(
+                'Manage your categories. Long-press a preset in Log Activity to delete it.',
+                style: AppText.body,
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              ChangeNotifierProvider.value(
+                value: context.read<ActivityProvider>(),
+                child: const CategoryManager(),
               ),
 
               const SizedBox(height: AppSpacing.sectionGap),

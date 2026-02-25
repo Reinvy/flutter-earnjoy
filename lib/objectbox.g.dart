@@ -15,6 +15,7 @@ import 'package:objectbox/objectbox.dart' as obx;
 import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 
 import 'data/models/activity.dart';
+import 'data/models/activity_preset.dart';
 import 'data/models/badge.dart';
 import 'data/models/category.dart';
 import 'data/models/quest.dart';
@@ -379,6 +380,48 @@ final _entities = <obx_int.ModelEntity>[
     relations: <obx_int.ModelRelation>[],
     backlinks: <obx_int.ModelBacklink>[],
   ),
+  obx_int.ModelEntity(
+    id: const obx_int.IdUid(8, 5845437736512944696),
+    name: 'ActivityPreset',
+    lastPropertyId: const obx_int.IdUid(5, 2134722590970084420),
+    flags: 0,
+    properties: <obx_int.ModelProperty>[
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(1, 5495318047791083633),
+        name: 'id',
+        type: 6,
+        flags: 1,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(2, 2676697481260441231),
+        name: 'title',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(3, 6768655033661243172),
+        name: 'durationMinutes',
+        type: 6,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(4, 4152633897801720380),
+        name: 'isDefault',
+        type: 1,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(5, 2134722590970084420),
+        name: 'categoryId',
+        type: 11,
+        flags: 520,
+        indexId: const obx_int.IdUid(2, 3777624002170199725),
+        relationTarget: 'Category',
+      ),
+    ],
+    relations: <obx_int.ModelRelation>[],
+    backlinks: <obx_int.ModelBacklink>[],
+  ),
 ];
 
 /// Shortcut for [obx.Store.new] that passes [getObjectBoxModel] and for Flutter
@@ -419,8 +462,8 @@ Future<obx.Store> openStore({
 obx_int.ModelDefinition getObjectBoxModel() {
   final model = obx_int.ModelInfo(
     entities: _entities,
-    lastEntityId: const obx_int.IdUid(7, 7567813523073515485),
-    lastIndexId: const obx_int.IdUid(1, 3911332620656891733),
+    lastEntityId: const obx_int.IdUid(8, 5845437736512944696),
+    lastIndexId: const obx_int.IdUid(2, 3777624002170199725),
     lastRelationId: const obx_int.IdUid(0, 0),
     lastSequenceId: const obx_int.IdUid(0, 0),
     retiredEntityUids: const [],
@@ -927,6 +970,65 @@ obx_int.ModelDefinition getObjectBoxModel() {
         return object;
       },
     ),
+    ActivityPreset: obx_int.EntityDefinition<ActivityPreset>(
+      model: _entities[7],
+      toOneRelations: (ActivityPreset object) => [object.category],
+      toManyRelations: (ActivityPreset object) => {},
+      getId: (ActivityPreset object) => object.id,
+      setId: (ActivityPreset object, int id) {
+        object.id = id;
+      },
+      objectToFB: (ActivityPreset object, fb.Builder fbb) {
+        final titleOffset = fbb.writeString(object.title);
+        fbb.startTable(6);
+        fbb.addInt64(0, object.id);
+        fbb.addOffset(1, titleOffset);
+        fbb.addInt64(2, object.durationMinutes);
+        fbb.addBool(3, object.isDefault);
+        fbb.addInt64(4, object.category.targetId);
+        fbb.finish(fbb.endTable());
+        return object.id;
+      },
+      objectFromFB: (obx.Store store, ByteData fbData) {
+        final buffer = fb.BufferContext(fbData);
+        final rootOffset = buffer.derefObject(0);
+        final idParam = const fb.Int64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          4,
+          0,
+        );
+        final titleParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 6, '');
+        final durationMinutesParam = const fb.Int64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          8,
+          0,
+        );
+        final isDefaultParam = const fb.BoolReader().vTableGet(
+          buffer,
+          rootOffset,
+          10,
+          false,
+        );
+        final object = ActivityPreset(
+          id: idParam,
+          title: titleParam,
+          durationMinutes: durationMinutesParam,
+          isDefault: isDefaultParam,
+        );
+        object.category.targetId = const fb.Int64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          12,
+          0,
+        );
+        object.category.attach(store);
+        return object;
+      },
+    ),
   };
 
   return obx_int.ModelDefinition(model, bindings);
@@ -1176,4 +1278,32 @@ class Quest_ {
 
   /// See [Quest.date].
   static final date = obx.QueryDateProperty<Quest>(_entities[6].properties[7]);
+}
+
+/// [ActivityPreset] entity fields to define ObjectBox queries.
+class ActivityPreset_ {
+  /// See [ActivityPreset.id].
+  static final id = obx.QueryIntegerProperty<ActivityPreset>(
+    _entities[7].properties[0],
+  );
+
+  /// See [ActivityPreset.title].
+  static final title = obx.QueryStringProperty<ActivityPreset>(
+    _entities[7].properties[1],
+  );
+
+  /// See [ActivityPreset.durationMinutes].
+  static final durationMinutes = obx.QueryIntegerProperty<ActivityPreset>(
+    _entities[7].properties[2],
+  );
+
+  /// See [ActivityPreset.isDefault].
+  static final isDefault = obx.QueryBooleanProperty<ActivityPreset>(
+    _entities[7].properties[3],
+  );
+
+  /// See [ActivityPreset.category].
+  static final category = obx.QueryRelationToOne<ActivityPreset, Category>(
+    _entities[7].properties[4],
+  );
 }
