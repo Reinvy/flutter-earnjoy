@@ -2,6 +2,7 @@
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import 'package:earnjoy/core/extensions.dart';
 import 'package:earnjoy/core/theme.dart';
 import 'package:earnjoy/core/widgets/gradient_button.dart';
 import 'package:earnjoy/presentation/providers/reward_provider.dart';
@@ -40,7 +41,26 @@ class _RewardScreenState extends State<RewardScreen> with TickerProviderStateMix
     super.dispose();
   }
 
-  Future<void> _onRedeem(BuildContext context, int rewardId, String name) async {
+  Future<void> _confirmRedeem(
+    BuildContext context,
+    int rewardId,
+    String name,
+    double pointCost,
+    double userBalance,
+  ) async {
+    final confirmed = await showModalBottomSheet<bool>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (_) =>
+          _RedeemConfirmSheet(rewardName: name, rewardCost: pointCost, userBalance: userBalance),
+    );
+    if (confirmed == true && mounted) {
+      _executeRedeem(context, rewardId, name);
+    }
+  }
+
+  Future<void> _executeRedeem(BuildContext context, int rewardId, String name) async {
     final rewardProvider = context.read<RewardProvider>();
     final userProvider = context.read<UserProvider>();
     final storage = context.read<StorageService>();
@@ -113,7 +133,7 @@ class _RewardScreenState extends State<RewardScreen> with TickerProviderStateMix
           body: SafeArea(
             child: Column(
               children: [
-              Expanded(
+                Expanded(
                   child: SingleChildScrollView(
                     padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screenH),
                     child: Column(
@@ -142,7 +162,13 @@ class _RewardScreenState extends State<RewardScreen> with TickerProviderStateMix
                                 reward: r,
                                 userBalance: userBalance,
                                 onRedeem: r.canRedeemWithBalance(userBalance)
-                                    ? () => _onRedeem(context, r.id, r.name)
+                                    ? () => _confirmRedeem(
+                                        context,
+                                        r.id,
+                                        r.name,
+                                        r.pointCost,
+                                        userBalance,
+                                      )
                                     : null,
                                 onDelete: () => context.read<RewardProvider>().deleteReward(r.id),
                               ),
@@ -156,7 +182,7 @@ class _RewardScreenState extends State<RewardScreen> with TickerProviderStateMix
                   ),
                 ),
 
-                  Padding(
+                Padding(
                   padding: const EdgeInsets.fromLTRB(
                     AppSpacing.screenH,
                     AppSpacing.sm,
@@ -174,10 +200,16 @@ class _RewardScreenState extends State<RewardScreen> with TickerProviderStateMix
           ),
         ),
 
-         if (_showCelebration)
+        if (_showCelebration)
           FadeTransition(
             opacity: _fadeAnim,
-            child: _CelebrationOverlay(rewardName: _redeemedRewardName),
+            child: _CelebrationOverlay(
+              rewardName: _redeemedRewardName,
+              onDismiss: () async {
+                await _celebrationController.reverse();
+                if (mounted) setState(() => _showCelebration = false);
+              },
+            ),
           ),
       ],
     );
@@ -249,9 +281,175 @@ class _EmptyState extends StatelessWidget {
   }
 }
 
+// ── Redeem Confirmation Sheet ─────────────────────────────────────────────────
+
+class _RedeemConfirmSheet extends StatelessWidget {
+  final String rewardName;
+  final double rewardCost;
+  final double userBalance;
+
+  const _RedeemConfirmSheet({
+    required this.rewardName,
+    required this.rewardCost,
+    required this.userBalance,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final balanceAfter = userBalance - rewardCost;
+
+    return Container(
+      decoration: const BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
+      ),
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.screenH,
+        AppSpacing.md,
+        AppSpacing.screenH,
+        AppSpacing.xl,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Handle bar
+          Center(
+            child: Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: AppColors.glassBorder,
+                borderRadius: BorderRadius.circular(AppRadius.full),
+              ),
+            ),
+          ),
+
+          const SizedBox(height: AppSpacing.lg),
+
+          // Icon
+          Container(
+            width: 64,
+            height: 64,
+            decoration: BoxDecoration(
+              gradient: AppGradients.primary,
+              borderRadius: BorderRadius.circular(AppRadius.md),
+            ),
+            child: const Icon(Icons.redeem, color: Colors.white, size: 32),
+          ),
+
+          const SizedBox(height: AppSpacing.md),
+
+          const Text('Redeem Reward?', style: AppText.title),
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            rewardName,
+            style: AppText.body.copyWith(color: AppColors.textSecondary),
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+
+          const SizedBox(height: AppSpacing.lg),
+
+          // Info card
+          Container(
+            padding: const EdgeInsets.all(AppSpacing.md),
+            decoration: BoxDecoration(
+              color: AppColors.surfaceHigh,
+              borderRadius: BorderRadius.circular(AppRadius.md),
+              border: Border.all(color: AppColors.glassBorder),
+            ),
+            child: Column(
+              children: [
+                _InfoRow(
+                  label: 'Biaya Redeem',
+                  value: '${rewardCost.toPointsLabel} pts',
+                  valueColor: AppColors.primary,
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                _InfoRow(
+                  label: 'Balance Kamu',
+                  value: '${userBalance.toPointsLabel} pts',
+                  valueColor: AppColors.textPrimary,
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: AppSpacing.sm),
+                  child: Divider(color: AppColors.glassBorder, height: 1),
+                ),
+                _InfoRow(
+                  label: 'Sisa Setelah Redeem',
+                  value: '${balanceAfter.toPointsLabel} pts',
+                  valueColor: AppColors.success,
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: AppSpacing.lg),
+
+          // Confirm CTA
+          GestureDetector(
+            onTap: () {
+              HapticFeedback.mediumImpact();
+              Navigator.pop(context, true);
+            },
+            child: Container(
+              height: 52,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                gradient: AppGradients.primary,
+                borderRadius: BorderRadius.circular(AppRadius.full),
+              ),
+              child: const Center(child: Text('Redeem Sekarang', style: AppText.title)),
+            ),
+          ),
+
+          const SizedBox(height: AppSpacing.sm),
+
+          // Cancel
+          GestureDetector(
+            onTap: () => Navigator.pop(context, false),
+            child: SizedBox(
+              height: 48,
+              width: double.infinity,
+              child: Center(
+                child: Text('Batal', style: AppText.body.copyWith(color: AppColors.textSecondary)),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _InfoRow extends StatelessWidget {
+  final String label;
+  final String value;
+  final Color valueColor;
+
+  const _InfoRow({required this.label, required this.value, required this.valueColor});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(label, style: AppText.body),
+        Text(
+          value,
+          style: AppText.body.copyWith(color: valueColor, fontWeight: FontWeight.w600),
+        ),
+      ],
+    );
+  }
+}
+
 class _CelebrationOverlay extends StatelessWidget {
   final String rewardName;
-  const _CelebrationOverlay({required this.rewardName});
+  final VoidCallback onDismiss;
+
+  const _CelebrationOverlay({required this.rewardName, required this.onDismiss});
 
   @override
   Widget build(BuildContext context) {
@@ -261,10 +459,23 @@ class _CelebrationOverlay extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.celebration, color: Colors.white, size: 80),
+            const Spacer(),
+
+            // Icon with pulsing glow background
+            Container(
+              width: 120,
+              height: 120,
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.15),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.celebration, color: Colors.white, size: 64),
+            ),
+
             const SizedBox(height: AppSpacing.lg),
+
             const Text(
-              'Selamat!',
+              'Selamat! 🎉',
               style: TextStyle(
                 fontSize: 40,
                 fontWeight: FontWeight.w700,
@@ -272,19 +483,82 @@ class _CelebrationOverlay extends StatelessWidget {
                 letterSpacing: -1.5,
               ),
             ),
+
             const SizedBox(height: AppSpacing.sm),
+
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
               child: Text(
-                'Kamu berhasil redeem\n"$rewardName"',
-                style: const TextStyle(fontSize: 18, color: Colors.white70, height: 1.5),
+                'Kamu berhasil redeem',
+                style: const TextStyle(fontSize: 16, color: Colors.white70, height: 1.5),
                 textAlign: TextAlign.center,
               ),
             ),
-            const SizedBox(height: AppSpacing.xxl),
+
+            const SizedBox(height: AppSpacing.xs),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.md,
+                  vertical: AppSpacing.xs,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(AppRadius.full),
+                ),
+                child: Text(
+                  rewardName,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ),
+
+            const SizedBox(height: AppSpacing.md),
+
             const Text(
-              'Kamu layak mendapatkannya! ðŸŽ‰',
+              'Kamu layak mendapatkannya! ✨',
               style: TextStyle(fontSize: 14, color: Colors.white60),
+            ),
+
+            const Spacer(),
+
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.screenH,
+                0,
+                AppSpacing.screenH,
+                AppSpacing.lg,
+              ),
+              child: GestureDetector(
+                onTap: onDismiss,
+                child: Container(
+                  height: 52,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(AppRadius.full),
+                    border: Border.all(color: Colors.white.withValues(alpha: 0.4)),
+                  ),
+                  child: const Center(
+                    child: Text(
+                      'Tutup',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ),
           ],
         ),
