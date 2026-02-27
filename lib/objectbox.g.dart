@@ -391,7 +391,7 @@ final _entities = <obx_int.ModelEntity>[
       obx_int.ModelProperty(
         id: const obx_int.IdUid(6, 3127731869596257500),
         name: 'bonusPoints',
-        type: 6,
+        type: 8,
         flags: 0,
       ),
       obx_int.ModelProperty(
@@ -1305,7 +1305,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
         fbb.addInt64(0, object.id);
         fbb.addOffset(1, titleOffset);
         fbb.addOffset(2, descriptionOffset);
-        fbb.addInt64(5, object.bonusPoints);
+        fbb.addFloat64(5, object.bonusPoints);
         fbb.addBool(6, object.isCompleted);
         fbb.addOffset(8, typeOffset);
         fbb.addOffset(9, conditionTypeOffset);
@@ -1341,7 +1341,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final conditionJsonParam = const fb.StringReader(
           asciiOptimization: true,
         ).vTableGet(buffer, rootOffset, 24, '');
-        final bonusPointsParam = const fb.Int64Reader().vTableGet(
+        final bonusPointsParam = const fb.Float64Reader().vTableGet(
           buffer,
           rootOffset,
           14,
@@ -2082,7 +2082,7 @@ class Quest_ {
   );
 
   /// See [Quest.bonusPoints].
-  static final bonusPoints = obx.QueryIntegerProperty<Quest>(
+  static final bonusPoints = obx.QueryDoubleProperty<Quest>(
     _entities[6].properties[3],
   );
 

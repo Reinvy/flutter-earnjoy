@@ -10,7 +10,7 @@ class Quest {
   String type; // 'daily' | 'weekly' | 'epic' | 'flash' | 'milestone'
   String conditionType; // 'log_count' | 'point_target' | 'category_combo' | 'streak'
   String conditionJson; // serialized condition params
-  int bonusPoints;
+  double bonusPoints;
   String? rewardBadgeId;
 
   @Property(type: PropertyType.date)
@@ -44,7 +44,7 @@ class Quest {
     String? type,
     String? conditionType,
     String? conditionJson,
-    int? bonusPoints,
+    double? bonusPoints,
     String? rewardBadgeId,
     DateTime? expiresAt,
     DateTime? createdAt,
