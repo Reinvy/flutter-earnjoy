@@ -11,6 +11,7 @@ import 'reward_provider.dart';
 import 'user_provider.dart';
 import 'quest_provider.dart';
 import 'badge_provider.dart';
+import 'event_provider.dart';
 
 class ActivityProvider extends ChangeNotifier {
   final StorageService _storage;
@@ -19,6 +20,7 @@ class ActivityProvider extends ChangeNotifier {
   RewardProvider? _rewardProvider;
   QuestProvider? _questProvider;
   BadgeProvider? _badgeProvider;
+  EventProvider? _eventProvider;
 
   List<Activity> _todayActivities = [];
   List<ActivityPreset> _presets = [];
@@ -51,6 +53,10 @@ class ActivityProvider extends ChangeNotifier {
 
   void setBadgeProvider(BadgeProvider badgeProvider) {
     _badgeProvider = badgeProvider;
+  }
+
+  void setEventProvider(EventProvider eventProvider) {
+    _eventProvider = eventProvider;
   }
 
   void loadTodayActivities() {
@@ -99,6 +105,10 @@ class ActivityProvider extends ChangeNotifier {
 
     // Apply level multiplier
     points *= _userProvider!.pointMultiplier;
+
+    // Apply event multiplier
+    final eventMultiplier = _eventProvider?.getMultiplierForCategory(categoryId) ?? 1.0;
+    points *= eventMultiplier;
 
     // Penalty: diminishing returns for repeated same-category today
     final countToday = _activityService.categoryCountToday(categoryId);

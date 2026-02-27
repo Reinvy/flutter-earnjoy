@@ -10,6 +10,7 @@ import 'package:earnjoy/core/widgets/gradient_button.dart';
 import 'package:earnjoy/presentation/providers/activity_provider.dart';
 import 'package:earnjoy/presentation/providers/user_provider.dart';
 import 'package:earnjoy/presentation/providers/badge_provider.dart';
+import 'package:earnjoy/presentation/providers/event_provider.dart';
 import 'package:earnjoy/data/models/badge.dart' as earnjoy_badge;
 import 'widgets/activity_card.dart';
 import 'widgets/quick_add_bottom_sheet.dart';
@@ -25,13 +26,14 @@ class HomeScreen extends StatelessWidget {
     final todayActivities = context.watch<ActivityProvider>().todayActivities;
     final todayEarned = todayActivities.fold<double>(0, (s, a) => s + a.points);
     final isBurnedOut = userProvider.isBurnedOut;
-    
     final badgeProvider = context.watch<BadgeProvider>();
     final unlockedBadges = badgeProvider.unlockedBadges;
     // Assuming the badges may not be strictly sorted by unlock date locally, 
     // but the last in the array is typically highest rarity or recently unlocked.
     unlockedBadges.sort((a,b) => (a.unlockedAt ?? DateTime(2000)).compareTo(b.unlockedAt ?? DateTime(2000)));
     final latestBadge = unlockedBadges.lastOrNull;
+
+    final activeEvents = context.watch<EventProvider>().activeEvents;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -54,6 +56,8 @@ class HomeScreen extends StatelessWidget {
                         padding: const EdgeInsets.only(bottom: AppSpacing.md),
                         child: Center(child: _MicroTrophy(badge: latestBadge)),
                       ),
+
+
 
                     const SizedBox(height: AppSpacing.sm),
 
@@ -363,3 +367,38 @@ class _BurnoutBanner extends StatelessWidget {
     );
   }
 }
+
+class _EventBanner extends StatelessWidget {
+  final dynamic event;
+
+  const _EventBanner({required this.event});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(AppSpacing.md),
+      decoration: BoxDecoration(
+        color: AppColors.primary.withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(AppRadius.md),
+        border: Border.all(color: AppColors.primary.withValues(alpha: 0.4)),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.flash_on_rounded, color: AppColors.primary),
+          const SizedBox(width: AppSpacing.md),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(event.name, style: AppText.title.copyWith(color: AppColors.primary)),
+                Text(event.description, style: AppText.caption),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+

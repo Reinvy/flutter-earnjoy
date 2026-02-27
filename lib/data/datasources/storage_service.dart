@@ -8,6 +8,11 @@ import 'package:earnjoy/data/models/user.dart';
 import 'package:earnjoy/data/models/category.dart';
 import 'package:earnjoy/data/models/quest.dart';
 import 'package:earnjoy/data/models/badge.dart';
+import 'package:earnjoy/data/models/season.dart';
+import 'package:earnjoy/data/models/season_progress.dart';
+import 'package:earnjoy/data/models/game_event.dart';
+import 'package:earnjoy/data/models/habit_stack.dart';
+import 'package:earnjoy/data/models/stack_item.dart';
 import 'package:earnjoy/objectbox.g.dart';
 
 /// The single layer that knows about ObjectBox.
@@ -20,6 +25,8 @@ class StorageService {
     _seedUserIfEmpty();
     _seedCategoriesIfEmpty();
     _seedActivityPresetsIfEmpty();
+    _seedSeasonAndEventsIfEmpty();
+    _seedHabitStacksIfEmpty();
   }
 
   Store get store => _store;
@@ -32,6 +39,11 @@ class StorageService {
   Box<Quest> get _questBox => _store.box<Quest>();
   Box<Badge> get _badgeBox => _store.box<Badge>();
   Box<ActivityPreset> get _presetBox => _store.box<ActivityPreset>();
+  Box<HabitStack> get _habitStackBox => _store.box<HabitStack>();
+  Box<StackItem> get _stackItemBox => _store.box<StackItem>();
+  Box<Season> get _seasonBox => _store.box<Season>();
+  Box<SeasonProgress> get _seasonProgressBox => _store.box<SeasonProgress>();
+  Box<GameEvent> get _eventBox => _store.box<GameEvent>();
 
   /// Returns the single app user (id=1), creating a default one if absent.
   User getUser() {
@@ -98,6 +110,135 @@ class StorageService {
       );
       preset.category.target = cat;
       _presetBox.put(preset);
+    }
+  }
+
+  void _seedHabitStacksIfEmpty() {
+    if (_habitStackBox.count() > 0) return;
+
+    final categories = getAllCategories();
+    final healthCat = categories.where((c) => c.name == 'Health').firstOrNull;
+    final hobbyCat = categories.where((c) => c.name == 'Hobby').firstOrNull;
+    final workCat = categories.where((c) => c.name == 'Work').firstOrNull;
+    final studyCat = categories.where((c) => c.name == 'Study').firstOrNull;
+
+    // Morning Kickstart
+    final morningStack = HabitStack(
+      name: 'Morning Kickstart',
+      description: 'Start your day with energy and focus',
+      isTemplate: true,
+      bonusPoints: 50,
+    );
+
+    if (healthCat != null && hobbyCat != null) {
+      final morningItem1 = StackItem(
+        activityTitle: 'Morning Workout/Run',
+        durationMinutes: 20,
+        order: 1,
+      );
+      morningItem1.category.target = healthCat;
+
+      final morningItem2 = StackItem(
+        activityTitle: 'Journaling',
+        durationMinutes: 10,
+        order: 2,
+      );
+      morningItem2.category.target = hobbyCat;
+
+      final morningItem3 = StackItem(
+        activityTitle: 'Reading/Planning',
+        durationMinutes: 30,
+        order: 3,
+      );
+      morningItem3.category.target = hobbyCat;
+
+      morningStack.items.addAll([morningItem1, morningItem2, morningItem3]);
+      _habitStackBox.put(morningStack);
+    }
+
+    // Deep Work Session
+    final deepWorkStack = HabitStack(
+      name: 'Deep Work Session',
+      description: 'Focus without distractions',
+      isTemplate: true,
+      bonusPoints: 75,
+    );
+
+    if (workCat != null) {
+      final dsItem1 = StackItem(
+        activityTitle: 'Deep Work Block 1',
+        durationMinutes: 45,
+        order: 1,
+      );
+      dsItem1.category.target = workCat;
+
+      final dsItem2 = StackItem(
+        activityTitle: 'Deep Work Block 2',
+        durationMinutes: 45,
+        order: 2,
+      );
+      dsItem2.category.target = workCat;
+
+      deepWorkStack.items.addAll([dsItem1, dsItem2]);
+      _habitStackBox.put(deepWorkStack);
+    }
+
+    // Student Power Block
+    final studentStack = HabitStack(
+      name: 'Student Power Block',
+      description: 'Maximize your study efficiency',
+      isTemplate: true,
+      bonusPoints: 60,
+    );
+
+    if (studyCat != null) {
+      final spItem1 = StackItem(
+        activityTitle: 'Pomodoro Study 1',
+        durationMinutes: 25,
+        order: 1,
+      );
+      spItem1.category.target = studyCat;
+
+      final spItem2 = StackItem(
+        activityTitle: 'Pomodoro Study 2',
+        durationMinutes: 25,
+        order: 2,
+      );
+      spItem2.category.target = studyCat;
+
+      final spItem3 = StackItem(
+        activityTitle: 'Pomodoro Study 3',
+        durationMinutes: 25,
+        order: 3,
+      );
+      spItem3.category.target = studyCat;
+
+      studentStack.items.addAll([spItem1, spItem2, spItem3]);
+      _habitStackBox.put(studentStack);
+    }
+  }
+
+  void _seedSeasonAndEventsIfEmpty() {
+    if (_seasonBox.count() == 0) {
+      _seasonBox.put(Season(
+        name: 'Season 1: Kebangkitan',
+        themeKey: 'cosmic',
+        startAt: DateTime.now().subtract(const Duration(days: 5)),
+        endAt: DateTime.now().add(const Duration(days: 85)),
+        isActive: true,
+      ));
+    }
+    
+    if (_eventBox.count() == 0) {
+      _eventBox.put(GameEvent(
+        name: '🔥 Double XP Weekend',
+        description: 'Semua aktivitas mendapatkan +100% XP bonus!',
+        type: 'double_xp',
+        multiplier: 2.0,
+        startAt: DateTime.now().subtract(const Duration(hours: 2)),
+        endAt: DateTime.now().add(const Duration(days: 2)),
+        isActive: true,
+      ));
     }
   }
 
@@ -288,4 +429,36 @@ class StorageService {
   List<Badge> getAllBadges() => _badgeBox.getAll();
   Badge? getBadge(int id) => _badgeBox.get(id);
   bool deleteBadge(int id) => _badgeBox.remove(id);
+
+  // ─── Habit Stack ────────────────────────────────────────────────────────┬
+
+  int saveHabitStack(HabitStack stack) => _habitStackBox.put(stack);
+  List<HabitStack> getAllHabitStacks() => _habitStackBox.getAll();
+  HabitStack? getHabitStack(int id) => _habitStackBox.get(id);
+  bool deleteHabitStack(int id) => _habitStackBox.remove(id);
+
+  int saveStackItem(StackItem item) => _stackItemBox.put(item);
+  StackItem? getStackItem(int id) => _stackItemBox.get(id);
+  bool deleteStackItem(int id) => _stackItemBox.remove(id);
+  // ─── Season & Event ─────────────────────────────────────────────────────────
+
+  int saveSeason(Season season) => _seasonBox.put(season);
+  List<Season> getAllSeasons() => _seasonBox.getAll();
+  Season? getActiveSeason() {
+    final now = DateTime.now();
+    return _seasonBox.getAll().where((s) => s.isActive && s.startAt.isBefore(now) && s.endAt.isAfter(now)).firstOrNull;
+  }
+
+  int saveSeasonProgress(SeasonProgress progress) => _seasonProgressBox.put(progress);
+  List<SeasonProgress> getAllSeasonProgress() => _seasonProgressBox.getAll();
+  SeasonProgress? getSeasonProgressForUser(int userId, int seasonId) {
+    return _seasonProgressBox.getAll().where((p) => p.user.targetId == userId && p.season.targetId == seasonId).firstOrNull;
+  }
+
+  int saveGameEvent(GameEvent event) => _eventBox.put(event);
+  List<GameEvent> getAllGameEvents() => _eventBox.getAll();
+  List<GameEvent> getActiveEvents() {
+    final now = DateTime.now();
+    return _eventBox.getAll().where((e) => e.isActive && e.startAt.isBefore(now) && e.endAt.isAfter(now)).toList();
+  }
 }

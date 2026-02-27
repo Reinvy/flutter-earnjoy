@@ -18,8 +18,13 @@ import 'data/models/activity.dart';
 import 'data/models/activity_preset.dart';
 import 'data/models/badge.dart';
 import 'data/models/category.dart';
+import 'data/models/game_event.dart';
+import 'data/models/habit_stack.dart';
 import 'data/models/quest.dart';
 import 'data/models/reward.dart';
+import 'data/models/season.dart';
+import 'data/models/season_progress.dart';
+import 'data/models/stack_item.dart';
 import 'data/models/transaction.dart';
 import 'data/models/user.dart';
 
@@ -483,6 +488,286 @@ final _entities = <obx_int.ModelEntity>[
     relations: <obx_int.ModelRelation>[],
     backlinks: <obx_int.ModelBacklink>[],
   ),
+  obx_int.ModelEntity(
+    id: const obx_int.IdUid(9, 7808974247994837562),
+    name: 'HabitStack',
+    lastPropertyId: const obx_int.IdUid(7, 4820018273641208428),
+    flags: 0,
+    properties: <obx_int.ModelProperty>[
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(1, 4778114985009592970),
+        name: 'id',
+        type: 6,
+        flags: 1,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(2, 3205921390749209001),
+        name: 'name',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(3, 4356225111457186785),
+        name: 'description',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(4, 3620418212218115576),
+        name: 'isTemplate',
+        type: 1,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(5, 8299000440384491623),
+        name: 'bonusPoints',
+        type: 6,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(6, 582442702901983559),
+        name: 'streakDays',
+        type: 6,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(7, 4820018273641208428),
+        name: 'lastCompletedAt',
+        type: 10,
+        flags: 0,
+      ),
+    ],
+    relations: <obx_int.ModelRelation>[],
+    backlinks: <obx_int.ModelBacklink>[
+      obx_int.ModelBacklink(
+        name: 'items',
+        srcEntity: 'StackItem',
+        srcField: '',
+      ),
+    ],
+  ),
+  obx_int.ModelEntity(
+    id: const obx_int.IdUid(10, 7342917611015812829),
+    name: 'StackItem',
+    lastPropertyId: const obx_int.IdUid(7, 6203203611291167830),
+    flags: 0,
+    properties: <obx_int.ModelProperty>[
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(1, 5979955306093983416),
+        name: 'id',
+        type: 6,
+        flags: 1,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(2, 322927633571149786),
+        name: 'activityTitle',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(3, 286723056455138777),
+        name: 'durationMinutes',
+        type: 6,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(4, 4688313266828945134),
+        name: 'order',
+        type: 6,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(5, 6550157265344477643),
+        name: 'isCompleted',
+        type: 1,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(6, 8747843462921719409),
+        name: 'stackId',
+        type: 11,
+        flags: 520,
+        indexId: const obx_int.IdUid(4, 5598720275755946603),
+        relationTarget: 'HabitStack',
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(7, 6203203611291167830),
+        name: 'categoryId',
+        type: 11,
+        flags: 520,
+        indexId: const obx_int.IdUid(5, 5555334313111654792),
+        relationTarget: 'Category',
+      ),
+    ],
+    relations: <obx_int.ModelRelation>[],
+    backlinks: <obx_int.ModelBacklink>[],
+  ),
+  obx_int.ModelEntity(
+    id: const obx_int.IdUid(11, 2557365640441454112),
+    name: 'GameEvent',
+    lastPropertyId: const obx_int.IdUid(9, 3180405990358567827),
+    flags: 0,
+    properties: <obx_int.ModelProperty>[
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(1, 8193640348775864306),
+        name: 'id',
+        type: 6,
+        flags: 1,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(2, 8151176896268184773),
+        name: 'name',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(3, 4020750977805384163),
+        name: 'description',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(4, 3721411005798409741),
+        name: 'type',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(5, 5147108500045417948),
+        name: 'multiplier',
+        type: 8,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(6, 4546513750729967413),
+        name: 'startAt',
+        type: 10,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(7, 1562960696349937423),
+        name: 'endAt',
+        type: 10,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(8, 5684525397656855590),
+        name: 'isActive',
+        type: 1,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(9, 3180405990358567827),
+        name: 'targetCategoryId',
+        type: 6,
+        flags: 0,
+      ),
+    ],
+    relations: <obx_int.ModelRelation>[],
+    backlinks: <obx_int.ModelBacklink>[],
+  ),
+  obx_int.ModelEntity(
+    id: const obx_int.IdUid(12, 3765060305610154998),
+    name: 'Season',
+    lastPropertyId: const obx_int.IdUid(7, 6917089895121272658),
+    flags: 0,
+    properties: <obx_int.ModelProperty>[
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(1, 3419207769211005338),
+        name: 'id',
+        type: 6,
+        flags: 1,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(2, 7564926970231952667),
+        name: 'name',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(3, 8230430264770792831),
+        name: 'themeKey',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(4, 5923449641650617892),
+        name: 'startAt',
+        type: 10,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(5, 2229340776866562236),
+        name: 'endAt',
+        type: 10,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(6, 6652341584909128135),
+        name: 'isActive',
+        type: 1,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(7, 6917089895121272658),
+        name: 'milestonesJson',
+        type: 9,
+        flags: 0,
+      ),
+    ],
+    relations: <obx_int.ModelRelation>[],
+    backlinks: <obx_int.ModelBacklink>[],
+  ),
+  obx_int.ModelEntity(
+    id: const obx_int.IdUid(13, 6555632522327042793),
+    name: 'SeasonProgress',
+    lastPropertyId: const obx_int.IdUid(6, 1413626782031776680),
+    flags: 0,
+    properties: <obx_int.ModelProperty>[
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(1, 3200192800114898439),
+        name: 'id',
+        type: 6,
+        flags: 1,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(2, 8769422093713330127),
+        name: 'seasonId',
+        type: 11,
+        flags: 520,
+        indexId: const obx_int.IdUid(6, 2854972863311880089),
+        relationTarget: 'Season',
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(3, 5562363865291043077),
+        name: 'userId',
+        type: 11,
+        flags: 520,
+        indexId: const obx_int.IdUid(7, 4135129020907092117),
+        relationTarget: 'User',
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(4, 6257366229845059426),
+        name: 'xpEarned',
+        type: 8,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(5, 1074105798098028902),
+        name: 'rank',
+        type: 6,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(6, 1413626782031776680),
+        name: 'milestoneReached',
+        type: 6,
+        flags: 0,
+      ),
+    ],
+    relations: <obx_int.ModelRelation>[],
+    backlinks: <obx_int.ModelBacklink>[],
+  ),
 ];
 
 /// Shortcut for [obx.Store.new] that passes [getObjectBoxModel] and for Flutter
@@ -523,8 +808,8 @@ Future<obx.Store> openStore({
 obx_int.ModelDefinition getObjectBoxModel() {
   final model = obx_int.ModelInfo(
     entities: _entities,
-    lastEntityId: const obx_int.IdUid(8, 5845437736512944696),
-    lastIndexId: const obx_int.IdUid(3, 3333553318397306036),
+    lastEntityId: const obx_int.IdUid(13, 6555632522327042793),
+    lastIndexId: const obx_int.IdUid(7, 4135129020907092117),
     lastRelationId: const obx_int.IdUid(0, 0),
     lastSequenceId: const obx_int.IdUid(0, 0),
     retiredEntityUids: const [],
@@ -1160,6 +1445,387 @@ obx_int.ModelDefinition getObjectBoxModel() {
         return object;
       },
     ),
+    HabitStack: obx_int.EntityDefinition<HabitStack>(
+      model: _entities[8],
+      toOneRelations: (HabitStack object) => [],
+      toManyRelations: (HabitStack object) => {
+        obx_int.RelInfo<StackItem>.toOneBacklink(
+          6,
+          object.id,
+          (StackItem srcObject) => srcObject.stack,
+        ): object.items,
+      },
+      getId: (HabitStack object) => object.id,
+      setId: (HabitStack object, int id) {
+        object.id = id;
+      },
+      objectToFB: (HabitStack object, fb.Builder fbb) {
+        final nameOffset = fbb.writeString(object.name);
+        final descriptionOffset = fbb.writeString(object.description);
+        fbb.startTable(8);
+        fbb.addInt64(0, object.id);
+        fbb.addOffset(1, nameOffset);
+        fbb.addOffset(2, descriptionOffset);
+        fbb.addBool(3, object.isTemplate);
+        fbb.addInt64(4, object.bonusPoints);
+        fbb.addInt64(5, object.streakDays);
+        fbb.addInt64(6, object.lastCompletedAt?.millisecondsSinceEpoch);
+        fbb.finish(fbb.endTable());
+        return object.id;
+      },
+      objectFromFB: (obx.Store store, ByteData fbData) {
+        final buffer = fb.BufferContext(fbData);
+        final rootOffset = buffer.derefObject(0);
+        final lastCompletedAtValue = const fb.Int64Reader().vTableGetNullable(
+          buffer,
+          rootOffset,
+          16,
+        );
+        final idParam = const fb.Int64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          4,
+          0,
+        );
+        final nameParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 6, '');
+        final descriptionParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 8, '');
+        final isTemplateParam = const fb.BoolReader().vTableGet(
+          buffer,
+          rootOffset,
+          10,
+          false,
+        );
+        final bonusPointsParam = const fb.Int64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          12,
+          0,
+        );
+        final streakDaysParam = const fb.Int64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          14,
+          0,
+        );
+        final lastCompletedAtParam = lastCompletedAtValue == null
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(lastCompletedAtValue);
+        final object = HabitStack(
+          id: idParam,
+          name: nameParam,
+          description: descriptionParam,
+          isTemplate: isTemplateParam,
+          bonusPoints: bonusPointsParam,
+          streakDays: streakDaysParam,
+          lastCompletedAt: lastCompletedAtParam,
+        );
+        obx_int.InternalToManyAccess.setRelInfo<HabitStack>(
+          object.items,
+          store,
+          obx_int.RelInfo<StackItem>.toOneBacklink(
+            6,
+            object.id,
+            (StackItem srcObject) => srcObject.stack,
+          ),
+        );
+        return object;
+      },
+    ),
+    StackItem: obx_int.EntityDefinition<StackItem>(
+      model: _entities[9],
+      toOneRelations: (StackItem object) => [object.stack, object.category],
+      toManyRelations: (StackItem object) => {},
+      getId: (StackItem object) => object.id,
+      setId: (StackItem object, int id) {
+        object.id = id;
+      },
+      objectToFB: (StackItem object, fb.Builder fbb) {
+        final activityTitleOffset = fbb.writeString(object.activityTitle);
+        fbb.startTable(8);
+        fbb.addInt64(0, object.id);
+        fbb.addOffset(1, activityTitleOffset);
+        fbb.addInt64(2, object.durationMinutes);
+        fbb.addInt64(3, object.order);
+        fbb.addBool(4, object.isCompleted);
+        fbb.addInt64(5, object.stack.targetId);
+        fbb.addInt64(6, object.category.targetId);
+        fbb.finish(fbb.endTable());
+        return object.id;
+      },
+      objectFromFB: (obx.Store store, ByteData fbData) {
+        final buffer = fb.BufferContext(fbData);
+        final rootOffset = buffer.derefObject(0);
+        final idParam = const fb.Int64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          4,
+          0,
+        );
+        final activityTitleParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 6, '');
+        final durationMinutesParam = const fb.Int64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          8,
+          0,
+        );
+        final orderParam = const fb.Int64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          10,
+          0,
+        );
+        final isCompletedParam = const fb.BoolReader().vTableGet(
+          buffer,
+          rootOffset,
+          12,
+          false,
+        );
+        final object = StackItem(
+          id: idParam,
+          activityTitle: activityTitleParam,
+          durationMinutes: durationMinutesParam,
+          order: orderParam,
+          isCompleted: isCompletedParam,
+        );
+        object.stack.targetId = const fb.Int64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          14,
+          0,
+        );
+        object.stack.attach(store);
+        object.category.targetId = const fb.Int64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          16,
+          0,
+        );
+        object.category.attach(store);
+        return object;
+      },
+    ),
+    GameEvent: obx_int.EntityDefinition<GameEvent>(
+      model: _entities[10],
+      toOneRelations: (GameEvent object) => [],
+      toManyRelations: (GameEvent object) => {},
+      getId: (GameEvent object) => object.id,
+      setId: (GameEvent object, int id) {
+        object.id = id;
+      },
+      objectToFB: (GameEvent object, fb.Builder fbb) {
+        final nameOffset = fbb.writeString(object.name);
+        final descriptionOffset = fbb.writeString(object.description);
+        final typeOffset = fbb.writeString(object.type);
+        fbb.startTable(10);
+        fbb.addInt64(0, object.id);
+        fbb.addOffset(1, nameOffset);
+        fbb.addOffset(2, descriptionOffset);
+        fbb.addOffset(3, typeOffset);
+        fbb.addFloat64(4, object.multiplier);
+        fbb.addInt64(5, object.startAt.millisecondsSinceEpoch);
+        fbb.addInt64(6, object.endAt.millisecondsSinceEpoch);
+        fbb.addBool(7, object.isActive);
+        fbb.addInt64(8, object.targetCategoryId);
+        fbb.finish(fbb.endTable());
+        return object.id;
+      },
+      objectFromFB: (obx.Store store, ByteData fbData) {
+        final buffer = fb.BufferContext(fbData);
+        final rootOffset = buffer.derefObject(0);
+        final idParam = const fb.Int64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          4,
+          0,
+        );
+        final nameParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 6, '');
+        final descriptionParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 8, '');
+        final typeParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 10, '');
+        final multiplierParam = const fb.Float64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          12,
+          0,
+        );
+        final startAtParam = DateTime.fromMillisecondsSinceEpoch(
+          const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0),
+        );
+        final endAtParam = DateTime.fromMillisecondsSinceEpoch(
+          const fb.Int64Reader().vTableGet(buffer, rootOffset, 16, 0),
+        );
+        final isActiveParam = const fb.BoolReader().vTableGet(
+          buffer,
+          rootOffset,
+          18,
+          false,
+        );
+        final targetCategoryIdParam = const fb.Int64Reader().vTableGetNullable(
+          buffer,
+          rootOffset,
+          20,
+        );
+        final object = GameEvent(
+          id: idParam,
+          name: nameParam,
+          description: descriptionParam,
+          type: typeParam,
+          multiplier: multiplierParam,
+          startAt: startAtParam,
+          endAt: endAtParam,
+          isActive: isActiveParam,
+          targetCategoryId: targetCategoryIdParam,
+        );
+
+        return object;
+      },
+    ),
+    Season: obx_int.EntityDefinition<Season>(
+      model: _entities[11],
+      toOneRelations: (Season object) => [],
+      toManyRelations: (Season object) => {},
+      getId: (Season object) => object.id,
+      setId: (Season object, int id) {
+        object.id = id;
+      },
+      objectToFB: (Season object, fb.Builder fbb) {
+        final nameOffset = fbb.writeString(object.name);
+        final themeKeyOffset = fbb.writeString(object.themeKey);
+        final milestonesJsonOffset = fbb.writeString(object.milestonesJson);
+        fbb.startTable(8);
+        fbb.addInt64(0, object.id);
+        fbb.addOffset(1, nameOffset);
+        fbb.addOffset(2, themeKeyOffset);
+        fbb.addInt64(3, object.startAt.millisecondsSinceEpoch);
+        fbb.addInt64(4, object.endAt.millisecondsSinceEpoch);
+        fbb.addBool(5, object.isActive);
+        fbb.addOffset(6, milestonesJsonOffset);
+        fbb.finish(fbb.endTable());
+        return object.id;
+      },
+      objectFromFB: (obx.Store store, ByteData fbData) {
+        final buffer = fb.BufferContext(fbData);
+        final rootOffset = buffer.derefObject(0);
+        final idParam = const fb.Int64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          4,
+          0,
+        );
+        final nameParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 6, '');
+        final themeKeyParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 8, '');
+        final startAtParam = DateTime.fromMillisecondsSinceEpoch(
+          const fb.Int64Reader().vTableGet(buffer, rootOffset, 10, 0),
+        );
+        final endAtParam = DateTime.fromMillisecondsSinceEpoch(
+          const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0),
+        );
+        final isActiveParam = const fb.BoolReader().vTableGet(
+          buffer,
+          rootOffset,
+          14,
+          false,
+        );
+        final milestonesJsonParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 16, '');
+        final object = Season(
+          id: idParam,
+          name: nameParam,
+          themeKey: themeKeyParam,
+          startAt: startAtParam,
+          endAt: endAtParam,
+          isActive: isActiveParam,
+          milestonesJson: milestonesJsonParam,
+        );
+
+        return object;
+      },
+    ),
+    SeasonProgress: obx_int.EntityDefinition<SeasonProgress>(
+      model: _entities[12],
+      toOneRelations: (SeasonProgress object) => [object.season, object.user],
+      toManyRelations: (SeasonProgress object) => {},
+      getId: (SeasonProgress object) => object.id,
+      setId: (SeasonProgress object, int id) {
+        object.id = id;
+      },
+      objectToFB: (SeasonProgress object, fb.Builder fbb) {
+        fbb.startTable(7);
+        fbb.addInt64(0, object.id);
+        fbb.addInt64(1, object.season.targetId);
+        fbb.addInt64(2, object.user.targetId);
+        fbb.addFloat64(3, object.xpEarned);
+        fbb.addInt64(4, object.rank);
+        fbb.addInt64(5, object.milestoneReached);
+        fbb.finish(fbb.endTable());
+        return object.id;
+      },
+      objectFromFB: (obx.Store store, ByteData fbData) {
+        final buffer = fb.BufferContext(fbData);
+        final rootOffset = buffer.derefObject(0);
+        final idParam = const fb.Int64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          4,
+          0,
+        );
+        final xpEarnedParam = const fb.Float64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          10,
+          0,
+        );
+        final rankParam = const fb.Int64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          12,
+          0,
+        );
+        final milestoneReachedParam = const fb.Int64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          14,
+          0,
+        );
+        final object = SeasonProgress(
+          id: idParam,
+          xpEarned: xpEarnedParam,
+          rank: rankParam,
+          milestoneReached: milestoneReachedParam,
+        );
+        object.season.targetId = const fb.Int64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          6,
+          0,
+        );
+        object.season.attach(store);
+        object.user.targetId = const fb.Int64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          8,
+          0,
+        );
+        object.user.attach(store);
+        return object;
+      },
+    ),
   };
 
   return obx_int.ModelDefinition(model, bindings);
@@ -1486,5 +2152,205 @@ class ActivityPreset_ {
   /// See [ActivityPreset.category].
   static final category = obx.QueryRelationToOne<ActivityPreset, Category>(
     _entities[7].properties[4],
+  );
+}
+
+/// [HabitStack] entity fields to define ObjectBox queries.
+class HabitStack_ {
+  /// See [HabitStack.id].
+  static final id = obx.QueryIntegerProperty<HabitStack>(
+    _entities[8].properties[0],
+  );
+
+  /// See [HabitStack.name].
+  static final name = obx.QueryStringProperty<HabitStack>(
+    _entities[8].properties[1],
+  );
+
+  /// See [HabitStack.description].
+  static final description = obx.QueryStringProperty<HabitStack>(
+    _entities[8].properties[2],
+  );
+
+  /// See [HabitStack.isTemplate].
+  static final isTemplate = obx.QueryBooleanProperty<HabitStack>(
+    _entities[8].properties[3],
+  );
+
+  /// See [HabitStack.bonusPoints].
+  static final bonusPoints = obx.QueryIntegerProperty<HabitStack>(
+    _entities[8].properties[4],
+  );
+
+  /// See [HabitStack.streakDays].
+  static final streakDays = obx.QueryIntegerProperty<HabitStack>(
+    _entities[8].properties[5],
+  );
+
+  /// See [HabitStack.lastCompletedAt].
+  static final lastCompletedAt = obx.QueryDateProperty<HabitStack>(
+    _entities[8].properties[6],
+  );
+
+  /// see [HabitStack.items]
+  static final items = obx.QueryBacklinkToMany<StackItem, HabitStack>(
+    StackItem_.stack,
+  );
+}
+
+/// [StackItem] entity fields to define ObjectBox queries.
+class StackItem_ {
+  /// See [StackItem.id].
+  static final id = obx.QueryIntegerProperty<StackItem>(
+    _entities[9].properties[0],
+  );
+
+  /// See [StackItem.activityTitle].
+  static final activityTitle = obx.QueryStringProperty<StackItem>(
+    _entities[9].properties[1],
+  );
+
+  /// See [StackItem.durationMinutes].
+  static final durationMinutes = obx.QueryIntegerProperty<StackItem>(
+    _entities[9].properties[2],
+  );
+
+  /// See [StackItem.order].
+  static final order = obx.QueryIntegerProperty<StackItem>(
+    _entities[9].properties[3],
+  );
+
+  /// See [StackItem.isCompleted].
+  static final isCompleted = obx.QueryBooleanProperty<StackItem>(
+    _entities[9].properties[4],
+  );
+
+  /// See [StackItem.stack].
+  static final stack = obx.QueryRelationToOne<StackItem, HabitStack>(
+    _entities[9].properties[5],
+  );
+
+  /// See [StackItem.category].
+  static final category = obx.QueryRelationToOne<StackItem, Category>(
+    _entities[9].properties[6],
+  );
+}
+
+/// [GameEvent] entity fields to define ObjectBox queries.
+class GameEvent_ {
+  /// See [GameEvent.id].
+  static final id = obx.QueryIntegerProperty<GameEvent>(
+    _entities[10].properties[0],
+  );
+
+  /// See [GameEvent.name].
+  static final name = obx.QueryStringProperty<GameEvent>(
+    _entities[10].properties[1],
+  );
+
+  /// See [GameEvent.description].
+  static final description = obx.QueryStringProperty<GameEvent>(
+    _entities[10].properties[2],
+  );
+
+  /// See [GameEvent.type].
+  static final type = obx.QueryStringProperty<GameEvent>(
+    _entities[10].properties[3],
+  );
+
+  /// See [GameEvent.multiplier].
+  static final multiplier = obx.QueryDoubleProperty<GameEvent>(
+    _entities[10].properties[4],
+  );
+
+  /// See [GameEvent.startAt].
+  static final startAt = obx.QueryDateProperty<GameEvent>(
+    _entities[10].properties[5],
+  );
+
+  /// See [GameEvent.endAt].
+  static final endAt = obx.QueryDateProperty<GameEvent>(
+    _entities[10].properties[6],
+  );
+
+  /// See [GameEvent.isActive].
+  static final isActive = obx.QueryBooleanProperty<GameEvent>(
+    _entities[10].properties[7],
+  );
+
+  /// See [GameEvent.targetCategoryId].
+  static final targetCategoryId = obx.QueryIntegerProperty<GameEvent>(
+    _entities[10].properties[8],
+  );
+}
+
+/// [Season] entity fields to define ObjectBox queries.
+class Season_ {
+  /// See [Season.id].
+  static final id = obx.QueryIntegerProperty<Season>(
+    _entities[11].properties[0],
+  );
+
+  /// See [Season.name].
+  static final name = obx.QueryStringProperty<Season>(
+    _entities[11].properties[1],
+  );
+
+  /// See [Season.themeKey].
+  static final themeKey = obx.QueryStringProperty<Season>(
+    _entities[11].properties[2],
+  );
+
+  /// See [Season.startAt].
+  static final startAt = obx.QueryDateProperty<Season>(
+    _entities[11].properties[3],
+  );
+
+  /// See [Season.endAt].
+  static final endAt = obx.QueryDateProperty<Season>(
+    _entities[11].properties[4],
+  );
+
+  /// See [Season.isActive].
+  static final isActive = obx.QueryBooleanProperty<Season>(
+    _entities[11].properties[5],
+  );
+
+  /// See [Season.milestonesJson].
+  static final milestonesJson = obx.QueryStringProperty<Season>(
+    _entities[11].properties[6],
+  );
+}
+
+/// [SeasonProgress] entity fields to define ObjectBox queries.
+class SeasonProgress_ {
+  /// See [SeasonProgress.id].
+  static final id = obx.QueryIntegerProperty<SeasonProgress>(
+    _entities[12].properties[0],
+  );
+
+  /// See [SeasonProgress.season].
+  static final season = obx.QueryRelationToOne<SeasonProgress, Season>(
+    _entities[12].properties[1],
+  );
+
+  /// See [SeasonProgress.user].
+  static final user = obx.QueryRelationToOne<SeasonProgress, User>(
+    _entities[12].properties[2],
+  );
+
+  /// See [SeasonProgress.xpEarned].
+  static final xpEarned = obx.QueryDoubleProperty<SeasonProgress>(
+    _entities[12].properties[3],
+  );
+
+  /// See [SeasonProgress.rank].
+  static final rank = obx.QueryIntegerProperty<SeasonProgress>(
+    _entities[12].properties[4],
+  );
+
+  /// See [SeasonProgress.milestoneReached].
+  static final milestoneReached = obx.QueryIntegerProperty<SeasonProgress>(
+    _entities[12].properties[5],
   );
 }

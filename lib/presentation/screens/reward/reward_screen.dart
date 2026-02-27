@@ -69,12 +69,14 @@ class _RewardScreenState extends State<RewardScreen> with TickerProviderStateMix
     // Validate monthly budget before redeeming
     final rewardService = RewardService(storage);
     if (rewardService.isMonthlyBudgetExceeded(userProvider.user)) {
+      if (!context.mounted) return;
       _showErrorSnackbar(context, 'Monthly budget terlampaui.');
       return;
     }
 
     final success = rewardProvider.redeem(rewardId);
     if (!success) {
+      if (!context.mounted) return;
       _showErrorSnackbar(context, 'Balance tidak cukup atau reward belum unlocked.');
       return;
     }

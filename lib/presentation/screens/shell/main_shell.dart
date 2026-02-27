@@ -2,8 +2,9 @@
 
 import 'package:earnjoy/core/theme.dart';
 import '../home/home_screen.dart';
-import '../profile/profile_screen.dart';
 import '../reward/reward_screen.dart';
+import '../profile/profile_screen.dart';
+import '../routines/routine_list_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:earnjoy/presentation/providers/badge_provider.dart';
 import 'package:earnjoy/presentation/widgets/badge_toast.dart';
@@ -22,7 +23,7 @@ class _MainShellState extends State<MainShell> {
   int _selectedIndex = 0;
   StreamSubscription? _badgeSubscription;
 
-  static const _screens = [HomeScreen(), RewardScreen(), ProfileScreen()];
+  static const _screens = [HomeScreen(), RoutineListScreen(), RewardScreen(), ProfileScreen()];
 
   @override
   void initState() {
@@ -56,6 +57,11 @@ class _MainShellState extends State<MainShell> {
             icon: Icon(Icons.home_outlined),
             selectedIcon: Icon(Icons.home_rounded),
             label: 'Home',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.list_alt_outlined),
+            selectedIcon: Icon(Icons.list_alt_rounded),
+            label: 'Routines',
           ),
           NavigationDestination(
             icon: Icon(Icons.redeem_outlined),

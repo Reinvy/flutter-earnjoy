@@ -11,6 +11,9 @@ import 'package:earnjoy/data/datasources/storage_service.dart';
 
 import 'package:earnjoy/presentation/providers/quest_provider.dart';
 import 'package:earnjoy/presentation/providers/badge_provider.dart';
+import 'package:earnjoy/presentation/providers/event_provider.dart';
+import 'package:earnjoy/presentation/providers/season_provider.dart';
+import 'package:earnjoy/presentation/providers/habit_stack_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,7 +34,12 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         Provider<StorageService>.value(value: storageService),
-        ChangeNotifierProvider(create: (_) => UserProvider(storageService)),
+        ChangeNotifierProvider(create: (_) => SeasonProvider(storageService)),
+        ChangeNotifierProxyProvider<SeasonProvider, UserProvider>(
+          create: (_) => UserProvider(storageService),
+          update: (_, season, user) => user!..setSeasonProvider(season),
+        ),
+        ChangeNotifierProvider(create: (_) => EventProvider(storageService)),
         ChangeNotifierProvider(create: (_) => BadgeProvider(storageService)),
         ChangeNotifierProxyProvider<BadgeProvider, RewardProvider>(
           create: (_) => RewardProvider(storageService),
@@ -43,13 +51,23 @@ class MyApp extends StatelessWidget {
           update: (_, userProvider, questProvider) => questProvider!
             ..setUserProvider(userProvider),
         ),
-        ChangeNotifierProxyProvider4<UserProvider, RewardProvider, QuestProvider, BadgeProvider, ActivityProvider>(
+        ChangeNotifierProxyProvider5<UserProvider, RewardProvider, QuestProvider, BadgeProvider, EventProvider, ActivityProvider>(
           create: (_) => ActivityProvider(storageService),
-          update: (_, userProvider, rewardProvider, questProvider, badgeProvider, activityProvider) => activityProvider!
+          update: (_, userProvider, rewardProvider, questProvider, badgeProvider, eventProvider, activityProvider) => activityProvider!
             ..setUserProvider(userProvider)
             ..setRewardProvider(rewardProvider)
             ..setQuestProvider(questProvider)
-            ..setBadgeProvider(badgeProvider),
+            ..setBadgeProvider(badgeProvider)
+            ..setEventProvider(eventProvider),
+        ),
+        ChangeNotifierProxyProvider2<UserProvider, ActivityProvider, HabitStackProvider>(
+          create: (context) => HabitStackProvider(
+            storageService,
+            Provider.of<UserProvider>(context, listen: false),
+            Provider.of<ActivityProvider>(context, listen: false),
+          ),
+          update: (_, userProvider, activityProvider, habitStackProvider) => 
+            HabitStackProvider(storageService, userProvider, activityProvider),
         ),
       ],
       child: MaterialApp(

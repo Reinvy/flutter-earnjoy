@@ -3,6 +3,7 @@
 import 'package:earnjoy/data/models/user.dart';
 import 'package:earnjoy/data/datasources/storage_service.dart';
 import 'package:earnjoy/core/utils/level_system.dart';
+import 'package:earnjoy/presentation/providers/season_provider.dart';
 
 class UserProvider extends ChangeNotifier {
   final StorageService _storage;
@@ -13,6 +14,14 @@ class UserProvider extends ChangeNotifier {
   }
 
   User get user => _user;
+  SeasonProvider? _seasonProvider;
+
+  void setSeasonProvider(SeasonProvider seasonProvider) {
+    _seasonProvider = seasonProvider;
+    if (_user.id != 0) {
+      _seasonProvider?.loadSeasonData(_user.id);
+    }
+  }
 
   /// Whether the burnout threshold has been hit (score >= 3 consecutive misses).
   bool get isBurnedOut => _user.burnoutScore >= 3;
@@ -120,6 +129,7 @@ class UserProvider extends ChangeNotifier {
     }
     _user = _user.copyWith(pointBalance: _user.pointBalance + delta, xp: newXp);
     _storage.saveUser(_user);
+    // Season XP tracking handled elsewhere or to be implemented
     notifyListeners();
   }
 
@@ -165,6 +175,7 @@ class UserProvider extends ChangeNotifier {
     );
     _recalculateAdjustmentFactor();
     _storage.saveUser(_user);
+    // Season XP tracking handled elsewhere or to be implemented
     notifyListeners();
   }
 
