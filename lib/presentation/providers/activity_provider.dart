@@ -9,12 +9,14 @@ import 'package:earnjoy/domain/usecases/point_engine.dart';
 import 'package:earnjoy/data/datasources/storage_service.dart';
 import 'reward_provider.dart';
 import 'user_provider.dart';
+import 'quest_provider.dart';
 
 class ActivityProvider extends ChangeNotifier {
   final StorageService _storage;
   late final ActivityService _activityService;
   UserProvider? _userProvider;
   RewardProvider? _rewardProvider;
+  QuestProvider? _questProvider;
 
   List<Activity> _todayActivities = [];
   List<ActivityPreset> _presets = [];
@@ -39,6 +41,10 @@ class ActivityProvider extends ChangeNotifier {
   /// Called by [ChangeNotifierProxyProvider2] each time [RewardProvider] updates.
   void setRewardProvider(RewardProvider rewardProvider) {
     _rewardProvider = rewardProvider;
+  }
+
+  void setQuestProvider(QuestProvider questProvider) {
+    _questProvider = questProvider;
   }
 
   void loadTodayActivities() {
@@ -99,7 +105,7 @@ class ActivityProvider extends ChangeNotifier {
     }
 
     // Persist activity
-    _activityService.addActivity(
+    final createdActivity = _activityService.addActivity(
       title: title,
       categoryId: categoryId,
       durationMinutes: durationMinutes,
@@ -108,6 +114,9 @@ class ActivityProvider extends ChangeNotifier {
 
     // Record earn transaction
     _storage.saveTransaction(Transaction(type: TransactionType.earn, amount: points, label: title));
+
+    // Update quests
+    _questProvider?.onActivityLogged(createdActivity);
 
     // Update user balance + streak
     _userProvider!.updateAfterActivity(points);

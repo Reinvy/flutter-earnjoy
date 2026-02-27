@@ -9,6 +9,8 @@ import 'package:earnjoy/presentation/screens/onboarding/onboarding_screen.dart';
 import 'package:earnjoy/presentation/screens/shell/main_shell.dart';
 import 'package:earnjoy/data/datasources/storage_service.dart';
 
+import 'package:earnjoy/presentation/providers/quest_provider.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -30,11 +32,17 @@ class MyApp extends StatelessWidget {
         Provider<StorageService>.value(value: storageService),
         ChangeNotifierProvider(create: (_) => UserProvider(storageService)),
         ChangeNotifierProvider(create: (_) => RewardProvider(storageService)),
-        ChangeNotifierProxyProvider2<UserProvider, RewardProvider, ActivityProvider>(
+        ChangeNotifierProxyProvider<UserProvider, QuestProvider>(
+          create: (_) => QuestProvider(storageService),
+          update: (_, userProvider, questProvider) => questProvider!
+            ..setUserProvider(userProvider),
+        ),
+        ChangeNotifierProxyProvider3<UserProvider, RewardProvider, QuestProvider, ActivityProvider>(
           create: (_) => ActivityProvider(storageService),
-          update: (_, userProvider, rewardProvider, activityProvider) => activityProvider!
+          update: (_, userProvider, rewardProvider, questProvider, activityProvider) => activityProvider!
             ..setUserProvider(userProvider)
-            ..setRewardProvider(rewardProvider),
+            ..setRewardProvider(rewardProvider)
+            ..setQuestProvider(questProvider),
         ),
       ],
       child: MaterialApp(

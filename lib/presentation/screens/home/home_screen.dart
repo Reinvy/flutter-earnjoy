@@ -11,6 +11,7 @@ import 'package:earnjoy/presentation/providers/activity_provider.dart';
 import 'package:earnjoy/presentation/providers/user_provider.dart';
 import 'widgets/activity_card.dart';
 import 'widgets/quick_add_bottom_sheet.dart';
+import 'widgets/quest_carousel.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -56,6 +57,9 @@ class HomeScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: AppSpacing.md),
                     ],
+
+                    const QuestCarousel(),
+                    const SizedBox(height: AppSpacing.sectionGap),
 
                     const Text("Today's Activities", style: AppText.title),
                     const SizedBox(height: AppSpacing.sm),

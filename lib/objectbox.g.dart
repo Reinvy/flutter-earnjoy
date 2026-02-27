@@ -325,7 +325,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
     id: const obx_int.IdUid(7, 7567813523073515485),
     name: 'Quest',
-    lastPropertyId: const obx_int.IdUid(8, 152670071877584968),
+    lastPropertyId: const obx_int.IdUid(15, 1537780824442832454),
     flags: 0,
     properties: <obx_int.ModelProperty>[
       obx_int.ModelProperty(
@@ -347,21 +347,9 @@ final _entities = <obx_int.ModelEntity>[
         flags: 0,
       ),
       obx_int.ModelProperty(
-        id: const obx_int.IdUid(4, 6070520624509161020),
-        name: 'targetCount',
-        type: 6,
-        flags: 0,
-      ),
-      obx_int.ModelProperty(
-        id: const obx_int.IdUid(5, 2990638843911408226),
-        name: 'currentCount',
-        type: 6,
-        flags: 0,
-      ),
-      obx_int.ModelProperty(
         id: const obx_int.IdUid(6, 3127731869596257500),
         name: 'bonusPoints',
-        type: 8,
+        type: 6,
         flags: 0,
       ),
       obx_int.ModelProperty(
@@ -371,9 +359,45 @@ final _entities = <obx_int.ModelEntity>[
         flags: 0,
       ),
       obx_int.ModelProperty(
-        id: const obx_int.IdUid(8, 152670071877584968),
-        name: 'date',
+        id: const obx_int.IdUid(9, 3731154141248843751),
+        name: 'type',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(10, 2267035780086213689),
+        name: 'conditionType',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(11, 7533677366773694261),
+        name: 'conditionJson',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(12, 8504469234203673709),
+        name: 'rewardBadgeId',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(13, 4949161896773739033),
+        name: 'expiresAt',
         type: 10,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(14, 8721969685919625293),
+        name: 'createdAt',
+        type: 10,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(15, 1537780824442832454),
+        name: 'progress',
+        type: 8,
         flags: 0,
       ),
     ],
@@ -468,7 +492,12 @@ obx_int.ModelDefinition getObjectBoxModel() {
     lastSequenceId: const obx_int.IdUid(0, 0),
     retiredEntityUids: const [],
     retiredIndexUids: const [],
-    retiredPropertyUids: const [4594496594359212475],
+    retiredPropertyUids: const [
+      4594496594359212475,
+      6070520624509161020,
+      2990638843911408226,
+      152670071877584968,
+    ],
     retiredRelationUids: const [],
     modelVersion: 5,
     modelVersionParserMinimum: 5,
@@ -902,15 +931,25 @@ obx_int.ModelDefinition getObjectBoxModel() {
       objectToFB: (Quest object, fb.Builder fbb) {
         final titleOffset = fbb.writeString(object.title);
         final descriptionOffset = fbb.writeString(object.description);
-        fbb.startTable(9);
+        final typeOffset = fbb.writeString(object.type);
+        final conditionTypeOffset = fbb.writeString(object.conditionType);
+        final conditionJsonOffset = fbb.writeString(object.conditionJson);
+        final rewardBadgeIdOffset = object.rewardBadgeId == null
+            ? null
+            : fbb.writeString(object.rewardBadgeId!);
+        fbb.startTable(16);
         fbb.addInt64(0, object.id);
         fbb.addOffset(1, titleOffset);
         fbb.addOffset(2, descriptionOffset);
-        fbb.addInt64(3, object.targetCount);
-        fbb.addInt64(4, object.currentCount);
-        fbb.addFloat64(5, object.bonusPoints);
+        fbb.addInt64(5, object.bonusPoints);
         fbb.addBool(6, object.isCompleted);
-        fbb.addInt64(7, object.date.millisecondsSinceEpoch);
+        fbb.addOffset(8, typeOffset);
+        fbb.addOffset(9, conditionTypeOffset);
+        fbb.addOffset(10, conditionJsonOffset);
+        fbb.addOffset(11, rewardBadgeIdOffset);
+        fbb.addInt64(12, object.expiresAt.millisecondsSinceEpoch);
+        fbb.addInt64(13, object.createdAt.millisecondsSinceEpoch);
+        fbb.addFloat64(14, object.progress);
         fbb.finish(fbb.endTable());
         return object.id;
       },
@@ -929,23 +968,29 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final descriptionParam = const fb.StringReader(
           asciiOptimization: true,
         ).vTableGet(buffer, rootOffset, 8, '');
-        final targetCountParam = const fb.Int64Reader().vTableGet(
-          buffer,
-          rootOffset,
-          10,
-          0,
-        );
-        final currentCountParam = const fb.Int64Reader().vTableGet(
-          buffer,
-          rootOffset,
-          12,
-          0,
-        );
-        final bonusPointsParam = const fb.Float64Reader().vTableGet(
+        final typeParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 20, '');
+        final conditionTypeParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 22, '');
+        final conditionJsonParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 24, '');
+        final bonusPointsParam = const fb.Int64Reader().vTableGet(
           buffer,
           rootOffset,
           14,
           0,
+        );
+        final rewardBadgeIdParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGetNullable(buffer, rootOffset, 26);
+        final expiresAtParam = DateTime.fromMillisecondsSinceEpoch(
+          const fb.Int64Reader().vTableGet(buffer, rootOffset, 28, 0),
+        );
+        final createdAtParam = DateTime.fromMillisecondsSinceEpoch(
+          const fb.Int64Reader().vTableGet(buffer, rootOffset, 30, 0),
         );
         final isCompletedParam = const fb.BoolReader().vTableGet(
           buffer,
@@ -953,18 +998,25 @@ obx_int.ModelDefinition getObjectBoxModel() {
           16,
           false,
         );
-        final dateParam = DateTime.fromMillisecondsSinceEpoch(
-          const fb.Int64Reader().vTableGet(buffer, rootOffset, 18, 0),
+        final progressParam = const fb.Float64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          32,
+          0,
         );
         final object = Quest(
           id: idParam,
           title: titleParam,
           description: descriptionParam,
-          targetCount: targetCountParam,
-          currentCount: currentCountParam,
+          type: typeParam,
+          conditionType: conditionTypeParam,
+          conditionJson: conditionJsonParam,
           bonusPoints: bonusPointsParam,
+          rewardBadgeId: rewardBadgeIdParam,
+          expiresAt: expiresAtParam,
+          createdAt: createdAtParam,
           isCompleted: isCompletedParam,
-          date: dateParam,
+          progress: progressParam,
         );
 
         return object;
@@ -1256,28 +1308,50 @@ class Quest_ {
     _entities[6].properties[2],
   );
 
-  /// See [Quest.targetCount].
-  static final targetCount = obx.QueryIntegerProperty<Quest>(
-    _entities[6].properties[3],
-  );
-
-  /// See [Quest.currentCount].
-  static final currentCount = obx.QueryIntegerProperty<Quest>(
-    _entities[6].properties[4],
-  );
-
   /// See [Quest.bonusPoints].
-  static final bonusPoints = obx.QueryDoubleProperty<Quest>(
-    _entities[6].properties[5],
+  static final bonusPoints = obx.QueryIntegerProperty<Quest>(
+    _entities[6].properties[3],
   );
 
   /// See [Quest.isCompleted].
   static final isCompleted = obx.QueryBooleanProperty<Quest>(
+    _entities[6].properties[4],
+  );
+
+  /// See [Quest.type].
+  static final type = obx.QueryStringProperty<Quest>(
+    _entities[6].properties[5],
+  );
+
+  /// See [Quest.conditionType].
+  static final conditionType = obx.QueryStringProperty<Quest>(
     _entities[6].properties[6],
   );
 
-  /// See [Quest.date].
-  static final date = obx.QueryDateProperty<Quest>(_entities[6].properties[7]);
+  /// See [Quest.conditionJson].
+  static final conditionJson = obx.QueryStringProperty<Quest>(
+    _entities[6].properties[7],
+  );
+
+  /// See [Quest.rewardBadgeId].
+  static final rewardBadgeId = obx.QueryStringProperty<Quest>(
+    _entities[6].properties[8],
+  );
+
+  /// See [Quest.expiresAt].
+  static final expiresAt = obx.QueryDateProperty<Quest>(
+    _entities[6].properties[9],
+  );
+
+  /// See [Quest.createdAt].
+  static final createdAt = obx.QueryDateProperty<Quest>(
+    _entities[6].properties[10],
+  );
+
+  /// See [Quest.progress].
+  static final progress = obx.QueryDoubleProperty<Quest>(
+    _entities[6].properties[11],
+  );
 }
 
 /// [ActivityPreset] entity fields to define ObjectBox queries.

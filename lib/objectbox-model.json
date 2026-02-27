@@ -257,7 +257,7 @@
     },
     {
       "id": "7:7567813523073515485",
-      "lastPropertyId": "8:152670071877584968",
+      "lastPropertyId": "15:1537780824442832454",
       "name": "Quest",
       "properties": [
         {
@@ -277,19 +277,9 @@
           "type": 9
         },
         {
-          "id": "4:6070520624509161020",
-          "name": "targetCount",
-          "type": 6
-        },
-        {
-          "id": "5:2990638843911408226",
-          "name": "currentCount",
-          "type": 6
-        },
-        {
           "id": "6:3127731869596257500",
           "name": "bonusPoints",
-          "type": 8
+          "type": 6
         },
         {
           "id": "7:7426645031311613286",
@@ -297,9 +287,39 @@
           "type": 1
         },
         {
-          "id": "8:152670071877584968",
-          "name": "date",
+          "id": "9:3731154141248843751",
+          "name": "type",
+          "type": 9
+        },
+        {
+          "id": "10:2267035780086213689",
+          "name": "conditionType",
+          "type": 9
+        },
+        {
+          "id": "11:7533677366773694261",
+          "name": "conditionJson",
+          "type": 9
+        },
+        {
+          "id": "12:8504469234203673709",
+          "name": "rewardBadgeId",
+          "type": 9
+        },
+        {
+          "id": "13:4949161896773739033",
+          "name": "expiresAt",
           "type": 10
+        },
+        {
+          "id": "14:8721969685919625293",
+          "name": "createdAt",
+          "type": 10
+        },
+        {
+          "id": "15:1537780824442832454",
+          "name": "progress",
+          "type": 8
         }
       ],
       "relations": []
@@ -351,7 +371,10 @@
   "retiredEntityUids": [],
   "retiredIndexUids": [],
   "retiredPropertyUids": [
-    4594496594359212475
+    4594496594359212475,
+    6070520624509161020,
+    2990638843911408226,
+    152670071877584968
   ],
   "retiredRelationUids": [],
   "version": 1
