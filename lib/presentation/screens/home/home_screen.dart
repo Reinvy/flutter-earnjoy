@@ -9,6 +9,8 @@ import 'package:earnjoy/core/theme.dart';
 import 'package:earnjoy/core/widgets/gradient_button.dart';
 import 'package:earnjoy/presentation/providers/activity_provider.dart';
 import 'package:earnjoy/presentation/providers/user_provider.dart';
+import 'package:earnjoy/presentation/providers/badge_provider.dart';
+import 'package:earnjoy/data/models/badge.dart' as earnjoy_badge;
 import 'widgets/activity_card.dart';
 import 'widgets/quick_add_bottom_sheet.dart';
 import 'widgets/quest_carousel.dart';
@@ -23,6 +25,13 @@ class HomeScreen extends StatelessWidget {
     final todayActivities = context.watch<ActivityProvider>().todayActivities;
     final todayEarned = todayActivities.fold<double>(0, (s, a) => s + a.points);
     final isBurnedOut = userProvider.isBurnedOut;
+    
+    final badgeProvider = context.watch<BadgeProvider>();
+    final unlockedBadges = badgeProvider.unlockedBadges;
+    // Assuming the badges may not be strictly sorted by unlock date locally, 
+    // but the last in the array is typically highest rarity or recently unlocked.
+    unlockedBadges.sort((a,b) => (a.unlockedAt ?? DateTime(2000)).compareTo(b.unlockedAt ?? DateTime(2000)));
+    final latestBadge = unlockedBadges.lastOrNull;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -39,7 +48,14 @@ class HomeScreen extends StatelessWidget {
 
                     _HeroMetric(balance: user.pointBalance),
 
-                    const SizedBox(height: AppSpacing.lg),
+                    const SizedBox(height: AppSpacing.sm),
+                    if (latestBadge != null)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: AppSpacing.md),
+                        child: Center(child: _MicroTrophy(badge: latestBadge)),
+                      ),
+
+                    const SizedBox(height: AppSpacing.sm),
 
                     Row(
                       children: [
@@ -237,6 +253,48 @@ class _DailyProgressBar extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _MicroTrophy extends StatelessWidget {
+  final earnjoy_badge.Badge badge;
+  const _MicroTrophy({required this.badge});
+
+  IconData _getIconData(String iconName) {
+    switch (iconName) {
+      case 'local_fire_department': return Icons.local_fire_department_rounded;
+      case 'emoji_events': return Icons.emoji_events_rounded;
+      case 'military_tech': return Icons.military_tech_rounded;
+      case 'redeem': return Icons.redeem_rounded;
+      default: return Icons.star_rounded;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceHigh,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.primary.withValues(alpha: 0.3)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(_getIconData(badge.icon), size: 16, color: AppColors.primary),
+          const SizedBox(width: 8),
+          Text(
+            badge.name,
+            style: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              color: AppColors.primary,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

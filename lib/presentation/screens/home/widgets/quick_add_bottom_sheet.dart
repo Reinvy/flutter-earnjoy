@@ -8,6 +8,8 @@ import 'package:earnjoy/data/models/activity_preset.dart';
 import 'package:earnjoy/data/models/category.dart';
 import 'package:earnjoy/domain/usecases/point_engine.dart';
 import 'package:earnjoy/presentation/providers/activity_provider.dart';
+import 'package:earnjoy/presentation/providers/user_provider.dart';
+import 'package:earnjoy/presentation/widgets/level_up_dialog.dart' as import_level_up;
 
 /// Modal bottom sheet showing dynamic activity presets.
 /// Users can tap a preset to log it, long-press to delete, or tap "+" to add new.
@@ -203,13 +205,23 @@ class _PresetTile extends StatelessWidget {
 
   void _log(BuildContext context) {
     HapticFeedback.mediumImpact();
-    final provider = context.read<ActivityProvider>();
+    final activityProvider = context.read<ActivityProvider>();
+    final userProvider = context.read<UserProvider>();
+    
     final categoryId = preset.category.targetId;
-    final earned = provider.logActivity(
+    final int oldLevel = userProvider.currentLevel;
+    
+    final earned = activityProvider.logActivity(
       title: preset.title,
       categoryId: categoryId,
       durationMinutes: preset.durationMinutes,
     );
+    
+    final int newLevel = userProvider.currentLevel;
+    if (newLevel > oldLevel) {
+      import_level_up.LevelUpDialog.show(context, newLevel, userProvider.currentTierName);
+    }
+    
     Navigator.pop(context, earned);
   }
 

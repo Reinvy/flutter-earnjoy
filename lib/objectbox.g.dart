@@ -157,7 +157,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
     id: const obx_int.IdUid(4, 2329469739092839643),
     name: 'User',
-    lastPropertyId: const obx_int.IdUid(13, 8683160586099615495),
+    lastPropertyId: const obx_int.IdUid(14, 6799221967030747424),
     flags: 0,
     properties: <obx_int.ModelProperty>[
       obx_int.ModelProperty(
@@ -238,6 +238,12 @@ final _entities = <obx_int.ModelEntity>[
         type: 10,
         flags: 0,
       ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(14, 6799221967030747424),
+        name: 'xp',
+        type: 8,
+        flags: 0,
+      ),
     ],
     relations: <obx_int.ModelRelation>[],
     backlinks: <obx_int.ModelBacklink>[],
@@ -245,7 +251,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
     id: const obx_int.IdUid(5, 3322047366399380042),
     name: 'Badge',
-    lastPropertyId: const obx_int.IdUid(5, 5874067951615650337),
+    lastPropertyId: const obx_int.IdUid(10, 966599234471453781),
     flags: 0,
     properties: <obx_int.ModelProperty>[
       obx_int.ModelProperty(
@@ -276,6 +282,37 @@ final _entities = <obx_int.ModelEntity>[
         id: const obx_int.IdUid(5, 5874067951615650337),
         name: 'unlockedAt',
         type: 10,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(6, 2262233366461776302),
+        name: 'badgeKey',
+        type: 9,
+        flags: 2080,
+        indexId: const obx_int.IdUid(3, 3333553318397306036),
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(7, 6382925441357053053),
+        name: 'category',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(8, 7449654561980373721),
+        name: 'rarity',
+        type: 6,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(9, 781843219672483026),
+        name: 'isUnlocked',
+        type: 1,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(10, 966599234471453781),
+        name: 'conditionJson',
+        type: 9,
         flags: 0,
       ),
     ],
@@ -487,7 +524,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
   final model = obx_int.ModelInfo(
     entities: _entities,
     lastEntityId: const obx_int.IdUid(8, 5845437736512944696),
-    lastIndexId: const obx_int.IdUid(2, 3777624002170199725),
+    lastIndexId: const obx_int.IdUid(3, 3333553318397306036),
     lastRelationId: const obx_int.IdUid(0, 0),
     lastSequenceId: const obx_int.IdUid(0, 0),
     retiredEntityUids: const [],
@@ -692,7 +729,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
       },
       objectToFB: (User object, fb.Builder fbb) {
         final nameOffset = fbb.writeString(object.name);
-        fbb.startTable(14);
+        fbb.startTable(15);
         fbb.addInt64(0, object.id);
         fbb.addOffset(1, nameOffset);
         fbb.addFloat64(2, object.pointBalance);
@@ -709,6 +746,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
           12,
           object.lastWeeklyAdjustmentDate.millisecondsSinceEpoch,
         );
+        fbb.addFloat64(13, object.xp);
         fbb.finish(fbb.endTable());
         return object.id;
       },
@@ -760,6 +798,12 @@ obx_int.ModelDefinition getObjectBoxModel() {
           18,
           0,
         );
+        final xpParam = const fb.Float64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          30,
+          0,
+        );
         final lastActivityDateParam = DateTime.fromMillisecondsSinceEpoch(
           const fb.Int64Reader().vTableGet(buffer, rootOffset, 20, 0),
         );
@@ -794,6 +838,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
           burnoutScore: burnoutScoreParam,
           adjustmentFactor: adjustmentFactorParam,
           disciplineScore: disciplineScoreParam,
+          xp: xpParam,
           lastActivityDate: lastActivityDateParam,
           onboardingDone: onboardingDoneParam,
           income: incomeParam,
@@ -816,12 +861,20 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final nameOffset = fbb.writeString(object.name);
         final descriptionOffset = fbb.writeString(object.description);
         final iconOffset = fbb.writeString(object.icon);
-        fbb.startTable(6);
+        final badgeKeyOffset = fbb.writeString(object.badgeKey);
+        final categoryOffset = fbb.writeString(object.category);
+        final conditionJsonOffset = fbb.writeString(object.conditionJson);
+        fbb.startTable(11);
         fbb.addInt64(0, object.id);
         fbb.addOffset(1, nameOffset);
         fbb.addOffset(2, descriptionOffset);
         fbb.addOffset(3, iconOffset);
         fbb.addInt64(4, object.unlockedAt?.millisecondsSinceEpoch);
+        fbb.addOffset(5, badgeKeyOffset);
+        fbb.addOffset(6, categoryOffset);
+        fbb.addInt64(7, object.rarity);
+        fbb.addBool(8, object.isUnlocked);
+        fbb.addOffset(9, conditionJsonOffset);
         fbb.finish(fbb.endTable());
         return object.id;
       },
@@ -839,6 +892,9 @@ obx_int.ModelDefinition getObjectBoxModel() {
           4,
           0,
         );
+        final badgeKeyParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 14, '');
         final nameParam = const fb.StringReader(
           asciiOptimization: true,
         ).vTableGet(buffer, rootOffset, 6, '');
@@ -848,15 +904,38 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final iconParam = const fb.StringReader(
           asciiOptimization: true,
         ).vTableGet(buffer, rootOffset, 10, '');
+        final categoryParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 16, '');
+        final rarityParam = const fb.Int64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          18,
+          0,
+        );
+        final isUnlockedParam = const fb.BoolReader().vTableGet(
+          buffer,
+          rootOffset,
+          20,
+          false,
+        );
         final unlockedAtParam = unlockedAtValue == null
             ? null
             : DateTime.fromMillisecondsSinceEpoch(unlockedAtValue);
+        final conditionJsonParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 22, '');
         final object = Badge(
           id: idParam,
+          badgeKey: badgeKeyParam,
           name: nameParam,
           description: descriptionParam,
           icon: iconParam,
+          category: categoryParam,
+          rarity: rarityParam,
+          isUnlocked: isUnlockedParam,
           unlockedAt: unlockedAtParam,
+          conditionJson: conditionJsonParam,
         );
 
         return object;
@@ -1237,6 +1316,9 @@ class User_ {
   static final lastWeeklyAdjustmentDate = obx.QueryDateProperty<User>(
     _entities[3].properties[12],
   );
+
+  /// See [User.xp].
+  static final xp = obx.QueryDoubleProperty<User>(_entities[3].properties[13]);
 }
 
 /// [Badge] entity fields to define ObjectBox queries.
@@ -1262,6 +1344,31 @@ class Badge_ {
   /// See [Badge.unlockedAt].
   static final unlockedAt = obx.QueryDateProperty<Badge>(
     _entities[4].properties[4],
+  );
+
+  /// See [Badge.badgeKey].
+  static final badgeKey = obx.QueryStringProperty<Badge>(
+    _entities[4].properties[5],
+  );
+
+  /// See [Badge.category].
+  static final category = obx.QueryStringProperty<Badge>(
+    _entities[4].properties[6],
+  );
+
+  /// See [Badge.rarity].
+  static final rarity = obx.QueryIntegerProperty<Badge>(
+    _entities[4].properties[7],
+  );
+
+  /// See [Badge.isUnlocked].
+  static final isUnlocked = obx.QueryBooleanProperty<Badge>(
+    _entities[4].properties[8],
+  );
+
+  /// See [Badge.conditionJson].
+  static final conditionJson = obx.QueryStringProperty<Badge>(
+    _entities[4].properties[9],
   );
 }
 

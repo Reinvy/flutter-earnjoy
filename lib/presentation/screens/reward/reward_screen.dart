@@ -55,7 +55,8 @@ class _RewardScreenState extends State<RewardScreen> with TickerProviderStateMix
       builder: (_) =>
           _RedeemConfirmSheet(rewardName: name, rewardCost: pointCost, userBalance: userBalance),
     );
-    if (confirmed == true && mounted) {
+    if (!mounted) return;
+    if (confirmed == true) {
       _executeRedeem(context, rewardId, name);
     }
   }

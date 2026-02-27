@@ -10,6 +10,7 @@ import 'package:earnjoy/presentation/screens/shell/main_shell.dart';
 import 'package:earnjoy/data/datasources/storage_service.dart';
 
 import 'package:earnjoy/presentation/providers/quest_provider.dart';
+import 'package:earnjoy/presentation/providers/badge_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,18 +32,24 @@ class MyApp extends StatelessWidget {
       providers: [
         Provider<StorageService>.value(value: storageService),
         ChangeNotifierProvider(create: (_) => UserProvider(storageService)),
-        ChangeNotifierProvider(create: (_) => RewardProvider(storageService)),
+        ChangeNotifierProvider(create: (_) => BadgeProvider(storageService)),
+        ChangeNotifierProxyProvider<BadgeProvider, RewardProvider>(
+          create: (_) => RewardProvider(storageService),
+          update: (_, badgeProvider, rewardProvider) => rewardProvider!
+            ..setBadgeProvider(badgeProvider),
+        ),
         ChangeNotifierProxyProvider<UserProvider, QuestProvider>(
           create: (_) => QuestProvider(storageService),
           update: (_, userProvider, questProvider) => questProvider!
             ..setUserProvider(userProvider),
         ),
-        ChangeNotifierProxyProvider3<UserProvider, RewardProvider, QuestProvider, ActivityProvider>(
+        ChangeNotifierProxyProvider4<UserProvider, RewardProvider, QuestProvider, BadgeProvider, ActivityProvider>(
           create: (_) => ActivityProvider(storageService),
-          update: (_, userProvider, rewardProvider, questProvider, activityProvider) => activityProvider!
+          update: (_, userProvider, rewardProvider, questProvider, badgeProvider, activityProvider) => activityProvider!
             ..setUserProvider(userProvider)
             ..setRewardProvider(rewardProvider)
-            ..setQuestProvider(questProvider),
+            ..setQuestProvider(questProvider)
+            ..setBadgeProvider(badgeProvider),
         ),
       ],
       child: MaterialApp(

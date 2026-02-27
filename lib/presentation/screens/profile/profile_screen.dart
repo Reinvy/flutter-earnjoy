@@ -12,6 +12,7 @@ import 'widgets/budget_setting.dart';
 import 'widgets/category_manager.dart';
 import 'widgets/user_header.dart';
 import 'widgets/weekly_summary_card.dart';
+import 'widgets/badge_grid.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -86,6 +87,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 totalEarned: totalEarned,
                 editingName: _editingName,
                 nameController: _nameController,
+                level: context.watch<UserProvider>().currentLevel,
+                tierName: context.watch<UserProvider>().currentTierName,
+                xpProgress: context.watch<UserProvider>().xpProgress,
+                xpForNextLevel: context.watch<UserProvider>().xpForNextLevel,
                 onEditTap: () {
                   setState(() {
                     _editingName = true;
@@ -104,6 +109,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 pointsEarned: weeklyPoints,
                 redeemedCount: weeklyRedeemed,
               ),
+
+              const SizedBox(height: AppSpacing.sectionGap),
+
+              const Text('Badges & Achievements', style: AppText.title),
+              const SizedBox(height: AppSpacing.sm),
+              const BadgeGrid(),
 
               const SizedBox(height: AppSpacing.sectionGap),
               const Text('Monthly Budget Cap', style: AppText.title),

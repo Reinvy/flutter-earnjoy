@@ -2,6 +2,7 @@
 
 import 'package:earnjoy/data/models/user.dart';
 import 'package:earnjoy/data/datasources/storage_service.dart';
+import 'package:earnjoy/core/utils/level_system.dart';
 
 class UserProvider extends ChangeNotifier {
   final StorageService _storage;
@@ -15,6 +16,12 @@ class UserProvider extends ChangeNotifier {
 
   /// Whether the burnout threshold has been hit (score >= 3 consecutive misses).
   bool get isBurnedOut => _user.burnoutScore >= 3;
+
+  int get currentLevel => LevelSystem.currentLevel(_user.xp);
+  String get currentTierName => LevelSystem.getTierName(currentLevel);
+  double get xpProgress => LevelSystem.getProgress(_user.xp);
+  double get xpForNextLevel => LevelSystem.xpForNextLevel(currentLevel);
+  double get pointMultiplier => LevelSystem.getPointMultiplier(currentLevel);
 
   void loadUser() {
     _user = _storage.getUser();
@@ -107,7 +114,11 @@ class UserProvider extends ChangeNotifier {
 
  
   void updateBalance(double delta) {
-    _user = _user.copyWith(pointBalance: _user.pointBalance + delta);
+    double newXp = _user.xp;
+    if (delta > 0) {
+      newXp += delta;
+    }
+    _user = _user.copyWith(pointBalance: _user.pointBalance + delta, xp: newXp);
     _storage.saveUser(_user);
     notifyListeners();
   }
@@ -146,6 +157,7 @@ class UserProvider extends ChangeNotifier {
 
     _user = _user.copyWith(
       pointBalance: (_user.pointBalance + pointsDelta).clamp(0.0, double.infinity),
+      xp: _user.xp + pointsDelta,
       streak: newStreak,
       lastActivityDate: now,
       burnoutScore: newBurnout,

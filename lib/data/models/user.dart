@@ -12,6 +12,7 @@ class User {
   double burnoutScore;
   double adjustmentFactor;
   double disciplineScore;
+  double xp;
   @Property(type: PropertyType.date)
   DateTime lastActivityDate;
 
@@ -33,6 +34,7 @@ class User {
     this.burnoutScore = 0.0,
     this.adjustmentFactor = 1.0,
     this.disciplineScore = 0.0,
+    this.xp = 0.0,
     DateTime? lastActivityDate,
     this.onboardingDone = false,
     this.income = 0.0,
@@ -50,6 +52,7 @@ class User {
     double? burnoutScore,
     double? adjustmentFactor,
     double? disciplineScore,
+    double? xp,
     DateTime? lastActivityDate,
     bool? onboardingDone,
     double? income,
@@ -65,6 +68,7 @@ class User {
       burnoutScore: burnoutScore ?? this.burnoutScore,
       adjustmentFactor: adjustmentFactor ?? this.adjustmentFactor,
       disciplineScore: disciplineScore ?? this.disciplineScore,
+      xp: xp ?? this.xp,
       lastActivityDate: lastActivityDate ?? this.lastActivityDate,
       onboardingDone: onboardingDone ?? this.onboardingDone,
       income: income ?? this.income,

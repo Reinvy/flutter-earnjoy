@@ -10,6 +10,7 @@ import 'package:earnjoy/data/datasources/storage_service.dart';
 import 'reward_provider.dart';
 import 'user_provider.dart';
 import 'quest_provider.dart';
+import 'badge_provider.dart';
 
 class ActivityProvider extends ChangeNotifier {
   final StorageService _storage;
@@ -17,6 +18,7 @@ class ActivityProvider extends ChangeNotifier {
   UserProvider? _userProvider;
   RewardProvider? _rewardProvider;
   QuestProvider? _questProvider;
+  BadgeProvider? _badgeProvider;
 
   List<Activity> _todayActivities = [];
   List<ActivityPreset> _presets = [];
@@ -45,6 +47,10 @@ class ActivityProvider extends ChangeNotifier {
 
   void setQuestProvider(QuestProvider questProvider) {
     _questProvider = questProvider;
+  }
+
+  void setBadgeProvider(BadgeProvider badgeProvider) {
+    _badgeProvider = badgeProvider;
   }
 
   void loadTodayActivities() {
@@ -91,6 +97,9 @@ class ActivityProvider extends ChangeNotifier {
       adjustmentFactor: user.adjustmentFactor,
     );
 
+    // Apply level multiplier
+    points *= _userProvider!.pointMultiplier;
+
     // Penalty: diminishing returns for repeated same-category today
     final countToday = _activityService.categoryCountToday(categoryId);
     points = PointEngine.applyDiminishingReturn(points, countToday);
@@ -120,6 +129,10 @@ class ActivityProvider extends ChangeNotifier {
 
     // Update user balance + streak
     _userProvider!.updateAfterActivity(points);
+
+    // Evaluate badges
+    _badgeProvider?.evaluateActivity(createdActivity);
+    _badgeProvider?.evaluateStreak(_userProvider!.user);
 
     // Notify RewardProvider so UI reflects updated balance immediately
     _rewardProvider?.refresh();

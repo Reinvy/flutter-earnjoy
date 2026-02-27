@@ -1,8 +1,8 @@
 ﻿import 'package:flutter/material.dart';
 
-import 'package:earnjoy/core/extensions.dart';
 import 'package:earnjoy/core/theme.dart';
 import 'package:earnjoy/data/models/user.dart';
+import 'package:earnjoy/core/utils/level_system.dart';
 
 class UserHeader extends StatelessWidget {
   final User user;
@@ -12,6 +12,11 @@ class UserHeader extends StatelessWidget {
   final VoidCallback onEditTap;
   final VoidCallback onSaveName;
 
+  final int level;
+  final String tierName;
+  final double xpProgress;
+  final double xpForNextLevel;
+
   const UserHeader({
     super.key,
     required this.user,
@@ -20,18 +25,50 @@ class UserHeader extends StatelessWidget {
     required this.nameController,
     required this.onEditTap,
     required this.onSaveName,
+    required this.level,
+    required this.tierName,
+    required this.xpProgress,
+    required this.xpForNextLevel,
   });
+
+  Color _getTierColor(String tier) {
+    switch (tier) {
+      case 'Novice':
+        return Colors.grey.shade400;
+      case 'Apprentice':
+        return Colors.blue.shade400;
+      case 'Practitioner':
+        return Colors.green.shade500;
+      case 'Achiever':
+        return Colors.orange.shade500;
+      case 'Expert':
+        return Colors.purple.shade400;
+      case 'Master':
+        return Colors.red.shade500;
+      case 'Legend':
+        return Colors.amber.shade500;
+      default:
+        return Colors.grey.shade400;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        // Avatar circle
+        // Avatar circle with Tier border
         Container(
           width: 56,
           height: 56,
-          decoration: const BoxDecoration(gradient: AppGradients.primary, shape: BoxShape.circle),
+          decoration: BoxDecoration(
+            gradient: AppGradients.primary,
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: _getTierColor(tierName),
+              width: 3.0,
+            ),
+          ),
           child: Center(
             child: Text(
               user.name.isNotEmpty ? user.name[0].toUpperCase() : 'U',
@@ -102,8 +139,27 @@ class UserHeader extends StatelessWidget {
                   ),
                 ),
 
-              const SizedBox(height: 2),
-              Text('${totalEarned.toPointsLabel} pts earned all-time', style: AppText.caption),
+              const SizedBox(height: 4),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Lvl $level • $tierName', style: AppText.caption.copyWith(color: _getTierColor(tierName), fontWeight: FontWeight.bold)),
+                  if (level < LevelSystem.maxLevel)
+                    Text('${(xpProgress * 100).toInt()}%', style: AppText.caption.copyWith(fontSize: 10)),
+                ],
+              ),
+              const SizedBox(height: 4),
+              // Progress Bar
+              if (level < LevelSystem.maxLevel)
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(4),
+                  child: LinearProgressIndicator(
+                    value: xpProgress,
+                    minHeight: 6,
+                    backgroundColor: AppColors.surfaceHigh,
+                    valueColor: AlwaysStoppedAnimation<Color>(_getTierColor(tierName)),
+                  ),
+                ),
             ],
           ),
         ),

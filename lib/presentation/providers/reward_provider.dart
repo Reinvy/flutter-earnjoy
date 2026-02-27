@@ -3,16 +3,22 @@
 import 'package:earnjoy/data/models/reward.dart';
 import 'package:earnjoy/domain/usecases/reward_service.dart';
 import 'package:earnjoy/data/datasources/storage_service.dart';
+import 'package:earnjoy/presentation/providers/badge_provider.dart';
 
 class RewardProvider extends ChangeNotifier {
   final StorageService _storage;
   late final RewardService _rewardService;
+  BadgeProvider? _badgeProvider;
 
   List<Reward> _rewards = [];
 
   RewardProvider(this._storage) {
     _rewardService = RewardService(_storage);
     loadRewards();
+  }
+
+  void setBadgeProvider(BadgeProvider badgeProvider) {
+    _badgeProvider = badgeProvider;
   }
 
   List<Reward> get rewards => List.unmodifiable(_rewards);
@@ -35,9 +41,14 @@ class RewardProvider extends ChangeNotifier {
 
   /// Returns `true` on successful redeem; `false` if blocked.
   bool redeem(int rewardId) {
+    // Get cost before it's potentially modified/deleted by redeem
+    final reward = _rewards.where((r) => r.id == rewardId).firstOrNull;
+    final cost = reward?.pointCost ?? 0.0;
+
     final success = _rewardService.redeemReward(rewardId);
     if (success) {
       _rewards = _rewardService.getRewards();
+      _badgeProvider?.evaluateRedeem(cost);
       notifyListeners();
     }
     return success;
