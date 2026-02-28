@@ -17,6 +17,7 @@ class HabitStackProvider extends ChangeNotifier {
   // Active stack tracking
   HabitStack? _activeStack;
   int _activeItemIndex = 0;
+  // ignore: unused_field — reserved for upcoming stack timer feature
   DateTime? _stackStartTime;
 
   HabitStackProvider(this._storage, this._userProvider, this._activityProvider) {

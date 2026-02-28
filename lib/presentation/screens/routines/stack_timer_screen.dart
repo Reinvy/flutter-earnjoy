@@ -38,7 +38,7 @@ class _StackTimerScreenState extends State<StackTimerScreen> {
     if (currentItem != null) {
       setState(() {
         // For testing we could use seconds instead of minutes
-        // _secondsRemaining = currentItem.durationMinutes; 
+        // _secondsRemaining = currentItem.durationMinutes;
         _secondsRemaining = currentItem.durationMinutes * 60;
         _isRunning = false;
       });
@@ -49,7 +49,7 @@ class _StackTimerScreenState extends State<StackTimerScreen> {
   void _startTimer() {
     if (_isRunning) return;
     setState(() => _isRunning = true);
-    
+
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_secondsRemaining > 0) {
         setState(() => _secondsRemaining--);
@@ -66,17 +66,19 @@ class _StackTimerScreenState extends State<StackTimerScreen> {
 
   void _completeItem() {
     _timer?.cancel();
-    
+
     final provider = context.read<HabitStackProvider>();
     provider.completeCurrentItem();
-    
+
     if (provider.activeStack == null) {
       // Stack is finished
       if (mounted) {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Routine ${widget.stack.name} finished! Earned +${widget.stack.bonusPoints} points.'),
+            content: Text(
+              'Routine ${widget.stack.name} finished! Earned +${widget.stack.bonusPoints} points.',
+            ),
             backgroundColor: AppColors.success,
           ),
         );
@@ -119,10 +121,7 @@ class _StackTimerScreenState extends State<StackTimerScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(widget.stack.name),
-          leading: IconButton(
-            icon: const Icon(Icons.close),
-            onPressed: _cancelStack,
-          ),
+          leading: IconButton(icon: const Icon(Icons.close), onPressed: _cancelStack),
         ),
         body: Consumer<HabitStackProvider>(
           builder: (context, provider, child) {
@@ -150,7 +149,7 @@ class _StackTimerScreenState extends State<StackTimerScreen> {
                     style: const TextStyle(color: AppColors.textDisabled),
                   ),
                   const SizedBox(height: 32),
-                  
+
                   // Big Timer Circle
                   Container(
                     width: 280,
@@ -168,10 +167,7 @@ class _StackTimerScreenState extends State<StackTimerScreen> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(
-                            IconData(
-                              int.parse(currentItem.category.target?.icon ?? 'e871', radix: 16),
-                              fontFamily: 'MaterialIcons',
-                            ),
+                            IconData(int.parse('e871', radix: 16), fontFamily: 'MaterialIcons'),
                             size: 48,
                             color: AppColors.textSecondary,
                           ),
@@ -194,9 +190,9 @@ class _StackTimerScreenState extends State<StackTimerScreen> {
                       ),
                     ),
                   ),
-                  
+
                   const SizedBox(height: 48),
-                  
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [

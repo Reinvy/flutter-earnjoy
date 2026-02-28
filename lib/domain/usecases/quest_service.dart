@@ -3,85 +3,127 @@ import 'package:earnjoy/data/datasources/storage_service.dart';
 import 'package:earnjoy/data/models/activity.dart';
 import 'package:earnjoy/data/models/quest.dart';
 
+/// Result of evaluating quests after logging an activity.
+class QuestEvaluationResult {
+  final List<Quest> justCompleted;
+  QuestEvaluationResult(this.justCompleted);
+  bool get hasCompletions => justCompleted.isNotEmpty;
+}
+
 class QuestService {
   final StorageService _storage;
 
   QuestService(this._storage);
 
-  /// Get quests that are active today
+  /// Get quests that are still active (not expired, not rewarded).
+  /// progress < 2.0 means not yet rewarded (2.0 = sentinel "rewarded & done").
   List<Quest> getDailyQuests() {
     final now = DateTime.now();
     return _storage.getAllQuests().where((q) {
-      return q.type == 'daily' && q.expiresAt.isAfter(now) && !q.isCompleted;
+      return q.type == 'daily' &&
+          q.expiresAt.isAfter(now) &&
+          q.progress < 2.0; // 2.0 = rewarded sentinel
     }).toList();
   }
 
-  /// Ensure there are active daily quests. If not, generate some.
+  /// Ensure there are active daily quests for today. Generates if none exist.
   void ensureDailyQuests() {
     final activeDailies = getDailyQuests();
     if (activeDailies.isNotEmpty) return;
 
-    // Generate new daily quests
     final now = DateTime.now();
     final endOfDay = DateTime(now.year, now.month, now.day, 23, 59, 59);
 
-    final quest1 = Quest(
-      title: 'Pejuang Pagi',
-      description: 'Log aktivitas apapun hari ini',
-      type: 'daily',
-      conditionType: 'log_count',
-      conditionJson: jsonEncode({'count': 1}),
-      bonusPoints: 50,
-      createdAt: now,
-      expiresAt: endOfDay,
-    );
+    final templates = [
+      _makeQuest(
+        title: '⚡ Pejuang Hari Ini',
+        description: 'Log setidaknya 1 aktivitas hari ini',
+        conditionType: 'log_count',
+        conditionJson: jsonEncode({'count': 1}),
+        bonusPoints: 50,
+        createdAt: now,
+        expiresAt: endOfDay,
+      ),
+      _makeQuest(
+        title: '🔥 Trifecta Hari Ini',
+        description: 'Log 3 aktivitas dalam satu hari',
+        conditionType: 'log_count',
+        conditionJson: jsonEncode({'count': 3}),
+        bonusPoints: 150,
+        createdAt: now,
+        expiresAt: endOfDay,
+      ),
+    ];
 
-    final quest2 = Quest(
-      title: 'Trifecta Hari Ini',
-      description: 'Log 3 aktivitas berbeda hari ini',
-      type: 'daily',
-      conditionType: 'log_count',
-      conditionJson: jsonEncode({'count': 3}),
-      bonusPoints: 150,
-      createdAt: now,
-      expiresAt: endOfDay,
-    );
-
-    _storage.saveQuest(quest1);
-    _storage.saveQuest(quest2);
-  }
-
-  /// Evaluates an activity against all active quests
-  void evaluateActivity(Activity activity) {
-    final activeQuests = _storage.getAllQuests().where((q) {
-      return q.expiresAt.isAfter(DateTime.now()) && !q.isCompleted;
-    }).toList();
-
-    for (final quest in activeQuests) {
-      _evaluateQuestCondition(quest, activity);
+    for (final q in templates) {
+      _storage.saveQuest(q);
     }
   }
 
-  void _evaluateQuestCondition(Quest quest, Activity activity) {
+  Quest _makeQuest({
+    required String title,
+    required String description,
+    required String conditionType,
+    required String conditionJson,
+    required double bonusPoints,
+    required DateTime createdAt,
+    required DateTime expiresAt,
+  }) {
+    return Quest(
+      title: title,
+      description: description,
+      type: 'daily',
+      conditionType: conditionType,
+      conditionJson: conditionJson,
+      bonusPoints: bonusPoints,
+      createdAt: createdAt,
+      expiresAt: expiresAt,
+    );
+  }
+
+  /// Evaluates all active quests against current logged activities.
+  /// Returns list of quests that were JUST completed in this call.
+  QuestEvaluationResult evaluateActivity(Activity activity) {
+    final now = DateTime.now();
+    final activeQuests = _storage.getAllQuests().where((q) {
+      return q.expiresAt.isAfter(now) && !q.isCompleted && q.progress < 2.0;
+    }).toList();
+
+    final justCompleted = <Quest>[];
+
+    for (final quest in activeQuests) {
+      _updateQuestProgress(quest);
+      if (quest.isCompleted) {
+        justCompleted.add(quest);
+      }
+    }
+
+    return QuestEvaluationResult(justCompleted);
+  }
+
+  void _updateQuestProgress(Quest quest) {
     final condition = jsonDecode(quest.conditionJson) as Map<String, dynamic>;
 
     if (quest.conditionType == 'log_count') {
-      final requiredCount = condition['count'] as int;
-      
-      // Increment progress simply by 1 log for now. Advanced logic would count today's logs.
-      // Better to check today's actual logs if the rule is strict.
+      final required = condition['count'] as int;
       final logsToday = _storage.getTodayActivities().length;
-      
-      double newProgress = logsToday / requiredCount;
-      if (newProgress > 1.0) newProgress = 1.0;
 
+      final newProgress = (logsToday / required).clamp(0.0, 1.0);
       quest.progress = newProgress;
-      
-      if (quest.progress >= 1.0) {
+
+      if (newProgress >= 1.0) {
         quest.isCompleted = true;
+        // Keep progress at exactly 1.0 until reward is claimed;
+        // After reward is paid, caller sets progress = 2.0 to dismiss.
       }
       _storage.saveQuest(quest);
     }
-    // More condition types: point_target, category_combo, streak can be added here
+    // Extensible: add 'point_target', 'category_combo', 'streak' types here
+  }
+
+  /// Marks a quest as rewarded so it won't appear or be rewarded again.
+  void markRewarded(Quest quest) {
+    quest.progress = 2.0; // Sentinel: "rewarded & archived"
+    _storage.saveQuest(quest);
   }
 }

@@ -1,4 +1,5 @@
-﻿import 'dart:math' show Random;
+﻿import 'dart:async';
+import 'dart:math' show Random;
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -7,17 +8,72 @@ import 'package:earnjoy/core/constants.dart';
 import 'package:earnjoy/core/extensions.dart';
 import 'package:earnjoy/core/theme.dart';
 import 'package:earnjoy/core/widgets/gradient_button.dart';
+import 'package:earnjoy/data/models/badge.dart' as earnjoy_badge;
+import 'package:earnjoy/data/models/game_event.dart';
 import 'package:earnjoy/presentation/providers/activity_provider.dart';
-import 'package:earnjoy/presentation/providers/user_provider.dart';
 import 'package:earnjoy/presentation/providers/badge_provider.dart';
 import 'package:earnjoy/presentation/providers/event_provider.dart';
-import 'package:earnjoy/data/models/badge.dart' as earnjoy_badge;
+import 'package:earnjoy/presentation/providers/user_provider.dart';
 import 'widgets/activity_card.dart';
 import 'widgets/quick_add_bottom_sheet.dart';
 import 'widgets/quest_carousel.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  StreamSubscription<earnjoy_badge.Badge>? _badgeSub;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _badgeSub?.cancel();
+    _badgeSub = context.read<BadgeProvider>().onBadgeUnlocked.listen(_onBadgeUnlocked);
+  }
+
+  void _onBadgeUnlocked(earnjoy_badge.Badge badge) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: AppColors.surfaceHigh,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.md),
+          side: BorderSide(color: AppColors.primary.withValues(alpha: 0.5)),
+        ),
+        content: Row(
+          children: [
+            const Text('🏅', style: TextStyle(fontSize: 20)),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Badge Baru: ${badge.name}',
+                    style: AppText.title.copyWith(color: AppColors.primary, fontSize: 14),
+                  ),
+                  Text(badge.description, style: AppText.caption),
+                ],
+              ),
+            ),
+          ],
+        ),
+        duration: const Duration(seconds: 3),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _badgeSub?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,11 +82,10 @@ class HomeScreen extends StatelessWidget {
     final todayActivities = context.watch<ActivityProvider>().todayActivities;
     final todayEarned = todayActivities.fold<double>(0, (s, a) => s + a.points);
     final isBurnedOut = userProvider.isBurnedOut;
-    final badgeProvider = context.watch<BadgeProvider>();
-    final unlockedBadges = badgeProvider.unlockedBadges;
-    // Assuming the badges may not be strictly sorted by unlock date locally, 
-    // but the last in the array is typically highest rarity or recently unlocked.
-    unlockedBadges.sort((a,b) => (a.unlockedAt ?? DateTime(2000)).compareTo(b.unlockedAt ?? DateTime(2000)));
+
+    // Sorted unlocked badges – most recently unlocked last
+    final unlockedBadges = List.of(context.watch<BadgeProvider>().unlockedBadges)
+      ..sort((a, b) => (a.unlockedAt ?? DateTime(2000)).compareTo(b.unlockedAt ?? DateTime(2000)));
     final latestBadge = unlockedBadges.lastOrNull;
 
     final activeEvents = context.watch<EventProvider>().activeEvents;
@@ -48,19 +103,15 @@ class HomeScreen extends StatelessWidget {
                   children: [
                     const SizedBox(height: AppSpacing.lg),
 
-                    _HeroMetric(balance: user.pointBalance),
+                    // ── Hero balance ────────────────────────────────────────
+                    _HeroMetric(
+                      balance: user.pointBalance,
+                      latestBadge: latestBadge,
+                    ),
 
-                    const SizedBox(height: AppSpacing.sm),
-                    if (latestBadge != null)
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: AppSpacing.md),
-                        child: Center(child: _MicroTrophy(badge: latestBadge)),
-                      ),
+                    const SizedBox(height: AppSpacing.md),
 
-
-
-                    const SizedBox(height: AppSpacing.sm),
-
+                    // ── Streak + daily progress ─────────────────────────────
                     Row(
                       children: [
                         _StreakBadge(streak: user.streak),
@@ -71,6 +122,15 @@ class HomeScreen extends StatelessWidget {
 
                     const SizedBox(height: AppSpacing.sectionGap),
 
+                    // ── Active event banner(s) ──────────────────────────────
+                    if (activeEvents.isNotEmpty) ...[
+                      for (final event in activeEvents) ...[
+                        _EventBanner(event: event),
+                        const SizedBox(height: AppSpacing.md),
+                      ],
+                    ],
+
+                    // ── Burnout flag ────────────────────────────────────────
                     if (isBurnedOut) ...[
                       _BurnoutBanner(
                         onDismiss: () => context.read<UserProvider>().dismissBurnout(),
@@ -78,9 +138,11 @@ class HomeScreen extends StatelessWidget {
                       const SizedBox(height: AppSpacing.md),
                     ],
 
+                    // ── Daily quests carousel ───────────────────────────────
                     const QuestCarousel(),
                     const SizedBox(height: AppSpacing.sectionGap),
 
+                    // ── Today's activities ──────────────────────────────────
                     const Text("Today's Activities", style: AppText.title),
                     const SizedBox(height: AppSpacing.sm),
 
@@ -100,6 +162,7 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
 
+            // ── Floating CTA ──────────────────────────────────────────────
             Padding(
               padding: const EdgeInsets.fromLTRB(
                 AppSpacing.screenH,
@@ -153,10 +216,12 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
+// ── Sub-widgets ─────────────────────────────────────────────────────────────
 
 class _HeroMetric extends StatelessWidget {
   final double balance;
-  const _HeroMetric({required this.balance});
+  final earnjoy_badge.Badge? latestBadge;
+  const _HeroMetric({required this.balance, this.latestBadge});
 
   @override
   Widget build(BuildContext context) {
@@ -164,7 +229,7 @@ class _HeroMetric extends StatelessWidget {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          // Radial glow backdrop
+          // Radial glow
           Container(
             width: 240,
             height: 240,
@@ -173,14 +238,56 @@ class _HeroMetric extends StatelessWidget {
               gradient: AppGradients.heroGlow,
             ),
           ),
-          // Balance text
           Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(balance.toPointsLabel, style: AppText.displayLarge),
               const SizedBox(height: 4),
               const Text('total points', style: AppText.caption),
+              if (latestBadge != null) ...[
+                const SizedBox(height: 10),
+                _MicroTrophy(badge: latestBadge!),
+              ],
             ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _MicroTrophy extends StatelessWidget {
+  final earnjoy_badge.Badge badge;
+  const _MicroTrophy({required this.badge});
+
+  IconData _iconFor(String name) => switch (name) {
+    'local_fire_department' => Icons.local_fire_department_rounded,
+    'emoji_events' => Icons.emoji_events_rounded,
+    'military_tech' => Icons.military_tech_rounded,
+    'redeem' => Icons.redeem_rounded,
+    _ => Icons.star_rounded,
+  };
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppRadius.full),
+        border: Border.all(color: AppColors.primary.withValues(alpha: 0.35)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(_iconFor(badge.icon), size: 14, color: AppColors.primary),
+          const SizedBox(width: 5),
+          Text(
+            badge.name,
+            style: AppText.caption.copyWith(
+              color: AppColors.primary,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ],
       ),
@@ -243,9 +350,7 @@ class _DailyProgressBar extends StatelessWidget {
             height: 6,
             child: Stack(
               children: [
-                // Track
                 Container(color: AppColors.primaryDim),
-                // Fill
                 FractionallySizedBox(
                   widthFactor: fraction,
                   child: Container(
@@ -261,41 +366,97 @@ class _DailyProgressBar extends StatelessWidget {
   }
 }
 
-class _MicroTrophy extends StatelessWidget {
-  final earnjoy_badge.Badge badge;
-  const _MicroTrophy({required this.badge});
-
-  IconData _getIconData(String iconName) {
-    switch (iconName) {
-      case 'local_fire_department': return Icons.local_fire_department_rounded;
-      case 'emoji_events': return Icons.emoji_events_rounded;
-      case 'military_tech': return Icons.military_tech_rounded;
-      case 'redeem': return Icons.redeem_rounded;
-      default: return Icons.star_rounded;
-    }
-  }
+class _EventBanner extends StatelessWidget {
+  final GameEvent event;
+  const _EventBanner({required this.event});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      width: double.infinity,
+      padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
-        color: AppColors.surfaceHigh,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.primary.withValues(alpha: 0.3)),
+        color: AppColors.primary.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(AppRadius.md),
+        border: Border.all(color: AppColors.primary.withValues(alpha: 0.35)),
       ),
       child: Row(
-        mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(_getIconData(badge.icon), size: 16, color: AppColors.primary),
-          const SizedBox(width: 8),
-          Text(
-            badge.name,
-            style: const TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-              color: AppColors.primary,
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: AppColors.primaryDim,
+              shape: BoxShape.circle,
             ),
+            child: const Icon(Icons.flash_on_rounded, color: AppColors.primary, size: 18),
+          ),
+          const SizedBox(width: AppSpacing.md),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '⚡ ${event.name}',
+                  style: AppText.title.copyWith(color: AppColors.primary, fontSize: 14),
+                ),
+                Text(event.description, style: AppText.caption),
+              ],
+            ),
+          ),
+          if (event.multiplier > 1.0) ...[
+            const SizedBox(width: AppSpacing.sm),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: AppColors.primaryDim,
+                borderRadius: BorderRadius.circular(AppRadius.full),
+              ),
+              child: Text(
+                '×${event.multiplier.toStringAsFixed(1)}',
+                style: AppText.caption.copyWith(color: AppColors.primaryLight, fontWeight: FontWeight.w700),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _BurnoutBanner extends StatelessWidget {
+  final VoidCallback onDismiss;
+  const _BurnoutBanner({required this.onDismiss});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.md),
+      decoration: BoxDecoration(
+        color: AppColors.warning.withValues(alpha: 0.10),
+        borderRadius: BorderRadius.circular(AppRadius.md),
+        border: Border.all(color: AppColors.warning.withValues(alpha: 0.35)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Icon(Icons.warning_amber_rounded, color: AppColors.warning, size: 20),
+          const SizedBox(width: AppSpacing.sm),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Burnout terdeteksi', style: AppText.title.copyWith(color: AppColors.warning)),
+                const SizedBox(height: 2),
+                const Text(
+                  'Kamu melewatkan beberapa hari. Mulai kembali dengan aktivitas ringan!',
+                  style: AppText.body,
+                ),
+              ],
+            ),
+          ),
+          GestureDetector(
+            onTap: onDismiss,
+            child: const Icon(Icons.close, size: 16, color: AppColors.textDisabled),
           ),
         ],
       ),
@@ -326,79 +487,3 @@ class _EmptyActivitiesState extends StatelessWidget {
     );
   }
 }
-
-class _BurnoutBanner extends StatelessWidget {
-  final VoidCallback onDismiss;
-  const _BurnoutBanner({required this.onDismiss});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(AppSpacing.md),
-      decoration: BoxDecoration(
-        color: AppColors.warning.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(AppRadius.md),
-        border: Border.all(color: AppColors.warning.withValues(alpha: 0.4)),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Icon(Icons.warning_amber_rounded, color: AppColors.warning, size: 20),
-          const SizedBox(width: AppSpacing.sm),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Burnout terdeteksi', style: AppText.title.copyWith(color: AppColors.warning)),
-                const SizedBox(height: 2),
-                const Text(
-                  'Kamu melewatkan beberapa hari. Mulai kembali dengan aktivitas ringan!',
-                  style: AppText.body,
-                ),
-              ],
-            ),
-          ),
-          GestureDetector(
-            onTap: onDismiss,
-            child: const Icon(Icons.close, size: 16, color: AppColors.textDisabled),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _EventBanner extends StatelessWidget {
-  final dynamic event;
-
-  const _EventBanner({required this.event});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(AppSpacing.md),
-      decoration: BoxDecoration(
-        color: AppColors.primary.withValues(alpha: 0.15),
-        borderRadius: BorderRadius.circular(AppRadius.md),
-        border: Border.all(color: AppColors.primary.withValues(alpha: 0.4)),
-      ),
-      child: Row(
-        children: [
-          const Icon(Icons.flash_on_rounded, color: AppColors.primary),
-          const SizedBox(width: AppSpacing.md),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(event.name, style: AppText.title.copyWith(color: AppColors.primary)),
-                Text(event.description, style: AppText.caption),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
