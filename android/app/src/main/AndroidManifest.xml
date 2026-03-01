@@ -30,6 +30,26 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+            <!-- App Shortcuts (long-press icon) -->
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
+            <!-- EarnJoy deep-link for widget & shortcut navigation -->
+            <intent-filter android:autoVerify="false">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="earnjoy" />
+            </intent-filter>
+            <!-- Quick-log intent from shortcuts -->
+            <intent-filter>
+                <action android:name="com.example.earnjoy.QUICK_LOG" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.example.earnjoy.OPEN_REWARDS" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
@@ -45,6 +65,30 @@
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
                 <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>
             </intent-filter>
+        </receiver>
+        <!-- EarnJoy small (2×2) home screen widget -->
+        <receiver
+            android:name=".EarnJoyWidgetProvider"
+            android:exported="true"
+            android:label="EarnJoy Widget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/earnjoy_widget_info" />
+        </receiver>
+        <!-- EarnJoy medium (4×2) home screen widget -->
+        <receiver
+            android:name=".EarnJoyMediumWidgetProvider"
+            android:exported="true"
+            android:label="EarnJoy Widget (Medium)">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/earnjoy_widget_medium_info" />
         </receiver>
     </application>
     <!-- Required to query activities that can process text, see:

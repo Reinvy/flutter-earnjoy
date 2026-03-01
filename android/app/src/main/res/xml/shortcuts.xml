@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <shortcut
+        android:shortcutId="quick_log_study"
+        android:enabled="true"
+        android:icon="@drawable/ic_launcher_background"
+        android:shortcutShortLabel="@string/shortcut_study_short"
+        android:shortcutLongLabel="@string/shortcut_study_long"
+        android:shortcutDisabledMessage="@string/shortcut_disabled">
+        <intent
+            android:action="com.example.earnjoy.QUICK_LOG"
+            android:targetPackage="com.example.earnjoy"
+            android:targetClass="com.example.earnjoy.MainActivity"
+            android:data="earnjoy://quick_log?title=Study&amp;category=Study&amp;duration=30" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+
+    <shortcut
+        android:shortcutId="quick_log_work"
+        android:enabled="true"
+        android:icon="@drawable/ic_launcher_background"
+        android:shortcutShortLabel="@string/shortcut_work_short"
+        android:shortcutLongLabel="@string/shortcut_work_long"
+        android:shortcutDisabledMessage="@string/shortcut_disabled">
+        <intent
+            android:action="com.example.earnjoy.QUICK_LOG"
+            android:targetPackage="com.example.earnjoy"
+            android:targetClass="com.example.earnjoy.MainActivity"
+            android:data="earnjoy://quick_log?title=Work&amp;category=Work&amp;duration=60" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+
+    <shortcut
+        android:shortcutId="quick_log_gym"
+        android:enabled="true"
+        android:icon="@drawable/ic_launcher_background"
+        android:shortcutShortLabel="@string/shortcut_gym_short"
+        android:shortcutLongLabel="@string/shortcut_gym_long"
+        android:shortcutDisabledMessage="@string/shortcut_disabled">
+        <intent
+            android:action="com.example.earnjoy.QUICK_LOG"
+            android:targetPackage="com.example.earnjoy"
+            android:targetClass="com.example.earnjoy.MainActivity"
+            android:data="earnjoy://quick_log?title=Gym&amp;category=Health&amp;duration=45" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+
+    <shortcut
+        android:shortcutId="open_rewards"
+        android:enabled="true"
+        android:icon="@drawable/ic_launcher_background"
+        android:shortcutShortLabel="@string/shortcut_rewards_short"
+        android:shortcutLongLabel="@string/shortcut_rewards_long"
+        android:shortcutDisabledMessage="@string/shortcut_disabled">
+        <intent
+            android:action="com.example.earnjoy.OPEN_REWARDS"
+            android:targetPackage="com.example.earnjoy"
+            android:targetClass="com.example.earnjoy.MainActivity"
+            android:data="earnjoy://tab?index=3" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+
+</shortcuts>

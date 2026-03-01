@@ -19,6 +19,7 @@ import 'package:earnjoy/domain/usecases/burnout_service.dart';
 import 'widgets/activity_card.dart';
 import 'widgets/quick_add_bottom_sheet.dart';
 import 'widgets/quest_carousel.dart';
+import 'widgets/quick_log_sheet.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -179,7 +180,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
 
-            // ── Floating CTA ──────────────────────────────────────────────
+            // ── CTA row: Quick Log + Log Activity ────────────────────────────
             Padding(
               padding: const EdgeInsets.fromLTRB(
                 AppSpacing.screenH,
@@ -187,10 +188,26 @@ class _HomeScreenState extends State<HomeScreen> {
                 AppSpacing.screenH,
                 AppSpacing.md,
               ),
-              child: GradientButton(
-                label: 'Log Activity',
-                icon: Icons.add,
-                onTap: () => _openQuickAdd(context),
+              child: Row(
+                children: [
+                  // Quick Log chip
+                  Expanded(
+                    flex: 2,
+                    child: _QuickLogButton(
+                      onPressed: () => _openQuickLog(context),
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.sm),
+                  // Full log sheet
+                  Expanded(
+                    flex: 3,
+                    child: GradientButton(
+                      label: 'Log Activity',
+                      icon: Icons.add,
+                      onTap: () => _openQuickAdd(context),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -215,6 +232,15 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  void _openQuickLog(BuildContext context, {String? presetTitle}) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (_) => QuickLogSheet(presetTitle: presetTitle),
+    );
+  }
+
   void _showMotivationSnackbar(BuildContext context, double points) {
     final msg = motivationMessages[Random().nextInt(motivationMessages.length)].replaceAll(
       '{points}',
@@ -234,6 +260,38 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 // ── Sub-widgets ─────────────────────────────────────────────────────────────
+
+class _QuickLogButton extends StatelessWidget {
+  final VoidCallback onPressed;
+  const _QuickLogButton({required this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 48,
+      child: OutlinedButton.icon(
+        onPressed: onPressed,
+        icon: const Icon(Icons.bolt_rounded, size: 18, color: AppColors.primary),
+        label: const Text(
+          'Quick Log',
+          style: TextStyle(
+            color: AppColors.primary,
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        style: OutlinedButton.styleFrom(
+          side: const BorderSide(color: AppColors.primary, width: 1.5),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppRadius.md),
+          ),
+          backgroundColor: AppColors.primaryDim,
+        ),
+      ),
+    );
+  }
+}
+
 
 class _HeroMetric extends StatelessWidget {
   final double balance;

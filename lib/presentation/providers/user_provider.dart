@@ -4,6 +4,7 @@ import 'package:earnjoy/data/models/user.dart';
 import 'package:earnjoy/data/datasources/storage_service.dart';
 import 'package:earnjoy/core/utils/level_system.dart';
 import 'package:earnjoy/presentation/providers/season_provider.dart';
+import 'package:earnjoy/domain/usecases/widget_sync_service.dart';
 
 class UserProvider extends ChangeNotifier {
   final StorageService _storage;
@@ -129,6 +130,7 @@ class UserProvider extends ChangeNotifier {
     }
     _user = _user.copyWith(pointBalance: _user.pointBalance + delta, xp: newXp);
     _storage.saveUser(_user);
+    WidgetSyncService.updateWidget(_user);
     // Season XP tracking handled elsewhere or to be implemented
     notifyListeners();
   }
@@ -175,6 +177,7 @@ class UserProvider extends ChangeNotifier {
     );
     _recalculateAdjustmentFactor();
     _storage.saveUser(_user);
+    WidgetSyncService.updateWidget(_user);
     // Season XP tracking handled elsewhere or to be implemented
     notifyListeners();
   }

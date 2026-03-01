@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_vertical"
+    android:padding="12dp"
+    android:background="@drawable/widget_background">
+
+    <!-- Top Row: Points + Streak -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="⚡ "
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/widget_points_med"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="0 pts"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🔥 "
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/widget_streak_med"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0 hari"
+            android:textColor="#E0E0E0"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+    <!-- Progress Bar Row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="6dp">
+
+        <ProgressBar
+            android:id="@+id/widget_progress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="8dp"
+            android:layout_weight="1"
+            android:max="100"
+            android:progress="0"
+            android:progressTint="#FFFFFF"
+            android:progressBackgroundTint="#55FFFFFF" />
+
+        <TextView
+            android:id="@+id/widget_progress_pct"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0%"
+            android:textColor="#E0E0E0"
+            android:textSize="11sp"
+            android:paddingStart="6dp" />
+
+    </LinearLayout>
+
+    <!-- Quick-Log Buttons Row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp">
+
+        <Button
+            android:id="@+id/widget_btn_study"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Study 30m"
+            android:textColor="#FFFFFF"
+            android:textSize="10sp"
+            android:background="@drawable/widget_btn_background"
+            android:padding="5dp"
+            android:layout_marginEnd="3dp" />
+
+        <Button
+            android:id="@+id/widget_btn_work"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Work 1h"
+            android:textColor="#FFFFFF"
+            android:textSize="10sp"
+            android:background="@drawable/widget_btn_background"
+            android:padding="5dp"
+            android:layout_marginEnd="3dp" />
+
+        <Button
+            android:id="@+id/widget_btn_gym"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Gym 45m"
+            android:textColor="#FFFFFF"
+            android:textSize="10sp"
+            android:background="@drawable/widget_btn_background"
+            android:padding="5dp" />
+
+    </LinearLayout>
+
+</LinearLayout>

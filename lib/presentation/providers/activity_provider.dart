@@ -7,6 +7,7 @@ import 'package:earnjoy/data/models/transaction.dart';
 import 'package:earnjoy/domain/usecases/activity_service.dart';
 import 'package:earnjoy/domain/usecases/point_engine.dart';
 import 'package:earnjoy/data/datasources/storage_service.dart';
+import 'package:earnjoy/domain/usecases/widget_sync_service.dart';
 import 'reward_provider.dart';
 import 'user_provider.dart';
 import 'quest_provider.dart';
@@ -164,6 +165,10 @@ class ActivityProvider extends ChangeNotifier {
 
     // Refresh wellbeing / burnout score
     _wellbeingProvider?.refresh();
+
+    // Sync home screen widget
+    final todayEarnedAfter = _storage.getTodayEarnedPoints();
+    WidgetSyncService.updateWidget(_userProvider!.user, todayPoints: todayEarnedAfter);
 
     // Refresh local activity list
     _todayActivities = _activityService.getTodayActivities();

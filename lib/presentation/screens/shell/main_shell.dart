@@ -9,12 +9,17 @@ import '../insights/insights_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:earnjoy/presentation/providers/badge_provider.dart';
 import 'package:earnjoy/presentation/widgets/badge_toast.dart';
+import 'package:earnjoy/presentation/screens/home/widgets/quick_log_sheet.dart';
 import 'dart:async';
 
 /// Root scaffold that owns the [NavigationBar] and switches between the three
 /// main screens using an [IndexedStack] to preserve scroll/state across tabs.
 class MainShell extends StatefulWidget {
-  const MainShell({super.key});
+  /// If set (from a widget/shortcut deep-link), the QuickLogSheet is opened
+  /// automatically after the first frame, pre-selecting this preset title.
+  final String? initialQuickLogTitle;
+
+  const MainShell({super.key, this.initialQuickLogTitle});
 
   @override
   State<MainShell> createState() => _MainShellState();
@@ -36,6 +41,15 @@ class _MainShellState extends State<MainShell> {
           GlobalBadgeToast.show(context, badge);
         }
       });
+      // Auto-open QuickLogSheet when launched from widget/shortcut
+      if (widget.initialQuickLogTitle != null) {
+        showModalBottomSheet(
+          context: context,
+          backgroundColor: Colors.transparent,
+          isScrollControlled: true,
+          builder: (_) => QuickLogSheet(presetTitle: widget.initialQuickLogTitle),
+        );
+      }
     });
   }
 

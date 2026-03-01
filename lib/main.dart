@@ -18,6 +18,8 @@ import 'package:earnjoy/presentation/providers/insights_provider.dart';
 import 'package:earnjoy/presentation/providers/notification_provider.dart';
 import 'package:earnjoy/domain/usecases/notification_service.dart';
 import 'package:earnjoy/presentation/providers/wellbeing_provider.dart';
+import 'package:earnjoy/domain/usecases/widget_sync_service.dart';
+import 'package:home_widget/home_widget.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,6 +30,10 @@ Future<void> main() async {
   // Initialize notification service before app starts
   final notificationService = SmartNotificationService();
   await notificationService.initialize();
+
+  // Seed initial widget data on first launch
+  final user = storageService.getUser();
+  await WidgetSyncService.updateWidget(user);
 
   runApp(MyApp(storageService: storageService, notificationService: notificationService));
 }
@@ -109,15 +115,47 @@ class MyApp extends StatelessWidget {
   }
 }
 
-/// Reactive router that watches [UserProvider] so routing stays in sync with
-/// persisted state (onboarding done / data reset) without needing
-/// manual Navigator calls.
-class _RootRouter extends StatelessWidget {
+/// Reactive router that watches [UserProvider] and also handles deep-links
+/// from home screen widget buttons and app shortcuts.
+class _RootRouter extends StatefulWidget {
   const _RootRouter();
+
+  @override
+  State<_RootRouter> createState() => _RootRouterState();
+}
+
+class _RootRouterState extends State<_RootRouter> {
+  /// Set when a quick-log deep-link arrives before the widget tree is ready.
+  String? _pendingQuickLogTitle;
+
+  @override
+  void initState() {
+    super.initState();
+    // Handle widget tap while app is running in the background.
+    HomeWidget.widgetClicked.listen((uri) {
+      if (uri != null && mounted) _handleUri(uri);
+    });
+    // Handle the URI that cold-started the app via a widget/shortcut click.
+    HomeWidget.initiallyLaunchedFromHomeWidget().then((uri) {
+      if (uri != null && mounted) _handleUri(uri);
+    });
+  }
+
+  void _handleUri(Uri uri) {
+    if (uri.host == 'quick_log') {
+      setState(() {
+        _pendingQuickLogTitle = uri.queryParameters['title'];
+      });
+    }
+    // earnjoy://tab?index=N or earnjoy://home → no additional action needed;
+    // simply opening the app navigates to the main shell.
+  }
 
   @override
   Widget build(BuildContext context) {
     final onboardingDone = context.select<UserProvider, bool>((p) => p.user.onboardingDone);
-    return onboardingDone ? const MainShell() : const OnboardingScreen();
+    return onboardingDone
+        ? MainShell(initialQuickLogTitle: _pendingQuickLogTitle)
+        : const OnboardingScreen();
   }
 }

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">EarnJoy</string>
+
+    <!-- Widget descriptions -->
+    <string name="widget_description">EarnJoy points &amp; streak at a glance</string>
+    <string name="widget_medium_description">EarnJoy quick-log widget</string>
+
+    <!-- App shortcut labels -->
+    <string name="shortcut_study_short">Study 30m</string>
+    <string name="shortcut_study_long">Log Study 30 minutes</string>
+    <string name="shortcut_work_short">Work 1h</string>
+    <string name="shortcut_work_long">Log Work 1 hour</string>
+    <string name="shortcut_gym_short">Gym 45m</string>
+    <string name="shortcut_gym_long">Log Gym 45 minutes</string>
+    <string name="shortcut_rewards_short">Rewards</string>
+    <string name="shortcut_rewards_long">View closest reward</string>
+    <string name="shortcut_disabled">EarnJoy is not available</string>
+</resources>
