@@ -82,7 +82,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
     id: const obx_int.IdUid(2, 5487446234309648229),
     name: 'Reward',
-    lastPropertyId: const obx_int.IdUid(5, 3914125864764322844),
+    lastPropertyId: const obx_int.IdUid(15, 5373135433765886221),
     flags: 0,
     properties: <obx_int.ModelProperty>[
       obx_int.ModelProperty(
@@ -113,6 +113,66 @@ final _entities = <obx_int.ModelEntity>[
         id: const obx_int.IdUid(5, 3914125864764322844),
         name: 'status',
         type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(6, 1282077585155473386),
+        name: 'category',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(7, 1069163868834099856),
+        name: 'iconEmoji',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(8, 8618466584560608699),
+        name: 'recurrenceType',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(9, 7204818839221795198),
+        name: 'recurrenceIntervalDays',
+        type: 6,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(10, 7800174343127086709),
+        name: 'monthlyLimit',
+        type: 6,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(11, 5642445334576474994),
+        name: 'timesRedeemed',
+        type: 6,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(12, 842377422317441525),
+        name: 'lastRedeemedAt',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(13, 809781644067206420),
+        name: 'scheduledFor',
+        type: 10,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(14, 2462667693307869165),
+        name: 'isTemplate',
+        type: 1,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(15, 5373135433765886221),
+        name: 'isArchived',
+        type: 1,
         flags: 0,
       ),
     ],
@@ -162,7 +222,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
     id: const obx_int.IdUid(4, 2329469739092839643),
     name: 'User',
-    lastPropertyId: const obx_int.IdUid(14, 6799221967030747424),
+    lastPropertyId: const obx_int.IdUid(21, 4372895117579580195),
     flags: 0,
     properties: <obx_int.ModelProperty>[
       obx_int.ModelProperty(
@@ -247,6 +307,48 @@ final _entities = <obx_int.ModelEntity>[
         id: const obx_int.IdUid(14, 6799221967030747424),
         name: 'xp',
         type: 8,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(15, 4586355628929139878),
+        name: 'dailyPointTarget',
+        type: 8,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(16, 7455435355485559539),
+        name: 'notificationsEnabled',
+        type: 1,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(17, 2472654809828793826),
+        name: 'preferredReminderHour',
+        type: 6,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(18, 7775652137231328337),
+        name: 'quietHoursStart',
+        type: 6,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(19, 2220298126360873456),
+        name: 'quietHoursEnd',
+        type: 6,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(20, 6137839207692255229),
+        name: 'restDayCount',
+        type: 6,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(21, 4372895117579580195),
+        name: 'lastRestDayDate',
+        type: 10,
         flags: 0,
       ),
     ],
@@ -902,18 +1004,39 @@ obx_int.ModelDefinition getObjectBoxModel() {
       objectToFB: (Reward object, fb.Builder fbb) {
         final nameOffset = fbb.writeString(object.name);
         final statusOffset = fbb.writeString(object.status);
-        fbb.startTable(6);
+        final categoryOffset = fbb.writeString(object.category);
+        final iconEmojiOffset = fbb.writeString(object.iconEmoji);
+        final recurrenceTypeOffset = fbb.writeString(object.recurrenceType);
+        final lastRedeemedAtOffset = object.lastRedeemedAt == null
+            ? null
+            : fbb.writeString(object.lastRedeemedAt!);
+        fbb.startTable(16);
         fbb.addInt64(0, object.id);
         fbb.addOffset(1, nameOffset);
         fbb.addFloat64(2, object.pointCost);
         fbb.addFloat64(3, object.progressPoints);
         fbb.addOffset(4, statusOffset);
+        fbb.addOffset(5, categoryOffset);
+        fbb.addOffset(6, iconEmojiOffset);
+        fbb.addOffset(7, recurrenceTypeOffset);
+        fbb.addInt64(8, object.recurrenceIntervalDays);
+        fbb.addInt64(9, object.monthlyLimit);
+        fbb.addInt64(10, object.timesRedeemed);
+        fbb.addOffset(11, lastRedeemedAtOffset);
+        fbb.addInt64(12, object.scheduledFor?.millisecondsSinceEpoch);
+        fbb.addBool(13, object.isTemplate);
+        fbb.addBool(14, object.isArchived);
         fbb.finish(fbb.endTable());
         return object.id;
       },
       objectFromFB: (obx.Store store, ByteData fbData) {
         final buffer = fb.BufferContext(fbData);
         final rootOffset = buffer.derefObject(0);
+        final scheduledForValue = const fb.Int64Reader().vTableGetNullable(
+          buffer,
+          rootOffset,
+          28,
+        );
         final idParam = const fb.Int64Reader().vTableGet(
           buffer,
           rootOffset,
@@ -938,12 +1061,62 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final statusParam = const fb.StringReader(
           asciiOptimization: true,
         ).vTableGet(buffer, rootOffset, 12, '');
+        final categoryParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 14, '');
+        final iconEmojiParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 16, '');
+        final recurrenceTypeParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 18, '');
+        final recurrenceIntervalDaysParam = const fb.Int64Reader()
+            .vTableGetNullable(buffer, rootOffset, 20);
+        final monthlyLimitParam = const fb.Int64Reader().vTableGetNullable(
+          buffer,
+          rootOffset,
+          22,
+        );
+        final timesRedeemedParam = const fb.Int64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          24,
+          0,
+        );
+        final lastRedeemedAtParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGetNullable(buffer, rootOffset, 26);
+        final scheduledForParam = scheduledForValue == null
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(scheduledForValue);
+        final isTemplateParam = const fb.BoolReader().vTableGet(
+          buffer,
+          rootOffset,
+          30,
+          false,
+        );
+        final isArchivedParam = const fb.BoolReader().vTableGet(
+          buffer,
+          rootOffset,
+          32,
+          false,
+        );
         final object = Reward(
           id: idParam,
           name: nameParam,
           pointCost: pointCostParam,
           progressPoints: progressPointsParam,
           status: statusParam,
+          category: categoryParam,
+          iconEmoji: iconEmojiParam,
+          recurrenceType: recurrenceTypeParam,
+          recurrenceIntervalDays: recurrenceIntervalDaysParam,
+          monthlyLimit: monthlyLimitParam,
+          timesRedeemed: timesRedeemedParam,
+          lastRedeemedAt: lastRedeemedAtParam,
+          scheduledFor: scheduledForParam,
+          isTemplate: isTemplateParam,
+          isArchived: isArchivedParam,
         );
 
         return object;
@@ -1014,7 +1187,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
       },
       objectToFB: (User object, fb.Builder fbb) {
         final nameOffset = fbb.writeString(object.name);
-        fbb.startTable(15);
+        fbb.startTable(22);
         fbb.addInt64(0, object.id);
         fbb.addOffset(1, nameOffset);
         fbb.addFloat64(2, object.pointBalance);
@@ -1032,6 +1205,13 @@ obx_int.ModelDefinition getObjectBoxModel() {
           object.lastWeeklyAdjustmentDate.millisecondsSinceEpoch,
         );
         fbb.addFloat64(13, object.xp);
+        fbb.addFloat64(14, object.dailyPointTarget);
+        fbb.addBool(15, object.notificationsEnabled);
+        fbb.addInt64(16, object.preferredReminderHour);
+        fbb.addInt64(17, object.quietHoursStart);
+        fbb.addInt64(18, object.quietHoursEnd);
+        fbb.addInt64(19, object.restDayCount);
+        fbb.addInt64(20, object.lastRestDayDate.millisecondsSinceEpoch);
         fbb.finish(fbb.endTable());
         return object.id;
       },
@@ -1092,6 +1272,12 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final lastActivityDateParam = DateTime.fromMillisecondsSinceEpoch(
           const fb.Int64Reader().vTableGet(buffer, rootOffset, 20, 0),
         );
+        final dailyPointTargetParam = const fb.Float64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          32,
+          0,
+        );
         final onboardingDoneParam = const fb.BoolReader().vTableGet(
           buffer,
           rootOffset,
@@ -1114,6 +1300,39 @@ obx_int.ModelDefinition getObjectBoxModel() {
             DateTime.fromMillisecondsSinceEpoch(
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 28, 0),
             );
+        final notificationsEnabledParam = const fb.BoolReader().vTableGet(
+          buffer,
+          rootOffset,
+          34,
+          false,
+        );
+        final preferredReminderHourParam = const fb.Int64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          36,
+          0,
+        );
+        final quietHoursStartParam = const fb.Int64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          38,
+          0,
+        );
+        final quietHoursEndParam = const fb.Int64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          40,
+          0,
+        );
+        final restDayCountParam = const fb.Int64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          42,
+          0,
+        );
+        final lastRestDayDateParam = DateTime.fromMillisecondsSinceEpoch(
+          const fb.Int64Reader().vTableGet(buffer, rootOffset, 44, 0),
+        );
         final object = User(
           id: idParam,
           name: nameParam,
@@ -1125,10 +1344,17 @@ obx_int.ModelDefinition getObjectBoxModel() {
           disciplineScore: disciplineScoreParam,
           xp: xpParam,
           lastActivityDate: lastActivityDateParam,
+          dailyPointTarget: dailyPointTargetParam,
           onboardingDone: onboardingDoneParam,
           income: incomeParam,
           rewardPercentage: rewardPercentageParam,
           lastWeeklyAdjustmentDate: lastWeeklyAdjustmentDateParam,
+          notificationsEnabled: notificationsEnabledParam,
+          preferredReminderHour: preferredReminderHourParam,
+          quietHoursStart: quietHoursStartParam,
+          quietHoursEnd: quietHoursEndParam,
+          restDayCount: restDayCountParam,
+          lastRestDayDate: lastRestDayDateParam,
         );
 
         return object;
@@ -1890,6 +2116,56 @@ class Reward_ {
   static final status = obx.QueryStringProperty<Reward>(
     _entities[1].properties[4],
   );
+
+  /// See [Reward.category].
+  static final category = obx.QueryStringProperty<Reward>(
+    _entities[1].properties[5],
+  );
+
+  /// See [Reward.iconEmoji].
+  static final iconEmoji = obx.QueryStringProperty<Reward>(
+    _entities[1].properties[6],
+  );
+
+  /// See [Reward.recurrenceType].
+  static final recurrenceType = obx.QueryStringProperty<Reward>(
+    _entities[1].properties[7],
+  );
+
+  /// See [Reward.recurrenceIntervalDays].
+  static final recurrenceIntervalDays = obx.QueryIntegerProperty<Reward>(
+    _entities[1].properties[8],
+  );
+
+  /// See [Reward.monthlyLimit].
+  static final monthlyLimit = obx.QueryIntegerProperty<Reward>(
+    _entities[1].properties[9],
+  );
+
+  /// See [Reward.timesRedeemed].
+  static final timesRedeemed = obx.QueryIntegerProperty<Reward>(
+    _entities[1].properties[10],
+  );
+
+  /// See [Reward.lastRedeemedAt].
+  static final lastRedeemedAt = obx.QueryStringProperty<Reward>(
+    _entities[1].properties[11],
+  );
+
+  /// See [Reward.scheduledFor].
+  static final scheduledFor = obx.QueryDateProperty<Reward>(
+    _entities[1].properties[12],
+  );
+
+  /// See [Reward.isTemplate].
+  static final isTemplate = obx.QueryBooleanProperty<Reward>(
+    _entities[1].properties[13],
+  );
+
+  /// See [Reward.isArchived].
+  static final isArchived = obx.QueryBooleanProperty<Reward>(
+    _entities[1].properties[14],
+  );
 }
 
 /// [Transaction] entity fields to define ObjectBox queries.
@@ -1985,6 +2261,41 @@ class User_ {
 
   /// See [User.xp].
   static final xp = obx.QueryDoubleProperty<User>(_entities[3].properties[13]);
+
+  /// See [User.dailyPointTarget].
+  static final dailyPointTarget = obx.QueryDoubleProperty<User>(
+    _entities[3].properties[14],
+  );
+
+  /// See [User.notificationsEnabled].
+  static final notificationsEnabled = obx.QueryBooleanProperty<User>(
+    _entities[3].properties[15],
+  );
+
+  /// See [User.preferredReminderHour].
+  static final preferredReminderHour = obx.QueryIntegerProperty<User>(
+    _entities[3].properties[16],
+  );
+
+  /// See [User.quietHoursStart].
+  static final quietHoursStart = obx.QueryIntegerProperty<User>(
+    _entities[3].properties[17],
+  );
+
+  /// See [User.quietHoursEnd].
+  static final quietHoursEnd = obx.QueryIntegerProperty<User>(
+    _entities[3].properties[18],
+  );
+
+  /// See [User.restDayCount].
+  static final restDayCount = obx.QueryIntegerProperty<User>(
+    _entities[3].properties[19],
+  );
+
+  /// See [User.lastRestDayDate].
+  static final lastRestDayDate = obx.QueryDateProperty<User>(
+    _entities[3].properties[20],
+  );
 }
 
 /// [Badge] entity fields to define ObjectBox queries.

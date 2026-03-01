@@ -13,6 +13,7 @@ import 'widgets/category_manager.dart';
 import 'widgets/user_header.dart';
 import 'widgets/weekly_summary_card.dart';
 import 'widgets/badge_grid.dart';
+import 'widgets/notification_settings_card.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -115,6 +116,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const Text('Badges & Achievements', style: AppText.title),
               const SizedBox(height: AppSpacing.sm),
               const BadgeGrid(),
+
+              const SizedBox(height: AppSpacing.sectionGap),
+
+              const Text('Smart Notifications', style: AppText.title),
+              const SizedBox(height: AppSpacing.xs),
+              const Text(
+                'Pengingat cerdas yang belajar dari pola aktivitasmu.',
+                style: AppText.body,
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              const NotificationSettingsCard(),
 
               const SizedBox(height: AppSpacing.sectionGap),
               const Text('Monthly Budget Cap', style: AppText.title),

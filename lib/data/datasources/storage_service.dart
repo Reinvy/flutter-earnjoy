@@ -13,6 +13,7 @@ import 'package:earnjoy/data/models/season_progress.dart';
 import 'package:earnjoy/data/models/game_event.dart';
 import 'package:earnjoy/data/models/habit_stack.dart';
 import 'package:earnjoy/data/models/stack_item.dart';
+import 'package:earnjoy/data/models/streak_record.dart';
 import 'package:earnjoy/objectbox.g.dart';
 
 /// The single layer that knows about ObjectBox.
@@ -27,6 +28,7 @@ class StorageService {
     _seedActivityPresetsIfEmpty();
     _seedSeasonAndEventsIfEmpty();
     _seedHabitStacksIfEmpty();
+    _seedRewardTemplatesIfEmpty();
   }
 
   Store get store => _store;
@@ -267,9 +269,36 @@ class StorageService {
 
   List<Reward> getAllRewards() => _rewardBox.getAll();
 
+  /// Active (non-archived, non-template) rewards for the user's wishlist
+  List<Reward> getAllActiveRewards() =>
+      _rewardBox.getAll().where((r) => !r.isTemplate && !r.isArchived).toList();
+
+  /// Archived rewards (non-template)
+  List<Reward> getArchivedRewards() =>
+      _rewardBox.getAll().where((r) => !r.isTemplate && r.isArchived).toList();
+
+  /// Built-in template rewards for the Shop tab
+  List<Reward> getTemplateRewards() =>
+      _rewardBox.getAll().where((r) => r.isTemplate).toList();
+
   Reward? getReward(int id) => _rewardBox.get(id);
 
   bool deleteReward(int id) => _rewardBox.remove(id);
+
+  /// How many times a specific reward was redeemed in the current calendar month.
+  int getMonthlyRedeemCountForReward(int rewardId) {
+    final now = DateTime.now();
+    final reward = getReward(rewardId);
+    if (reward == null) return 0;
+    // Use transactions labeled with the reward name, same month
+    return getAllTransactions()
+        .where((t) =>
+            t.isRedeem &&
+            t.label == reward.name &&
+            t.date.year == now.year &&
+            t.date.month == now.month)
+        .length;
+  }
 
   int saveTransaction(Transaction transaction) => _transactionBox.put(transaction);
 
@@ -402,6 +431,87 @@ class StorageService {
 
   void close() => _store.close();
 
+  // ─── Reward Templates Seed ──────────────────────────────────────────────────
+
+  void _seedRewardTemplatesIfEmpty() {
+    // Only seed if no templates exist
+    if (_rewardBox.getAll().any((r) => r.isTemplate)) return;
+
+    final templates = [
+      Reward(
+        name: 'Makan di Restoran Favorit',
+        pointCost: 500,
+        category: RewardCategory.food,
+        iconEmoji: '🍜',
+        recurrenceType: RecurrenceType.once,
+        isTemplate: true,
+      ),
+      Reward(
+        name: 'Kopi Specialty',
+        pointCost: 150,
+        category: RewardCategory.food,
+        iconEmoji: '☕',
+        recurrenceType: RecurrenceType.recurring,
+        recurrenceIntervalDays: 7,
+        isTemplate: true,
+      ),
+      Reward(
+        name: 'Nonton Bioskop',
+        pointCost: 300,
+        category: RewardCategory.entertainment,
+        iconEmoji: '🎬',
+        recurrenceType: RecurrenceType.limited,
+        monthlyLimit: 2,
+        isTemplate: true,
+      ),
+      Reward(
+        name: 'Belanja Online Spontan',
+        pointCost: 800,
+        category: RewardCategory.shopping,
+        iconEmoji: '🛒',
+        recurrenceType: RecurrenceType.once,
+        isTemplate: true,
+      ),
+      Reward(
+        name: 'Weekend Trip',
+        pointCost: 3000,
+        category: RewardCategory.experience,
+        iconEmoji: '🏖️',
+        recurrenceType: RecurrenceType.once,
+        isTemplate: true,
+      ),
+      Reward(
+        name: 'Upgrade Gadget',
+        pointCost: 10000,
+        category: RewardCategory.shopping,
+        iconEmoji: '📱',
+        recurrenceType: RecurrenceType.once,
+        isTemplate: true,
+      ),
+      Reward(
+        name: 'Beli Game Baru',
+        pointCost: 600,
+        category: RewardCategory.entertainment,
+        iconEmoji: '🎮',
+        recurrenceType: RecurrenceType.once,
+        isTemplate: true,
+      ),
+      Reward(
+        name: 'Ke Salon/Barber',
+        pointCost: 400,
+        category: RewardCategory.rest,
+        iconEmoji: '💆',
+        recurrenceType: RecurrenceType.limited,
+        monthlyLimit: 2,
+        isTemplate: true,
+      ),
+    ];
+
+    for (final t in templates) {
+      _rewardBox.put(t);
+    }
+  }
+
   // ─── Category ───────────────────────────────────────────────────────────────
 
   int saveCategory(Category category) => _categoryBox.put(category);
@@ -461,4 +571,168 @@ class StorageService {
     final now = DateTime.now();
     return _eventBox.getAll().where((e) => e.isActive && e.startAt.isBefore(now) && e.endAt.isAfter(now)).toList();
   }
+
+  // ─── Analytics / Insights ───────────────────────────────────────────────────
+
+  /// Returns a map of date → total points earned for the past [days] days.
+  /// Used for the heatmap calendar panel.
+  Map<DateTime, double> getHeatmapData({int days = 365}) {
+    final now = DateTime.now();
+    final cutoff = now.subtract(Duration(days: days));
+    final transactions = getAllTransactions()
+        .where((t) => t.isEarn && t.date.isAfter(cutoff))
+        .toList();
+
+    final Map<DateTime, double> result = {};
+    for (final t in transactions) {
+      final day = DateTime(t.date.year, t.date.month, t.date.day);
+      result[day] = (result[day] ?? 0.0) + t.amount;
+    }
+    return result;
+  }
+
+  /// Returns a list of (dayIndex, totalPoints) pairs for trend chart.
+  /// dayIndex 0 = oldest day, [days-1] = today.
+  List<Map<String, dynamic>> getPointTrendByDay(int days) {
+    final now = DateTime.now();
+    final List<Map<String, dynamic>> result = [];
+
+    for (int i = days - 1; i >= 0; i--) {
+      final day = now.subtract(Duration(days: i));
+      final dayKey = DateTime(day.year, day.month, day.day);
+      final heatmap = getHeatmapData(days: days + 1);
+      final points = heatmap[dayKey] ?? 0.0;
+      result.add({'day': dayKey, 'points': points, 'index': days - 1 - i});
+    }
+    return result;
+  }
+
+  /// Returns category name → total duration in minutes for the given [period].
+  /// period: 'week' | 'month' | 'all'
+  Map<String, double> getCategoryDistribution(String period) {
+    final now = DateTime.now();
+    DateTime cutoff;
+    switch (period) {
+      case 'week':
+        cutoff = now.subtract(const Duration(days: 7));
+        break;
+      case 'month':
+        cutoff = now.subtract(const Duration(days: 30));
+        break;
+      default:
+        cutoff = DateTime(2000);
+    }
+
+    final activities = getAllActivities().where((a) => a.createdAt.isAfter(cutoff)).toList();
+    final Map<String, double> result = {};
+    for (final a in activities) {
+      final catName = a.category.target?.name ?? 'Other';
+      result[catName] = (result[catName] ?? 0.0) + a.durationMinutes;
+    }
+    return result;
+  }
+
+  /// Returns hour (0-23) → average points earned in that hour across all activities.
+  Map<int, double> getHourlyProductivity() {
+    final activities = getAllActivities();
+    final Map<int, List<double>> hourPoints = {};
+
+    for (final a in activities) {
+      final hour = a.createdAt.hour;
+      hourPoints.putIfAbsent(hour, () => []);
+      hourPoints[hour]!.add(a.points);
+    }
+
+    return hourPoints.map((hour, pts) =>
+        MapEntry(hour, pts.isEmpty ? 0.0 : pts.reduce((a, b) => a + b) / pts.length));
+  }
+
+  /// Computes all historical streak periods from the full activity log.
+  List<StreakRecord> getStreakHistory() {
+    final activities = getAllActivities()
+      ..sort((a, b) => a.createdAt.compareTo(b.createdAt));
+
+    if (activities.isEmpty) return [];
+
+    // Collect distinct active days (local date only)
+    final Set<String> activeDayKeys = {};
+    for (final a in activities) {
+      activeDayKeys.add('${a.createdAt.year}-${a.createdAt.month}-${a.createdAt.day}');
+    }
+    final sortedDays = activeDayKeys.map((k) {
+      final parts = k.split('-');
+      return DateTime(int.parse(parts[0]), int.parse(parts[1]), int.parse(parts[2]));
+    }).toList()
+      ..sort();
+
+    if (sortedDays.isEmpty) return [];
+
+    final List<StreakRecord> records = [];
+    DateTime streakStart = sortedDays.first;
+    DateTime streakEnd = sortedDays.first;
+    DateTime? prevStreak;
+
+    for (int i = 1; i < sortedDays.length; i++) {
+      final diff = sortedDays[i].difference(streakEnd).inDays;
+      if (diff == 1) {
+        // Consecutive day — extend streak
+        streakEnd = sortedDays[i];
+      } else {
+        // Gap found — save current streak
+        final days = streakEnd.difference(streakStart).inDays + 1;
+        bool isComeback = false;
+        if (prevStreak != null) {
+          isComeback = streakStart.difference(prevStreak).inDays >= 7;
+        }
+        records.add(StreakRecord(
+          days: days,
+          startDate: streakStart,
+          endDate: streakEnd,
+          isComeback: isComeback,
+        ));
+        prevStreak = streakEnd;
+        streakStart = sortedDays[i];
+        streakEnd = sortedDays[i];
+      }
+    }
+    // Add final streak
+    final days = streakEnd.difference(streakStart).inDays + 1;
+    bool isComeback = false;
+    if (prevStreak != null) {
+      isComeback = streakStart.difference(prevStreak).inDays >= 7;
+    }
+    records.add(StreakRecord(
+      days: days,
+      startDate: streakStart,
+      endDate: streakEnd,
+      isComeback: isComeback,
+    ));
+
+    return records.reversed.toList(); // Most recent first
+  }
+
+  /// Returns date → {'actual': double, 'target': double} for the last [days] days.
+  Map<DateTime, Map<String, double>> getGoalVsActual({int days = 28}) {
+    final target = getUser().dailyPointTarget;
+    final heatmap = getHeatmapData(days: days + 1);
+    final now = DateTime.now();
+    final Map<DateTime, Map<String, double>> result = {};
+
+    for (int i = days - 1; i >= 0; i--) {
+      final day = now.subtract(Duration(days: i));
+      final dayKey = DateTime(day.year, day.month, day.day);
+      result[dayKey] = {
+        'actual': heatmap[dayKey] ?? 0.0,
+        'target': target,
+      };
+    }
+    return result;
+  }
+
+  /// Saves user's daily point target.
+  void setDailyPointTarget(double target) {
+    final user = getUser();
+    saveUser(user.copyWith(dailyPointTarget: target.clamp(50.0, 5000.0)));
+  }
 }
+

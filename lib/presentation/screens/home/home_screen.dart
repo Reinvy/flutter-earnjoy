@@ -14,6 +14,8 @@ import 'package:earnjoy/presentation/providers/activity_provider.dart';
 import 'package:earnjoy/presentation/providers/badge_provider.dart';
 import 'package:earnjoy/presentation/providers/event_provider.dart';
 import 'package:earnjoy/presentation/providers/user_provider.dart';
+import 'package:earnjoy/presentation/providers/wellbeing_provider.dart';
+import 'package:earnjoy/domain/usecases/burnout_service.dart';
 import 'widgets/activity_card.dart';
 import 'widgets/quick_add_bottom_sheet.dart';
 import 'widgets/quest_carousel.dart';
@@ -82,6 +84,8 @@ class _HomeScreenState extends State<HomeScreen> {
     final todayActivities = context.watch<ActivityProvider>().todayActivities;
     final todayEarned = todayActivities.fold<double>(0, (s, a) => s + a.points);
     final isBurnedOut = userProvider.isBurnedOut;
+    final wellbeing = context.watch<WellbeingProvider>();
+    final burnoutStatus = wellbeing.status;
 
     // Sorted unlocked badges – most recently unlocked last
     final unlockedBadges = List.of(context.watch<BadgeProvider>().unlockedBadges)
@@ -130,8 +134,21 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ],
 
-                    // ── Burnout flag ────────────────────────────────────────
-                    if (isBurnedOut) ...[
+                    // ── Burnout banners (multi-level) ───────────────────────
+                    if (burnoutStatus == BurnoutStatus.attention) ...[
+                      _AttentionBanner(),
+                      const SizedBox(height: AppSpacing.md),
+                    ],
+                    if (burnoutStatus == BurnoutStatus.fatigue) ...[
+                      _FatigueBanner(),
+                      const SizedBox(height: AppSpacing.md),
+                    ],
+                    if (burnoutStatus == BurnoutStatus.burnout) ...[
+                      _BurnoutInterventionBanner(),
+                      const SizedBox(height: AppSpacing.md),
+                    ],
+                    // Legacy simple banner (isBurnedOut = streak miss counter)
+                    if (isBurnedOut && burnoutStatus == BurnoutStatus.healthy) ...[
                       _BurnoutBanner(
                         onDismiss: () => context.read<UserProvider>().dismissBurnout(),
                       ),
@@ -417,6 +434,164 @@ class _EventBanner extends StatelessWidget {
               ),
             ),
           ],
+        ],
+      ),
+    );
+  }
+}
+
+// ─── Anti-Burnout Banners ─────────────────────────────────────────────────────
+
+class _AttentionBanner extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.md),
+      decoration: BoxDecoration(
+        color: AppColors.warning.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(AppRadius.md),
+        border: Border.all(color: AppColors.warning.withValues(alpha: 0.25)),
+      ),
+      child: Row(
+        children: [
+          const Text('⚠️', style: TextStyle(fontSize: 16)),
+          const SizedBox(width: AppSpacing.sm),
+          Expanded(
+            child: Text(
+              'Pertahankan keseimbanganmu — coba variasikan aktivitas minggu ini!',
+              style: AppText.caption.copyWith(color: AppColors.warning),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _FatigueBanner extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final insight = context.select<WellbeingProvider, String>((p) => p.balanceInsight);
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.md),
+      decoration: BoxDecoration(
+        color: const Color(0xFF8B4000).withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(AppRadius.md),
+        border: Border.all(color: const Color(0xFFFF8C00).withValues(alpha: 0.40)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('🔶', style: TextStyle(fontSize: 18)),
+          const SizedBox(width: AppSpacing.sm),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Tanda-tanda kelelahan terdeteksi',
+                    style: AppText.title.copyWith(
+                      color: const Color(0xFFFF8C00), fontSize: 13)),
+                const SizedBox(height: 4),
+                Text(insight, style: AppText.caption),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _BurnoutInterventionBanner extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => _showBurnoutDialog(context),
+      child: Container(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        decoration: BoxDecoration(
+          color: AppColors.error.withValues(alpha: 0.12),
+          borderRadius: BorderRadius.circular(AppRadius.md),
+          border: Border.all(color: AppColors.error.withValues(alpha: 0.45)),
+        ),
+        child: Row(
+          children: [
+            const Text('🔴', style: TextStyle(fontSize: 20)),
+            const SizedBox(width: AppSpacing.sm),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Kamu dalam kondisi burnout',
+                      style: AppText.title.copyWith(
+                        color: AppColors.error, fontSize: 14)),
+                  Text('Tap untuk melihat saran & deklarasikan Hari Istirahat',
+                      style: AppText.caption),
+                ],
+              ),
+            ),
+            const Icon(Icons.chevron_right_rounded,
+                color: AppColors.error, size: 18),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showBurnoutDialog(BuildContext context) {
+    final wellbeing = context.read<WellbeingProvider>();
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: AppColors.surfaceHigh,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.lg),
+          side: BorderSide(color: AppColors.error.withValues(alpha: 0.4)),
+        ),
+        title: const Text('🔴 Burnout Terdeteksi',
+            style: TextStyle(color: AppColors.error, fontSize: 16)),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(wellbeing.balanceInsight, style: AppText.body),
+            const SizedBox(height: AppSpacing.md),
+            const Text(
+              'Deklarasikan Hari Istirahat untuk menjaga streakmu sambil memberi tubuh & pikiran waktu pulih.',
+              style: AppText.caption,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Tutup',
+                style: TextStyle(color: AppColors.textSecondary)),
+          ),
+          StatefulBuilder(
+            builder: (innerCtx, setState) {
+              final canDeclare = wellbeing.canDeclareRestDay;
+              return ElevatedButton(
+                onPressed: canDeclare
+                    ? () async {
+                        await wellbeing.declareRestDay();
+                        if (ctx.mounted) Navigator.pop(ctx);
+                      }
+                    : null,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.success,
+                  foregroundColor: Colors.white,
+                  disabledBackgroundColor: AppColors.surfaceHigh,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(AppRadius.md),
+                  ),
+                ),
+                child: Text(
+                  canDeclare ? 'Deklarasikan Rest Day +10 pts' : 'Sudah digunakan minggu ini',
+                ),
+              );
+            },
+          ),
         ],
       ),
     );

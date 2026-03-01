@@ -47,7 +47,7 @@
     },
     {
       "id": "2:5487446234309648229",
-      "lastPropertyId": "5:3914125864764322844",
+      "lastPropertyId": "15:5373135433765886221",
       "name": "Reward",
       "properties": [
         {
@@ -75,6 +75,56 @@
           "id": "5:3914125864764322844",
           "name": "status",
           "type": 9
+        },
+        {
+          "id": "6:1282077585155473386",
+          "name": "category",
+          "type": 9
+        },
+        {
+          "id": "7:1069163868834099856",
+          "name": "iconEmoji",
+          "type": 9
+        },
+        {
+          "id": "8:8618466584560608699",
+          "name": "recurrenceType",
+          "type": 9
+        },
+        {
+          "id": "9:7204818839221795198",
+          "name": "recurrenceIntervalDays",
+          "type": 6
+        },
+        {
+          "id": "10:7800174343127086709",
+          "name": "monthlyLimit",
+          "type": 6
+        },
+        {
+          "id": "11:5642445334576474994",
+          "name": "timesRedeemed",
+          "type": 6
+        },
+        {
+          "id": "12:842377422317441525",
+          "name": "lastRedeemedAt",
+          "type": 9
+        },
+        {
+          "id": "13:809781644067206420",
+          "name": "scheduledFor",
+          "type": 10
+        },
+        {
+          "id": "14:2462667693307869165",
+          "name": "isTemplate",
+          "type": 1
+        },
+        {
+          "id": "15:5373135433765886221",
+          "name": "isArchived",
+          "type": 1
         }
       ],
       "relations": []
@@ -115,7 +165,7 @@
     },
     {
       "id": "4:2329469739092839643",
-      "lastPropertyId": "14:6799221967030747424",
+      "lastPropertyId": "21:4372895117579580195",
       "name": "User",
       "properties": [
         {
@@ -188,6 +238,41 @@
           "id": "14:6799221967030747424",
           "name": "xp",
           "type": 8
+        },
+        {
+          "id": "15:4586355628929139878",
+          "name": "dailyPointTarget",
+          "type": 8
+        },
+        {
+          "id": "16:7455435355485559539",
+          "name": "notificationsEnabled",
+          "type": 1
+        },
+        {
+          "id": "17:2472654809828793826",
+          "name": "preferredReminderHour",
+          "type": 6
+        },
+        {
+          "id": "18:7775652137231328337",
+          "name": "quietHoursStart",
+          "type": 6
+        },
+        {
+          "id": "19:2220298126360873456",
+          "name": "quietHoursEnd",
+          "type": 6
+        },
+        {
+          "id": "20:6137839207692255229",
+          "name": "restDayCount",
+          "type": 6
+        },
+        {
+          "id": "21:4372895117579580195",
+          "name": "lastRestDayDate",
+          "type": 10
         }
       ],
       "relations": []

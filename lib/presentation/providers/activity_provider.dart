@@ -12,6 +12,8 @@ import 'user_provider.dart';
 import 'quest_provider.dart';
 import 'badge_provider.dart';
 import 'event_provider.dart';
+import 'notification_provider.dart';
+import 'wellbeing_provider.dart';
 
 class ActivityProvider extends ChangeNotifier {
   final StorageService _storage;
@@ -21,6 +23,8 @@ class ActivityProvider extends ChangeNotifier {
   QuestProvider? _questProvider;
   BadgeProvider? _badgeProvider;
   EventProvider? _eventProvider;
+  NotificationProvider? _notificationProvider;
+  WellbeingProvider? _wellbeingProvider;
 
   List<Activity> _todayActivities = [];
   List<ActivityPreset> _presets = [];
@@ -57,6 +61,14 @@ class ActivityProvider extends ChangeNotifier {
 
   void setEventProvider(EventProvider eventProvider) {
     _eventProvider = eventProvider;
+  }
+
+  void setNotificationProvider(NotificationProvider notificationProvider) {
+    _notificationProvider = notificationProvider;
+  }
+
+  void setWellbeingProvider(WellbeingProvider wellbeingProvider) {
+    _wellbeingProvider = wellbeingProvider;
   }
 
   void loadTodayActivities() {
@@ -146,6 +158,12 @@ class ActivityProvider extends ChangeNotifier {
 
     // Notify RewardProvider so UI reflects updated balance immediately
     _rewardProvider?.refresh();
+
+    // Reschedule smart notifications (streak alert, goal proximity)
+    _notificationProvider?.rescheduleAll();
+
+    // Refresh wellbeing / burnout score
+    _wellbeingProvider?.refresh();
 
     // Refresh local activity list
     _todayActivities = _activityService.getTodayActivities();
