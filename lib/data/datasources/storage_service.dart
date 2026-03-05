@@ -1,7 +1,11 @@
 ﻿import 'dart:convert';
+import 'dart:math';
 
+import 'package:earnjoy/data/models/accountability_partner.dart';
 import 'package:earnjoy/data/models/activity.dart';
 import 'package:earnjoy/data/models/activity_preset.dart';
+import 'package:earnjoy/data/models/duel.dart';
+import 'package:earnjoy/data/models/group_challenge.dart';
 import 'package:earnjoy/data/models/reward.dart';
 import 'package:earnjoy/data/models/transaction.dart';
 import 'package:earnjoy/data/models/user.dart';
@@ -46,6 +50,9 @@ class StorageService {
   Box<Season> get _seasonBox => _store.box<Season>();
   Box<SeasonProgress> get _seasonProgressBox => _store.box<SeasonProgress>();
   Box<GameEvent> get _eventBox => _store.box<GameEvent>();
+  Box<AccountabilityPartner> get _partnerBox => _store.box<AccountabilityPartner>();
+  Box<Duel> get _duelBox => _store.box<Duel>();
+  Box<GroupChallenge> get _groupChallengeBox => _store.box<GroupChallenge>();
 
   /// Returns the single app user (id=1), creating a default one if absent.
   User getUser() {
@@ -430,6 +437,40 @@ class StorageService {
   }
 
   void close() => _store.close();
+
+  // ─── Social: AccountabilityPartner ───────────────────────────────────────────
+
+  int savePartner(AccountabilityPartner partner) => _partnerBox.put(partner);
+  List<AccountabilityPartner> getAllPartners() => _partnerBox.getAll();
+  AccountabilityPartner? getPartner(int id) => _partnerBox.get(id);
+  bool deletePartner(int id) => _partnerBox.remove(id);
+
+  // ─── Social: Duel ────────────────────────────────────────────────────────────
+
+  int saveDuel(Duel duel) => _duelBox.put(duel);
+  List<Duel> getAllDuels() => _duelBox.getAll();
+  Duel? getActiveDuel() =>
+      _duelBox.getAll().where((d) => d.status == DuelStatus.active).firstOrNull;
+  bool deleteDuel(int id) => _duelBox.remove(id);
+
+  // ─── Social: GroupChallenge ───────────────────────────────────────────────────
+
+  int saveGroupChallenge(GroupChallenge challenge) => _groupChallengeBox.put(challenge);
+  List<GroupChallenge> getAllGroupChallenges() => _groupChallengeBox.getAll();
+  GroupChallenge? getActiveGroupChallenge() => _groupChallengeBox
+      .getAll()
+      .where((c) => c.status == GroupChallengeStatus.active)
+      .firstOrNull;
+  bool deleteGroupChallenge(int id) => _groupChallengeBox.remove(id);
+
+  // ─── Social: Invite Code ─────────────────────────────────────────────────────
+
+  /// Generates a random 8-character alphanumeric invite code.
+  String generateInviteCode() {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    final rng = Random.secure();
+    return List.generate(8, (_) => chars[rng.nextInt(chars.length)]).join();
+  }
 
   // ─── Reward Templates Seed ──────────────────────────────────────────────────
 

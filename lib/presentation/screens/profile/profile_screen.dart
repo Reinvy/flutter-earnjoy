@@ -14,6 +14,7 @@ import 'widgets/user_header.dart';
 import 'widgets/weekly_summary_card.dart';
 import 'widgets/badge_grid.dart';
 import 'widgets/notification_settings_card.dart';
+import 'widgets/cloud_sync_card.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -162,6 +163,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 value: context.read<ActivityProvider>(),
                 child: const CategoryManager(),
               ),
+
+              const SizedBox(height: AppSpacing.sectionGap),
+
+              const Text('Cloud Sync', style: AppText.title),
+              const SizedBox(height: AppSpacing.xs),
+              const Text(
+                'Simpan data ke cloud dan akses dari perangkat lain.',
+                style: AppText.body,
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              const CloudSyncCard(),
 
               const SizedBox(height: AppSpacing.sectionGap),
 

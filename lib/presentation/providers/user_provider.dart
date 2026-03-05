@@ -193,19 +193,36 @@ class UserProvider extends ChangeNotifier {
 
  
   /// Persists all onboarding choices and marks the flow as done.
-  /// [monthlyBudget] is calculated upstream as income Ã— rewardPercentage.
+  /// [monthlyBudget] is calculated upstream as income × rewardPercentage.
   void completeOnboarding({
     required String name,
     required double income,
     required double rewardPercentage,
     required double monthlyBudget,
+    List<String> selectedGoals = const [],
+    String dreamReward = '',
+    String dreamRewardEmoji = '🎁',
+    int preferredActiveHour = -1,
   }) {
+    // Auto-set daily target based on goals
+    final hasProductiveGoal = selectedGoals.any((g) => g == 'Work' || g == 'Study');
+    final dailyTarget = hasProductiveGoal ? 400.0 : 300.0;
+
+    // Use active hour as preferred reminder hour if set
+    final reminderHour = preferredActiveHour >= 0 ? preferredActiveHour : _user.preferredReminderHour;
+
     _user = _user.copyWith(
       name: name.trim().isEmpty ? 'User' : name.trim(),
       income: income.clamp(0.0, double.infinity),
       rewardPercentage: rewardPercentage.clamp(0.0, 1.0),
       monthlyBudget: monthlyBudget.clamp(0.0, double.infinity),
       onboardingDone: true,
+      selectedGoalsJson: selectedGoals.isEmpty ? '[]' : '[\"${selectedGoals.join('\",\"')}\"]',
+      dreamReward: dreamReward.trim(),
+      dreamRewardEmoji: dreamRewardEmoji,
+      preferredActiveHour: preferredActiveHour,
+      preferredReminderHour: reminderHour,
+      dailyPointTarget: dailyTarget,
     );
     _storage.saveUser(_user);
     notifyListeners();

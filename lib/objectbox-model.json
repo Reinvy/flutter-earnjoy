@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:8378760439597630669",
-      "lastPropertyId": "7:8269014644489575122",
+      "lastPropertyId": "9:5093011319530020782",
       "name": "Activity",
       "properties": [
         {
@@ -41,13 +41,23 @@
           "type": 11,
           "flags": 520,
           "relationTarget": "Category"
+        },
+        {
+          "id": "8:6416702016967092831",
+          "name": "cloudId",
+          "type": 9
+        },
+        {
+          "id": "9:5093011319530020782",
+          "name": "updatedAt",
+          "type": 10
         }
       ],
       "relations": []
     },
     {
       "id": "2:5487446234309648229",
-      "lastPropertyId": "15:5373135433765886221",
+      "lastPropertyId": "17:7544684912431927037",
       "name": "Reward",
       "properties": [
         {
@@ -125,6 +135,16 @@
           "id": "15:5373135433765886221",
           "name": "isArchived",
           "type": 1
+        },
+        {
+          "id": "16:1751728320634880815",
+          "name": "cloudId",
+          "type": 9
+        },
+        {
+          "id": "17:7544684912431927037",
+          "name": "updatedAt",
+          "type": 10
         }
       ],
       "relations": []
@@ -165,7 +185,7 @@
     },
     {
       "id": "4:2329469739092839643",
-      "lastPropertyId": "21:4372895117579580195",
+      "lastPropertyId": "29:65793368076452699",
       "name": "User",
       "properties": [
         {
@@ -273,13 +293,53 @@
           "id": "21:4372895117579580195",
           "name": "lastRestDayDate",
           "type": 10
+        },
+        {
+          "id": "22:3516354642143857572",
+          "name": "socialEnabled",
+          "type": 1
+        },
+        {
+          "id": "23:143194841470961990",
+          "name": "inviteCode",
+          "type": 9
+        },
+        {
+          "id": "24:4863814854066431433",
+          "name": "selectedGoalsJson",
+          "type": 9
+        },
+        {
+          "id": "25:2063399413500247450",
+          "name": "dreamReward",
+          "type": 9
+        },
+        {
+          "id": "26:3681575303752930461",
+          "name": "dreamRewardEmoji",
+          "type": 9
+        },
+        {
+          "id": "27:7204685667463732488",
+          "name": "preferredActiveHour",
+          "type": 6
+        },
+        {
+          "id": "28:3395942877934358313",
+          "name": "cloudId",
+          "type": 9
+        },
+        {
+          "id": "29:65793368076452699",
+          "name": "updatedAt",
+          "type": 10
         }
       ],
       "relations": []
     },
     {
       "id": "5:3322047366399380042",
-      "lastPropertyId": "10:966599234471453781",
+      "lastPropertyId": "12:8996141344280570116",
       "name": "Badge",
       "properties": [
         {
@@ -334,6 +394,16 @@
           "id": "10:966599234471453781",
           "name": "conditionJson",
           "type": 9
+        },
+        {
+          "id": "11:591605850584100022",
+          "name": "cloudId",
+          "type": 9
+        },
+        {
+          "id": "12:8996141344280570116",
+          "name": "updatedAt",
+          "type": 10
         }
       ],
       "relations": []
@@ -374,7 +444,7 @@
     },
     {
       "id": "7:7567813523073515485",
-      "lastPropertyId": "15:1537780824442832454",
+      "lastPropertyId": "17:2704529478127726545",
       "name": "Quest",
       "properties": [
         {
@@ -437,6 +507,16 @@
           "id": "15:1537780824442832454",
           "name": "progress",
           "type": 8
+        },
+        {
+          "id": "16:3464064420174967122",
+          "name": "cloudId",
+          "type": 9
+        },
+        {
+          "id": "17:2704529478127726545",
+          "name": "updatedAt",
+          "type": 10
         }
       ],
       "relations": []
@@ -714,9 +794,156 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "14:4771121499296661285",
+      "lastPropertyId": "7:2266163428532328737",
+      "name": "AccountabilityPartner",
+      "properties": [
+        {
+          "id": "1:2690369317291155034",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:5925550068509625837",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "3:6471769775493711925",
+          "name": "inviteCode",
+          "type": 9
+        },
+        {
+          "id": "4:338996050217604243",
+          "name": "weeklyPoints",
+          "type": 8
+        },
+        {
+          "id": "5:6411319051157729063",
+          "name": "streakDays",
+          "type": 6
+        },
+        {
+          "id": "6:2879241753413678543",
+          "name": "isPrivacyShared",
+          "type": 1
+        },
+        {
+          "id": "7:2266163428532328737",
+          "name": "joinedAt",
+          "type": 10
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "15:8119789101529714766",
+      "lastPropertyId": "8:6174759686280910793",
+      "name": "Duel",
+      "properties": [
+        {
+          "id": "1:8751106164668901798",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:5658836113706546489",
+          "name": "partnerId",
+          "type": 6
+        },
+        {
+          "id": "3:3788654925585036816",
+          "name": "partnerName",
+          "type": 9
+        },
+        {
+          "id": "4:15242784486613171",
+          "name": "myPoints",
+          "type": 8
+        },
+        {
+          "id": "5:6143090167269415803",
+          "name": "partnerPoints",
+          "type": 8
+        },
+        {
+          "id": "6:2293256541679491250",
+          "name": "status",
+          "type": 9
+        },
+        {
+          "id": "7:8904823213902718910",
+          "name": "startAt",
+          "type": 10
+        },
+        {
+          "id": "8:6174759686280910793",
+          "name": "endAt",
+          "type": 10
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "16:5520838262180234975",
+      "lastPropertyId": "9:6619569030273763527",
+      "name": "GroupChallenge",
+      "properties": [
+        {
+          "id": "1:123334468286380947",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:1131292142924940573",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "3:6177817723829552704",
+          "name": "description",
+          "type": 9
+        },
+        {
+          "id": "4:2847109328367152029",
+          "name": "targetPoints",
+          "type": 8
+        },
+        {
+          "id": "5:8602494779491237420",
+          "name": "currentPoints",
+          "type": 8
+        },
+        {
+          "id": "6:9217037127294234919",
+          "name": "status",
+          "type": 9
+        },
+        {
+          "id": "7:9004596005791427647",
+          "name": "membersJson",
+          "type": 9
+        },
+        {
+          "id": "8:8444298669077515836",
+          "name": "startAt",
+          "type": 10
+        },
+        {
+          "id": "9:6619569030273763527",
+          "name": "endAt",
+          "type": 10
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "13:6555632522327042793",
+  "lastEntityId": "16:5520838262180234975",
   "lastIndexId": "7:4135129020907092117",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",

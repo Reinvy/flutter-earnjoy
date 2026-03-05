@@ -96,6 +96,11 @@ class Reward {
   /// Whether user has archived this reward (hidden from active list)
   bool isArchived;
 
+  // Cloud Sync
+  String? cloudId;
+  @Property(type: PropertyType.date)
+  DateTime updatedAt;
+
   Reward({
     this.id = 0,
     required this.name,
@@ -112,7 +117,9 @@ class Reward {
     this.scheduledFor,
     this.isTemplate = false,
     this.isArchived = false,
-  });
+    this.cloudId,
+    DateTime? updatedAt,
+  }) : updatedAt = updatedAt ?? DateTime.now();
 
   bool get isLocked => !isRedeemed;
   bool get isUnlocked => !isRedeemed; // kept for compatibility; real check needs balance
@@ -170,6 +177,9 @@ class Reward {
     bool? isArchived,
     bool clearScheduledFor = false,
     bool clearLastRedeemedAt = false,
+    String? cloudId,
+    bool clearCloudId = false,
+    DateTime? updatedAt,
   }) {
     return Reward(
       id: id ?? this.id,
@@ -187,6 +197,8 @@ class Reward {
       scheduledFor: clearScheduledFor ? null : (scheduledFor ?? this.scheduledFor),
       isTemplate: isTemplate ?? this.isTemplate,
       isArchived: isArchived ?? this.isArchived,
+      cloudId: clearCloudId ? null : (cloudId ?? this.cloudId),
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 }

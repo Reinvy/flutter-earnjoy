@@ -1,6 +1,8 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'package:earnjoy/core/supabase_config.dart';
 import 'package:earnjoy/core/theme.dart';
 import 'package:earnjoy/presentation/providers/activity_provider.dart';
 import 'package:earnjoy/presentation/providers/reward_provider.dart';
@@ -18,11 +20,23 @@ import 'package:earnjoy/presentation/providers/insights_provider.dart';
 import 'package:earnjoy/presentation/providers/notification_provider.dart';
 import 'package:earnjoy/domain/usecases/notification_service.dart';
 import 'package:earnjoy/presentation/providers/wellbeing_provider.dart';
+import 'package:earnjoy/presentation/providers/social_provider.dart';
 import 'package:earnjoy/domain/usecases/widget_sync_service.dart';
 import 'package:home_widget/home_widget.dart';
+import 'package:earnjoy/data/datasources/supabase_service.dart';
+import 'package:earnjoy/presentation/providers/auth_provider.dart';
+import 'package:earnjoy/presentation/providers/sync_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Supabase (safe to call even with placeholder credentials)
+  if (SupabaseConfig.isConfigured) {
+    await Supabase.initialize(
+      url: SupabaseConfig.url,
+      anonKey: SupabaseConfig.anonKey,
+    );
+  }
 
   final storageService = StorageService();
   await storageService.init();
@@ -35,20 +49,38 @@ Future<void> main() async {
   final user = storageService.getUser();
   await WidgetSyncService.updateWidget(user);
 
-  runApp(MyApp(storageService: storageService, notificationService: notificationService));
+  // Create shared Supabase service instance
+  final supabaseService = SupabaseService();
+
+  runApp(MyApp(
+    storageService: storageService,
+    notificationService: notificationService,
+    supabaseService: supabaseService,
+  ));
 }
 
 class MyApp extends StatelessWidget {
   final StorageService storageService;
   final SmartNotificationService notificationService;
+  final SupabaseService supabaseService;
 
-  const MyApp({super.key, required this.storageService, required this.notificationService});
+  const MyApp({
+    super.key,
+    required this.storageService,
+    required this.notificationService,
+    required this.supabaseService,
+  });
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
         Provider<StorageService>.value(value: storageService),
+        Provider<SupabaseService>.value(value: supabaseService),
+        ChangeNotifierProvider(create: (_) => AuthProvider(supabaseService)),
+        ChangeNotifierProvider(
+          create: (_) => SyncProvider(supabaseService, storageService),
+        ),
         ChangeNotifierProvider(create: (_) => SeasonProvider(storageService)),
         ChangeNotifierProxyProvider<SeasonProvider, UserProvider>(
           create: (_) => UserProvider(storageService),
@@ -103,6 +135,12 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProxyProvider<ActivityProvider, InsightsProvider>(
           create: (_) => InsightsProvider(storageService),
           update: (_, activityProvider, insightsProvider) => insightsProvider!..refresh(),
+        ),
+        ChangeNotifierProxyProvider2<UserProvider, BadgeProvider, SocialProvider>(
+          create: (_) => SocialProvider(storageService),
+          update: (_, userProvider, badgeProvider, socialProvider) => socialProvider!
+            ..setUserProvider(userProvider)
+            ..setBadgeProvider(badgeProvider),
         ),
       ],
       child: MaterialApp(

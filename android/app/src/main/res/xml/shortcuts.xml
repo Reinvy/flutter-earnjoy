@@ -4,7 +4,7 @@
     <shortcut
         android:shortcutId="quick_log_study"
         android:enabled="true"
-        android:icon="@drawable/ic_launcher_background"
+        android:icon="@mipmap/ic_launcher"
         android:shortcutShortLabel="@string/shortcut_study_short"
         android:shortcutLongLabel="@string/shortcut_study_long"
         android:shortcutDisabledMessage="@string/shortcut_disabled">
@@ -19,7 +19,7 @@
     <shortcut
         android:shortcutId="quick_log_work"
         android:enabled="true"
-        android:icon="@drawable/ic_launcher_background"
+        android:icon="@mipmap/ic_launcher"
         android:shortcutShortLabel="@string/shortcut_work_short"
         android:shortcutLongLabel="@string/shortcut_work_long"
         android:shortcutDisabledMessage="@string/shortcut_disabled">
@@ -34,7 +34,7 @@
     <shortcut
         android:shortcutId="quick_log_gym"
         android:enabled="true"
-        android:icon="@drawable/ic_launcher_background"
+        android:icon="@mipmap/ic_launcher"
         android:shortcutShortLabel="@string/shortcut_gym_short"
         android:shortcutLongLabel="@string/shortcut_gym_long"
         android:shortcutDisabledMessage="@string/shortcut_disabled">
@@ -49,7 +49,7 @@
     <shortcut
         android:shortcutId="open_rewards"
         android:enabled="true"
-        android:icon="@drawable/ic_launcher_background"
+        android:icon="@mipmap/ic_launcher"
         android:shortcutShortLabel="@string/shortcut_rewards_short"
         android:shortcutLongLabel="@string/shortcut_rewards_long"
         android:shortcutDisabledMessage="@string/shortcut_disabled">

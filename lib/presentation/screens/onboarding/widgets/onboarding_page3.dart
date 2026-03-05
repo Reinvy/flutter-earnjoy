@@ -1,17 +1,56 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
-import 'package:earnjoy/core/constants.dart';
 import 'package:earnjoy/core/theme.dart';
 import 'package:earnjoy/core/widgets/gradient_button.dart';
+import 'onboarding_text_field.dart';
 
-class OnboardingPage3 extends StatelessWidget {
-  final VoidCallback onComplete;
+class _RewardCategory {
+  final String emoji;
+  final String label;
+  const _RewardCategory(this.emoji, this.label);
+}
 
-  const OnboardingPage3({super.key, required this.onComplete});
+const _categories = [
+  _RewardCategory('🍔', 'Food & Drink'),
+  _RewardCategory('🎮', 'Entertainment'),
+  _RewardCategory('🛍️', 'Shopping'),
+  _RewardCategory('✈️', 'Experience'),
+  _RewardCategory('📚', 'Self-Growth'),
+  _RewardCategory('💤', 'Rest'),
+];
+
+/// Page 3 — Dream reward input with category selection and point estimate.
+class OnboardingPage3 extends StatefulWidget {
+  final TextEditingController dreamRewardController;
+  final String selectedCategoryEmoji;
+  final ValueChanged<String> onCategorySelected;
+  final VoidCallback onNext;
+
+  const OnboardingPage3({
+    super.key,
+    required this.dreamRewardController,
+    required this.selectedCategoryEmoji,
+    required this.onCategorySelected,
+    required this.onNext,
+  });
+
+  @override
+  State<OnboardingPage3> createState() => _OnboardingPage3State();
+}
+
+class _OnboardingPage3State extends State<OnboardingPage3> {
+  bool get _canProceed => widget.dreamRewardController.text.trim().isNotEmpty;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.dreamRewardController.addListener(() => setState(() {}));
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screenH),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -20,22 +59,22 @@ class OnboardingPage3 extends StatelessWidget {
 
           Center(
             child: Container(
-              width: 80,
-              height: 80,
+              width: 72,
+              height: 72,
               decoration: const BoxDecoration(
                 gradient: AppGradients.primary,
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.bolt_rounded, color: Colors.white, size: 40),
+              child: const Icon(Icons.redeem_rounded, color: Colors.white, size: 36),
             ),
           ),
           const SizedBox(height: AppSpacing.lg),
 
-          const Center(child: Text('Aktivitasmu Sudah Siap!', style: AppText.displaySmall)),
-          const SizedBox(height: AppSpacing.sm),
+          const Center(child: Text('Reward Impianmu', style: AppText.displaySmall)),
+          const SizedBox(height: AppSpacing.xs),
           const Center(
             child: Text(
-              'Berikut preset aktivitas yang bisa langsung kamu log. Kamu juga bisa tambahkan aktivitas custom kapan saja.',
+              'Apa yang paling kamu inginkan sebagai\nhadiah untuk dirimu sendiri?',
               style: AppText.body,
               textAlign: TextAlign.center,
             ),
@@ -43,88 +82,119 @@ class OnboardingPage3 extends StatelessWidget {
 
           const SizedBox(height: AppSpacing.sectionGap),
 
-          const Text('Aktivitas Tersedia', style: AppText.title),
+          const Text('Nama reward-mu', style: AppText.title),
+          const SizedBox(height: AppSpacing.sm),
+          OnboardingTextField(
+            controller: widget.dreamRewardController,
+            hint: 'Contoh: Makan di Restoran Favorit',
+            icon: Icons.favorite_outline_rounded,
+          ),
+
+          const SizedBox(height: AppSpacing.sectionGap),
+
+          const Text('Kategori', style: AppText.title),
+          const SizedBox(height: AppSpacing.xs),
+          const Text('Pilih yang paling sesuai.', style: AppText.body),
           const SizedBox(height: AppSpacing.sm),
 
-          ...presetActivities.map(
-            (p) => Padding(
-              padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-              child: _PresetActivityRow(preset: p),
-            ),
+          GridView.count(
+            crossAxisCount: 3,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            crossAxisSpacing: AppSpacing.sm,
+            mainAxisSpacing: AppSpacing.sm,
+            childAspectRatio: 1.6,
+            children: _categories.map((cat) {
+              final isSelected = widget.selectedCategoryEmoji == cat.emoji;
+              return GestureDetector(
+                onTap: () {
+                  HapticFeedback.selectionClick();
+                  widget.onCategorySelected(cat.emoji);
+                },
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 180),
+                  decoration: BoxDecoration(
+                    color: isSelected ? AppColors.primaryDim : AppColors.surface,
+                    borderRadius: BorderRadius.circular(AppRadius.md),
+                    border: Border.all(
+                      color: isSelected ? AppColors.primary : AppColors.glassBorder,
+                      width: isSelected ? 1.5 : 1,
+                    ),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(cat.emoji, style: const TextStyle(fontSize: 22)),
+                      const SizedBox(height: 2),
+                      Text(
+                        cat.label.split(' ').first,
+                        style: AppText.caption.copyWith(
+                          color: isSelected ? AppColors.primaryLight : AppColors.textSecondary,
+                          fontSize: 10,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }).toList(),
           ),
 
-          const Spacer(),
+          if (_canProceed) ...[
+            const SizedBox(height: AppSpacing.sectionGap),
+            Container(
+              padding: const EdgeInsets.all(AppSpacing.md),
+              decoration: BoxDecoration(
+                gradient: AppGradients.glassOverlay,
+                borderRadius: BorderRadius.circular(AppRadius.md),
+                border: Border.all(color: AppColors.glassBorder),
+              ),
+              child: Row(
+                children: [
+                  Text(widget.selectedCategoryEmoji, style: const TextStyle(fontSize: 28)),
+                  const SizedBox(width: AppSpacing.sm),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.dreamRewardController.text.trim(),
+                          style: AppText.title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Text(
+                          'Reward pertamamu sudah siap! 🎉',
+                          style: AppText.caption.copyWith(color: AppColors.success),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+
+          const SizedBox(height: AppSpacing.sectionGap),
 
           GradientButton(
-            label: 'Mulai Sekarang!',
-            icon: Icons.rocket_launch_rounded,
-            onTap: onComplete,
+            label: 'Lanjut',
+            icon: Icons.arrow_forward_rounded,
+            onTap: _canProceed ? widget.onNext : null,
           ),
-          const SizedBox(height: AppSpacing.lg),
-        ],
-      ),
-    );
-  }
-}
 
-class _PresetActivityRow extends StatelessWidget {
-  final Map<String, dynamic> preset;
-
-  const _PresetActivityRow({required this.preset});
-
-  String get _weightLabel {
-    final w = categoryWeights[preset['category'] as String] ?? 1.0;
-    return 'Ã—$w';
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppRadius.md),
-        border: Border.all(color: AppColors.glassBorder),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 36,
-            height: 36,
-            decoration: BoxDecoration(
-              color: AppColors.primaryDim,
-              borderRadius: BorderRadius.circular(AppRadius.sm),
-            ),
-            child: const Icon(Icons.directions_run, color: AppColors.primary, size: 18),
-          ),
-          const SizedBox(width: AppSpacing.sm),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(preset['title'] as String, style: AppText.title),
-                Text(
-                  '${preset['category']} · ${preset['durationMinutes']} menit',
-                  style: AppText.caption,
-                ),
-              ],
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-            decoration: BoxDecoration(
-              color: AppColors.primaryDim,
-              borderRadius: BorderRadius.circular(AppRadius.full),
-            ),
-            child: Text(
-              _weightLabel,
-              style: const TextStyle(
-                fontSize: 11,
-                color: AppColors.primaryLight,
-                fontWeight: FontWeight.w600,
+          Center(
+            child: TextButton(
+              onPressed: widget.onNext,
+              child: const Text(
+                'Lewati, atur nanti',
+                style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
               ),
             ),
           ),
+          const SizedBox(height: AppSpacing.lg),
         ],
       ),
     );

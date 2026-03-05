@@ -47,6 +47,17 @@ class BadgeProvider extends ChangeNotifier {
     _handleUnlockedList(newlyUnlocked);
   }
 
+  /// Unlock a badge by key (used for manual/social badges like Duel Champion).
+  void tryUnlockBadge(String badgeKey) {
+    final badge = _allBadges.where((b) => b.badgeKey == badgeKey && !b.isUnlocked).firstOrNull;
+    if (badge == null) return;
+    badge.isUnlocked = true;
+    badge.unlockedAt = DateTime.now();
+    _storage.saveBadge(badge);
+    _loadBadges();
+    _badgeUnlockController.add(badge);
+  }
+
   void _handleUnlockedList(List<Badge> newlyUnlocked) {
     if (newlyUnlocked.isNotEmpty) {
       _loadBadges(); // reload state

@@ -10,8 +10,7 @@ class BadgeService {
 
   /// Ensure default badges are in the database.
   void ensureDefaultBadges() {
-    final existingCount = _storage.getAllBadges().length;
-    if (existingCount > 0) return; // Already seeded
+    final existing = _storage.getAllBadges().map((b) => b.badgeKey).toSet();
 
     final defaultBadges = [
       // ─── STREAK BADGES ──────────────────────────────────────────────────
@@ -82,10 +81,23 @@ class BadgeService {
         rarity: 2,
         conditionJson: jsonEncode({'type': 'redeem_count', 'target': 10}),
       ),
+
+      // ─── SOCIAL BADGES ──────────────────────────────────────────────────
+      Badge(
+        badgeKey: 'duel_champion',
+        name: 'Duel Champion',
+        description: 'Menangkan Weekly Duel melawan seorang partner',
+        icon: 'emoji_events',
+        category: 'social',
+        rarity: 3, // Epic
+        conditionJson: jsonEncode({'type': 'manual', 'key': 'duel_champion'}),
+      ),
     ];
 
     for (final b in defaultBadges) {
-      _storage.saveBadge(b);
+      if (!existing.contains(b.badgeKey)) {
+        _storage.saveBadge(b);
+      }
     }
   }
 

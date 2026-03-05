@@ -42,15 +42,9 @@ class EarnJoyMediumWidgetProvider : android.appwidget.AppWidgetProvider() {
                 android.net.Uri.parse("earnjoy://quick_log?title=Gym&category=Health&duration=45")
             )
 
-            views.setOnClickPendingIntent(R.id.widget_btn_study,
-                android.app.PendingIntent.getActivity(context, 1, openStudy,
-                    android.app.PendingIntent.FLAG_UPDATE_CURRENT or android.app.PendingIntent.FLAG_IMMUTABLE))
-            views.setOnClickPendingIntent(R.id.widget_btn_work,
-                android.app.PendingIntent.getActivity(context, 2, openWork,
-                    android.app.PendingIntent.FLAG_UPDATE_CURRENT or android.app.PendingIntent.FLAG_IMMUTABLE))
-            views.setOnClickPendingIntent(R.id.widget_btn_gym,
-                android.app.PendingIntent.getActivity(context, 3, openGym,
-                    android.app.PendingIntent.FLAG_UPDATE_CURRENT or android.app.PendingIntent.FLAG_IMMUTABLE))
+            views.setOnClickPendingIntent(R.id.widget_btn_study, openStudy)
+            views.setOnClickPendingIntent(R.id.widget_btn_work, openWork)
+            views.setOnClickPendingIntent(R.id.widget_btn_gym, openGym)
 
             appWidgetManager.updateAppWidget(appWidgetId, views)
         }

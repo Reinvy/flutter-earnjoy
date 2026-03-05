@@ -39,6 +39,21 @@ class User {
   @Property(type: PropertyType.date)
   DateTime lastRestDayDate;   // Date of last rest day (for 7-day cooldown)
 
+  // Social & Accountability (Feature 12)
+  bool socialEnabled;         // opt-in privacy gate; default false
+  String inviteCode;          // 8-char unique code generated on enable
+
+  // Onboarding personalization (Feature 11)
+  String selectedGoalsJson;   // JSON list, e.g. '["Work","Health"]'
+  String dreamReward;         // Name of first dream reward
+  String dreamRewardEmoji;    // Emoji for the dream reward category
+  int preferredActiveHour;    // User's most active hour: 6,10,14, or 18 (-1 = unset)
+
+  // Cloud Sync
+  String? cloudId;            // UUID from Supabase (null = not yet synced)
+  @Property(type: PropertyType.date)
+  DateTime updatedAt;         // For last-write-wins conflict resolution
+
   User({
     this.id = 0,
     this.name = 'User',
@@ -61,9 +76,18 @@ class User {
     this.quietHoursEnd = 7,
     this.restDayCount = 0,
     DateTime? lastRestDayDate,
+    this.selectedGoalsJson = '[]',
+    this.dreamReward = '',
+    this.dreamRewardEmoji = '🎁',
+    this.preferredActiveHour = -1,
+    this.socialEnabled = false,
+    this.inviteCode = '',
+    this.cloudId,
+    DateTime? updatedAt,
   }) : lastActivityDate = lastActivityDate ?? DateTime(2000),
        lastWeeklyAdjustmentDate = lastWeeklyAdjustmentDate ?? DateTime(2000),
-       lastRestDayDate = lastRestDayDate ?? DateTime(2000);
+       lastRestDayDate = lastRestDayDate ?? DateTime(2000),
+       updatedAt = updatedAt ?? DateTime.now();
 
   User copyWith({
     int? id,
@@ -87,6 +111,15 @@ class User {
     int? quietHoursEnd,
     int? restDayCount,
     DateTime? lastRestDayDate,
+    String? selectedGoalsJson,
+    String? dreamReward,
+    String? dreamRewardEmoji,
+    int? preferredActiveHour,
+    bool? socialEnabled,
+    String? inviteCode,
+    String? cloudId,
+    bool clearCloudId = false,
+    DateTime? updatedAt,
   }) {
     return User(
       id: id ?? this.id,
@@ -110,6 +143,14 @@ class User {
       quietHoursEnd: quietHoursEnd ?? this.quietHoursEnd,
       restDayCount: restDayCount ?? this.restDayCount,
       lastRestDayDate: lastRestDayDate ?? this.lastRestDayDate,
+      selectedGoalsJson: selectedGoalsJson ?? this.selectedGoalsJson,
+      dreamReward: dreamReward ?? this.dreamReward,
+      dreamRewardEmoji: dreamRewardEmoji ?? this.dreamRewardEmoji,
+      preferredActiveHour: preferredActiveHour ?? this.preferredActiveHour,
+      socialEnabled: socialEnabled ?? this.socialEnabled,
+      inviteCode: inviteCode ?? this.inviteCode,
+      cloudId: clearCloudId ? null : (cloudId ?? this.cloudId),
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 }

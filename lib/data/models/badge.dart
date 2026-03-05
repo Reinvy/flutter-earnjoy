@@ -20,6 +20,11 @@ class Badge {
 
   String conditionJson;
 
+  // Cloud Sync
+  String? cloudId;
+  @Property(type: PropertyType.date)
+  DateTime updatedAt;
+
   Badge({
     this.id = 0,
     required this.badgeKey,
@@ -31,7 +36,9 @@ class Badge {
     this.isUnlocked = false,
     this.unlockedAt,
     required this.conditionJson,
-  });
+    this.cloudId,
+    DateTime? updatedAt,
+  }) : updatedAt = updatedAt ?? DateTime.now();
 
   Badge copyWith({
     int? id,
@@ -44,6 +51,9 @@ class Badge {
     bool? isUnlocked,
     DateTime? unlockedAt,
     String? conditionJson,
+    String? cloudId,
+    bool clearCloudId = false,
+    DateTime? updatedAt,
   }) {
     return Badge(
       id: id ?? this.id,
@@ -56,7 +66,8 @@ class Badge {
       isUnlocked: isUnlocked ?? this.isUnlocked,
       unlockedAt: unlockedAt ?? this.unlockedAt,
       conditionJson: conditionJson ?? this.conditionJson,
+      cloudId: clearCloudId ? null : (cloudId ?? this.cloudId),
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 }
-

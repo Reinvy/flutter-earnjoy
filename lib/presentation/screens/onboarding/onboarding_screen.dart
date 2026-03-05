@@ -7,6 +7,8 @@ import 'package:earnjoy/presentation/providers/user_provider.dart';
 import 'widgets/onboarding_page1.dart';
 import 'widgets/onboarding_page2.dart';
 import 'widgets/onboarding_page3.dart';
+import 'widgets/onboarding_page4.dart';
+import 'widgets/onboarding_page5.dart';
 import 'widgets/onboarding_progress_dots.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -20,41 +22,68 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final _pageController = PageController();
   int _currentPage = 0;
 
-  // Page 1
+  // Page 2 — Identity & Goals
   final _nameController = TextEditingController();
-  String? _selectedGoal;
+  final Set<String> _selectedGoals = {};
 
-  // Page 2
-  final _incomeController = TextEditingController();
-  double _rewardPercentage = 0.10;
+  // Page 3 — Dream Reward
+  final _dreamRewardController = TextEditingController();
+  String _dreamRewardEmoji = '🎁';
 
-  double get _calculatedBudget {
-    final income = double.tryParse(_incomeController.text.trim()) ?? 0.0;
-    return income * _rewardPercentage;
-  }
+  // Page 4 — Active Hours
+  int _activeSlotIndex = -1;
 
   @override
   void dispose() {
     _pageController.dispose();
     _nameController.dispose();
-    _incomeController.dispose();
+    _dreamRewardController.dispose();
     super.dispose();
   }
 
   void _goNext() {
-    _pageController.nextPage(duration: const Duration(milliseconds: 380), curve: Curves.easeInOut);
+    _pageController.nextPage(
+      duration: const Duration(milliseconds: 380),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  void _toggleGoal(String goal) {
+    setState(() {
+      if (_selectedGoals.contains(goal)) {
+        _selectedGoals.remove(goal);
+      } else if (_selectedGoals.length < 3) {
+        _selectedGoals.add(goal);
+      }
+    });
   }
 
   void _complete() {
-    final income = double.tryParse(_incomeController.text.trim()) ?? 0.0;
+    final activeHour = _activeSlotIndex >= 0
+        ? _activeHourFromSlot(_activeSlotIndex)
+        : -1;
+
+    final income = 0.0; // Income setup is optional; user can set it later in Profile
+    const rewardPercentage = 0.10;
+
     context.read<UserProvider>().completeOnboarding(
       name: _nameController.text,
       income: income,
-      rewardPercentage: _rewardPercentage,
-      monthlyBudget: income * _rewardPercentage,
+      rewardPercentage: rewardPercentage,
+      monthlyBudget: income * rewardPercentage,
+      selectedGoals: _selectedGoals.toList(),
+      dreamReward: _dreamRewardController.text.trim(),
+      dreamRewardEmoji: _dreamRewardEmoji,
+      preferredActiveHour: activeHour,
     );
     HapticFeedback.heavyImpact();
-    // _RootRouter will automatically navigate to MainShell when onboardingDone becomes true
+    // _RootRouter will automatically navigate to MainShell when onboardingDone == true
+  }
+
+  int _activeHourFromSlot(int slot) {
+    const hours = [6, 10, 14, 18];
+    if (slot < 0 || slot >= hours.length) return -1;
+    return hours[slot];
   }
 
   @override
@@ -65,7 +94,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         child: Column(
           children: [
             const SizedBox(height: AppSpacing.md),
-            OnboardingProgressDots(current: _currentPage, total: 3),
+            OnboardingProgressDots(current: _currentPage, total: 5),
             const SizedBox(height: AppSpacing.sm),
             Expanded(
               child: PageView(
@@ -73,20 +102,37 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 physics: const NeverScrollableScrollPhysics(),
                 onPageChanged: (i) => setState(() => _currentPage = i),
                 children: [
-                  OnboardingPage1(
-                    nameController: _nameController,
-                    selectedGoal: _selectedGoal,
-                    onGoalSelected: (g) => setState(() => _selectedGoal = g),
-                    onNext: _goNext,
-                  ),
+                  // Page 1 — Welcome
+                  OnboardingPage1(onNext: _goNext),
+
+                  // Page 2 — Name + Goals
                   OnboardingPage2(
-                    incomeController: _incomeController,
-                    rewardPercentage: _rewardPercentage,
-                    calculatedBudget: _calculatedBudget,
-                    onPercentageChanged: (v) => setState(() => _rewardPercentage = v),
+                    nameController: _nameController,
+                    selectedGoals: _selectedGoals,
+                    onGoalToggled: _toggleGoal,
                     onNext: _goNext,
                   ),
-                  OnboardingPage3(onComplete: _complete),
+
+                  // Page 3 — Dream Reward
+                  OnboardingPage3(
+                    dreamRewardController: _dreamRewardController,
+                    selectedCategoryEmoji: _dreamRewardEmoji,
+                    onCategorySelected: (e) => setState(() => _dreamRewardEmoji = e),
+                    onNext: _goNext,
+                  ),
+
+                  // Page 4 — Active Hours
+                  OnboardingPage4(
+                    selectedSlotIndex: _activeSlotIndex,
+                    onSlotSelected: (i) => setState(() => _activeSlotIndex = i),
+                    onNext: _goNext,
+                  ),
+
+                  // Page 5 — First Log + Confetti
+                  OnboardingPage5(
+                    selectedGoals: _selectedGoals.toList(),
+                    onComplete: _complete,
+                  ),
                 ],
               ),
             ),

@@ -1,168 +1,158 @@
 ﻿import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'package:earnjoy/core/theme.dart';
 import 'package:earnjoy/core/widgets/gradient_button.dart';
-import 'onboarding_text_field.dart';
 
-class _Goal {
-  final IconData icon;
-  final String label;
-  final String description;
-  const _Goal(this.icon, this.label, this.description);
-}
-
-const _goals = [
-  _Goal(Icons.work_outline_rounded, 'Work', 'Produktivitas & karier'),
-  _Goal(Icons.school_outlined, 'Study', 'Belajar & akademik'),
-  _Goal(Icons.fitness_center, 'Health', 'Kesehatan & olahraga'),
-  _Goal(Icons.self_improvement, 'Balance', 'Keseimbangan hidup'),
-];
-
+/// Page 1 — Welcome screen with animated hero icon and tagline.
 class OnboardingPage1 extends StatefulWidget {
-  final TextEditingController nameController;
-  final String? selectedGoal;
-  final ValueChanged<String> onGoalSelected;
   final VoidCallback onNext;
 
-  const OnboardingPage1({
-    super.key,
-    required this.nameController,
-    required this.selectedGoal,
-    required this.onGoalSelected,
-    required this.onNext,
-  });
+  const OnboardingPage1({super.key, required this.onNext});
 
   @override
   State<OnboardingPage1> createState() => _OnboardingPage1State();
 }
 
-class _OnboardingPage1State extends State<OnboardingPage1> {
-  bool get _canProceed => widget.nameController.text.trim().isNotEmpty;
+class _OnboardingPage1State extends State<OnboardingPage1>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _ctrl;
+  late final Animation<double> _fadeAnim;
+  late final Animation<double> _scaleAnim;
 
   @override
   void initState() {
     super.initState();
-    widget.nameController.addListener(() => setState(() {}));
+    _ctrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 900));
+    _fadeAnim = CurvedAnimation(parent: _ctrl, curve: const Interval(0.0, 0.7, curve: Curves.easeOut));
+    _scaleAnim = Tween<double>(begin: 0.7, end: 1.0).animate(
+      CurvedAnimation(parent: _ctrl, curve: const Interval(0.0, 0.8, curve: Curves.elasticOut)),
+    );
+    _ctrl.forward();
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screenH),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const SizedBox(height: AppSpacing.xl),
+          const Spacer(flex: 2),
 
-          // Hero icon
-          Center(
-            child: Container(
-              width: 80,
-              height: 80,
-              decoration: const BoxDecoration(
-                gradient: AppGradients.primary,
-                shape: BoxShape.circle,
+          // Animated hero icon
+          ScaleTransition(
+            scale: _scaleAnim,
+            child: FadeTransition(
+              opacity: _fadeAnim,
+              child: Container(
+                width: 120,
+                height: 120,
+                decoration: const BoxDecoration(
+                  gradient: AppGradients.primary,
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.bolt_rounded, color: Colors.white, size: 60),
               ),
-              child: const Icon(Icons.emoji_events_rounded, color: Colors.white, size: 40),
             ),
           ),
-          const SizedBox(height: AppSpacing.lg),
 
-          const Center(child: Text('Selamat datang di EarnJoy', style: AppText.displaySmall)),
-          const SizedBox(height: AppSpacing.sm),
-          const Center(
-            child: Text(
-              'Earn your rewards. Setiap usaha layak dihargai.',
+          const SizedBox(height: AppSpacing.xl),
+
+          FadeTransition(
+            opacity: _fadeAnim,
+            child: const Text(
+              'Selamat datang di\nEarnJoy.',
+              style: TextStyle(
+                fontSize: 34,
+                fontWeight: FontWeight.w700,
+                color: AppColors.textPrimary,
+                letterSpacing: -1.0,
+                height: 1.2,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+
+          const SizedBox(height: AppSpacing.md),
+
+          FadeTransition(
+            opacity: _fadeAnim,
+            child: const Text(
+              'Kamu layak mendapat yang terbaik\n— tapi harus diusahakan dulu.',
               style: AppText.body,
               textAlign: TextAlign.center,
             ),
           ),
 
-          const SizedBox(height: AppSpacing.sectionGap),
+          const Spacer(flex: 3),
 
-          // Name input
-          const Text('Siapa namamu?', style: AppText.title),
-          const SizedBox(height: AppSpacing.sm),
-          OnboardingTextField(
-            controller: widget.nameController,
-            hint: 'Nama kamu...',
-            icon: Icons.person_outline_rounded,
-          ),
-
-          const SizedBox(height: AppSpacing.sectionGap),
-
-          // Goal selection
-          const Text('Apa fokus utamamu?', style: AppText.title),
-          const SizedBox(height: AppSpacing.xs),
-          const Text('Ini membantu kami menyesuaikan pengalaman untukmu.', style: AppText.body),
-          const SizedBox(height: AppSpacing.sm),
-
-          GridView.count(
-            crossAxisCount: 2,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            crossAxisSpacing: AppSpacing.sm,
-            mainAxisSpacing: AppSpacing.sm,
-            childAspectRatio: 1.6,
-            children: _goals.map((g) {
-              final isSelected = widget.selectedGoal == g.label;
-              return GestureDetector(
-                onTap: () {
-                  HapticFeedback.selectionClick();
-                  widget.onGoalSelected(g.label);
-                },
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  padding: const EdgeInsets.all(AppSpacing.sm),
-                  decoration: BoxDecoration(
-                    color: isSelected ? AppColors.primaryDim : AppColors.surface,
-                    borderRadius: BorderRadius.circular(AppRadius.md),
-                    border: Border.all(
-                      color: isSelected ? AppColors.primary : AppColors.glassBorder,
-                      width: isSelected ? 1.5 : 1,
-                    ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        g.icon,
-                        color: isSelected ? AppColors.primary : AppColors.textSecondary,
-                        size: 22,
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        g.label,
-                        style: AppText.title.copyWith(
-                          color: isSelected ? AppColors.primary : AppColors.textPrimary,
-                          fontSize: 14,
-                        ),
-                      ),
-                      Text(
-                        g.description,
-                        style: AppText.caption,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ),
+          // Feature highlights
+          FadeTransition(
+            opacity: _fadeAnim,
+            child: Column(
+              children: [
+                _FeatureHint(
+                  icon: Icons.emoji_events_rounded,
+                  text: 'Log aktivitas → dapatkan poin',
                 ),
-              );
-            }).toList(),
+                const SizedBox(height: AppSpacing.sm),
+                _FeatureHint(
+                  icon: Icons.redeem_rounded,
+                  text: 'Tukar poin dengan reward impianmu',
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                _FeatureHint(
+                  icon: Icons.local_fire_department_rounded,
+                  text: 'Bangun streak & tingkatkan level',
+                ),
+              ],
+            ),
           ),
 
-          const SizedBox(height: AppSpacing.sectionGap),
+          const Spacer(flex: 2),
 
           GradientButton(
-            label: 'Lanjut',
+            label: 'Mulai Setup',
             icon: Icons.arrow_forward_rounded,
-            onTap: _canProceed ? widget.onNext : null,
+            onTap: widget.onNext,
           ),
+
           const SizedBox(height: AppSpacing.lg),
         ],
       ),
+    );
+  }
+}
+
+class _FeatureHint extends StatelessWidget {
+  final IconData icon;
+  final String text;
+
+  const _FeatureHint({required this.icon, required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 32,
+          height: 32,
+          decoration: BoxDecoration(
+            color: AppColors.primaryDim,
+            borderRadius: BorderRadius.circular(AppRadius.sm),
+          ),
+          child: Icon(icon, color: AppColors.primary, size: 16),
+        ),
+        const SizedBox(width: AppSpacing.sm),
+        Text(text, style: AppText.body),
+      ],
     );
   }
 }

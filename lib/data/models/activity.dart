@@ -13,13 +13,21 @@ class Activity {
   @Property(type: PropertyType.date)
   DateTime createdAt;
 
+  // Cloud Sync
+  String? cloudId;
+  @Property(type: PropertyType.date)
+  DateTime updatedAt;
+
   Activity({
     this.id = 0,
     required this.title,
     required this.durationMinutes,
     this.points = 0.0,
     DateTime? createdAt,
-  }) : createdAt = createdAt ?? DateTime.now();
+    this.cloudId,
+    DateTime? updatedAt,
+  }) : createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   Activity copyWith({
     int? id,
@@ -27,6 +35,9 @@ class Activity {
     int? durationMinutes,
     double? points,
     DateTime? createdAt,
+    String? cloudId,
+    bool clearCloudId = false,
+    DateTime? updatedAt,
   }) {
     return Activity(
       id: id ?? this.id,
@@ -34,6 +45,8 @@ class Activity {
       durationMinutes: durationMinutes ?? this.durationMinutes,
       points: points ?? this.points,
       createdAt: createdAt ?? this.createdAt,
+      cloudId: clearCloudId ? null : (cloudId ?? this.cloudId),
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 }

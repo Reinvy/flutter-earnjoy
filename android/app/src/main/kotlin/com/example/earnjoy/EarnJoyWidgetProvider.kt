@@ -87,16 +87,10 @@ class EarnJoyWidgetProvider : AppWidgetProvider() {
         }
 
         private fun buildOpenIntent(context: Context, uri: String): PendingIntent {
-            val intent = HomeWidgetLaunchIntent.getActivity(
+            return HomeWidgetLaunchIntent.getActivity(
                 context,
                 MainActivity::class.java,
                 Uri.parse(uri)
-            )
-            return PendingIntent.getActivity(
-                context,
-                uri.hashCode(),
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
         }
     }

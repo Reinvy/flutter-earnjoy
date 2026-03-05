@@ -22,6 +22,11 @@ class Quest {
   bool isCompleted;
   double progress; // 0.0 - 1.0
 
+  // Cloud Sync
+  String? cloudId;
+  @Property(type: PropertyType.date)
+  DateTime updatedAt;
+
   Quest({
     this.id = 0,
     required this.title,
@@ -35,7 +40,9 @@ class Quest {
     required this.createdAt,
     this.isCompleted = false,
     this.progress = 0.0,
-  });
+    this.cloudId,
+    DateTime? updatedAt,
+  }) : updatedAt = updatedAt ?? DateTime.now();
 
   Quest copyWith({
     int? id,
@@ -50,6 +57,9 @@ class Quest {
     DateTime? createdAt,
     bool? isCompleted,
     double? progress,
+    String? cloudId,
+    bool clearCloudId = false,
+    DateTime? updatedAt,
   }) {
     return Quest(
       id: id ?? this.id,
@@ -64,6 +74,8 @@ class Quest {
       createdAt: createdAt ?? this.createdAt,
       isCompleted: isCompleted ?? this.isCompleted,
       progress: progress ?? this.progress,
+      cloudId: clearCloudId ? null : (cloudId ?? this.cloudId),
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 }
