@@ -62,15 +62,15 @@ class _BadgeItem extends StatelessWidget {
   Color _getRarityColor(int rarity) {
     switch (rarity) {
       case 1:
-        return Colors.blueGrey;
+        return AppColors.rarityCommon;
       case 2:
-        return Colors.blue;
+        return AppColors.rarityRare;
       case 3:
-        return AppColors.primary;
+        return AppColors.rarityEpic;
       case 4:
-        return Colors.orangeAccent;
+        return AppColors.rarityLegendary;
       default:
-        return Colors.grey;
+        return AppColors.textDisabled;
     }
   }
 

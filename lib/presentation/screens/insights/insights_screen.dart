@@ -552,13 +552,13 @@ class _PeriodToggle extends StatelessWidget {
 class _CategoryPanel extends StatelessWidget {
   const _CategoryPanel();
 
-  static const _catColors = [
-    Color(0xFF8B7FF5),
-    Color(0xFF5EC4F0),
-    Color(0xFF4ECFA0),
-    Color(0xFFFFB547),
-    Color(0xFFFF6B6B),
-    Color(0xFFB388FF),
+  static final _catColors = [
+    AppColors.primary,
+    const Color(0xFF7CD1F9),
+    AppColors.success,
+    AppColors.warning,
+    AppColors.error,
+    const Color(0xFFD6A8FF),
   ];
 
   @override
@@ -683,14 +683,14 @@ class _PeakHoursPanel extends StatelessWidget {
             toY: val,
             gradient: isGolden
                 ? const LinearGradient(
-                    colors: [Color(0xFFFFB547), Color(0xFFFF6B6B)],
+                    colors: [AppColors.warning, AppColors.error],
                     begin: Alignment.bottomCenter,
                     end: Alignment.topCenter,
                   )
                 : LinearGradient(
                     colors: [
-                      AppColors.gradientStart.withAlpha(180),
-                      AppColors.gradientEnd.withAlpha(220),
+                      AppColors.primary.withAlpha(180),
+                      AppColors.primaryLight.withAlpha(220),
                     ],
                     begin: Alignment.bottomCenter,
                     end: Alignment.topCenter,
@@ -712,11 +712,11 @@ class _PeakHoursPanel extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.all(AppSpacing.md),
               decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0x33FFB547), Color(0x11FF6B6B)],
+                gradient: LinearGradient(
+                  colors: [AppColors.warning.withAlpha(30), AppColors.error.withAlpha(10)],
                 ),
                 borderRadius: BorderRadius.circular(AppRadius.md),
-                border: Border.all(color: const Color(0x55FFB547)),
+                border: Border.all(color: AppColors.warning.withAlpha(80)),
               ),
               child: Row(
                 children: [
@@ -848,11 +848,11 @@ class _StreakHistoryPanel extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.all(AppSpacing.md),
               decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0x334ECFA0), Color(0x114ECFA0)],
+                gradient: LinearGradient(
+                  colors: [AppColors.success.withAlpha(30), AppColors.success.withAlpha(10)],
                 ),
                 borderRadius: BorderRadius.circular(AppRadius.md),
-                border: Border.all(color: const Color(0x554ECFA0)),
+                border: Border.all(color: AppColors.success.withAlpha(80)),
               ),
               child: Row(
                 children: [
@@ -1364,7 +1364,7 @@ class _WellbeingPanel extends StatelessWidget {
   Color _statusColor(BurnoutStatus status) => switch (status) {
         BurnoutStatus.healthy   => AppColors.success,
         BurnoutStatus.attention => AppColors.warning,
-        BurnoutStatus.fatigue   => const Color(0xFFFF8C00),
+        BurnoutStatus.fatigue   => AppColors.warning,
         BurnoutStatus.burnout   => AppColors.error,
       };
 
@@ -1415,7 +1415,7 @@ class _BurnoutGauge extends StatelessWidget {
   Color _colorForStatus(BurnoutStatus s) => switch (s) {
         BurnoutStatus.healthy   => AppColors.success,
         BurnoutStatus.attention => AppColors.warning,
-        BurnoutStatus.fatigue   => const Color(0xFFFF8C00),
+        BurnoutStatus.fatigue   => AppColors.warning,
         BurnoutStatus.burnout   => AppColors.error,
       };
 }
@@ -1504,7 +1504,7 @@ class _BurnoutStatusRow extends StatelessWidget {
     final zones = [
       (label: '0–30\nSehat', color: AppColors.success),
       (label: '31–60\nPerhatian', color: AppColors.warning),
-      (label: '61–80\nKelelahan', color: const Color(0xFFFF8C00)),
+      (label: '61–80\nKelelahan', color: AppColors.warning),
       (label: '81–100\nBurnout', color: AppColors.error),
     ];
     final statusIdx = status.index;

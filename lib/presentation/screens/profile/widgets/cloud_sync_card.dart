@@ -371,9 +371,9 @@ class _ErrorBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: const BoxDecoration(
-        color: Color(0x22FF6B6B),
-        border: Border(top: BorderSide(color: Color(0x44FF6B6B))),
+      decoration: BoxDecoration(
+        color: AppColors.error.withAlpha(30),
+        border: const Border(top: BorderSide(color: AppColors.glassBorder)),
       ),
       child: Row(
         children: [
@@ -402,33 +402,33 @@ class _ConfigWarning extends StatelessWidget {
       margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(0x22F59E0B),
+        color: AppColors.warning.withAlpha(30),
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: const Color(0x44F59E0B)),
+        border: Border.all(color: AppColors.warning.withAlpha(60)),
       ),
-      child: const Column(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Icon(Icons.info_outline, size: 14, color: Color(0xFFF59E0B)),
-              SizedBox(width: 6),
+              const Icon(Icons.info_outline, size: 14, color: AppColors.warning),
+              const SizedBox(width: 6),
               Text(
                 'Setup Diperlukan',
                 style: TextStyle(
-                  color: Color(0xFFF59E0B),
+                  color: AppColors.warning,
                   fontSize: 12,
                   fontWeight: FontWeight.w700,
                 ),
               ),
             ],
           ),
-          SizedBox(height: 6),
-          Text(
+          const SizedBox(height: 6),
+          const Text(
             '1. Buat project di supabase.com (gratis)\n'
             '2. Isi SUPABASE_URL & SUPABASE_ANON_KEY di lib/core/supabase_config.dart\n'
             '3. Jalankan SQL schema dari docs/supabase_schema.sql',
-            style: TextStyle(color: Color(0xFFF59E0B), fontSize: 11, height: 1.5),
+            style: TextStyle(color: AppColors.warning, fontSize: 11, height: 1.5),
           ),
         ],
       ),

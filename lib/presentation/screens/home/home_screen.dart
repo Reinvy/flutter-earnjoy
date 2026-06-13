@@ -1,4 +1,4 @@
-﻿import 'dart:async';
+import 'dart:async';
 import 'dart:math' show Random;
 
 import 'package:flutter/material.dart';
@@ -533,9 +533,9 @@ class _FatigueBanner extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
-        color: const Color(0xFF8B4000).withValues(alpha: 0.15),
+        color: AppColors.warning.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(AppRadius.md),
-        border: Border.all(color: const Color(0xFFFF8C00).withValues(alpha: 0.40)),
+        border: Border.all(color: AppColors.warning.withValues(alpha: 0.35)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -548,7 +548,7 @@ class _FatigueBanner extends StatelessWidget {
               children: [
                 Text('Tanda-tanda kelelahan terdeteksi',
                     style: AppText.title.copyWith(
-                      color: const Color(0xFFFF8C00), fontSize: 13)),
+                      color: AppColors.warning, fontSize: 13)),
                 const SizedBox(height: 4),
                 Text(insight, style: AppText.caption),
               ],

@@ -38,9 +38,7 @@ class SocialScreen extends StatelessWidget {
                         'Social',
                         style: AppText.displaySmall.copyWith(
                           foreground: Paint()
-                            ..shader = const LinearGradient(
-                              colors: [AppColors.gradientStart, AppColors.gradientEnd],
-                            ).createShader(const Rect.fromLTWH(0, 0, 200, 40)),
+                            ..shader = AppGradients.primary.createShader(const Rect.fromLTWH(0, 0, 200, 40)),
                         ),
                       ),
                       Text('Accountability bersama teman', style: AppText.body),
@@ -96,11 +94,7 @@ class _ProfileCard extends StatelessWidget {
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadius.lg),
         border: Border.all(color: AppColors.glassBorder),
-        gradient: const LinearGradient(
-          colors: [Color(0x0D8B7FF5), Color(0x055EC4F0)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        gradient: AppGradients.subtle,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

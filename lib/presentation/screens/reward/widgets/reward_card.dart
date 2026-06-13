@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import 'package:earnjoy/core/extensions.dart';
 import 'package:earnjoy/core/theme.dart';
@@ -227,15 +227,7 @@ class _CategoryBadge extends StatelessWidget {
     );
   }
 
-  Color get _color => switch (category) {
-        RewardCategory.food => const Color(0xFFFF9F43),
-        RewardCategory.entertainment => AppColors.primary,
-        RewardCategory.shopping => const Color(0xFFFF6B9D),
-        RewardCategory.experience => const Color(0xFF5EC4F0),
-        RewardCategory.selfGrowth => AppColors.success,
-        RewardCategory.rest => const Color(0xFFB8B0FF),
-        _ => AppColors.textSecondary,
-      };
+  Color get _color => AppColors.rewardColorForCategory(category);
 }
 
 class _RecurrenceBadge extends StatelessWidget {

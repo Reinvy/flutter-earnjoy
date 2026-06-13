@@ -48,24 +48,7 @@ class _LevelUpDialogState extends State<LevelUpDialog> with SingleTickerProvider
   }
 
   Color _getTierColor(String tier) {
-    switch (tier) {
-      case 'Novice':
-        return Colors.grey.shade400;
-      case 'Apprentice':
-        return Colors.blue.shade400;
-      case 'Practitioner':
-        return Colors.green.shade500;
-      case 'Achiever':
-        return Colors.orange.shade500;
-      case 'Expert':
-        return Colors.purple.shade400;
-      case 'Master':
-        return Colors.red.shade500;
-      case 'Legend':
-        return Colors.amber.shade500;
-      default:
-        return Colors.blue.shade400;
-    }
+    return AppColors.tierColorFor(tier);
   }
 
   @override

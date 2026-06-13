@@ -217,11 +217,7 @@ class _BonusChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0x408B7FF5), Color(0x405EC4F0)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        gradient: AppGradients.subtle,
         borderRadius: BorderRadius.circular(AppRadius.full),
         border: Border.all(color: AppColors.primaryDim, width: 0.5),
       ),

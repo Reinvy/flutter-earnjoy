@@ -165,9 +165,7 @@ class DuelProgressCard extends StatelessWidget {
                       duel.myPoints.toStringAsFixed(0),
                       style: AppText.displaySmall.copyWith(
                         foreground: Paint()
-                          ..shader = const LinearGradient(
-                            colors: [AppColors.gradientStart, AppColors.gradientEnd],
-                          ).createShader(const Rect.fromLTWH(0, 0, 100, 30)),
+                          ..shader = AppGradients.primary.createShader(const Rect.fromLTWH(0, 0, 100, 30)),
                       ),
                       textAlign: TextAlign.center,
                     ),

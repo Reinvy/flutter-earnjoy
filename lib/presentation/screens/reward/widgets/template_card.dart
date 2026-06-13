@@ -162,15 +162,7 @@ class TemplateCard extends StatelessWidget {
     );
   }
 
-  Color get _categoryColor => switch (template.category) {
-        RewardCategory.food => const Color(0xFFFF9F43),
-        RewardCategory.entertainment => AppColors.primary,
-        RewardCategory.shopping => const Color(0xFFFF6B9D),
-        RewardCategory.experience => const Color(0xFF5EC4F0),
-        RewardCategory.selfGrowth => AppColors.success,
-        RewardCategory.rest => const Color(0xFFB8B0FF),
-        _ => AppColors.textSecondary,
-      };
+  Color get _categoryColor => AppColors.rewardColorForCategory(template.category);
 
   String get _recurrenceLabel {
     return switch (template.recurrenceType) {
