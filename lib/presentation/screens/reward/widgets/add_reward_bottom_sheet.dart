@@ -21,7 +21,6 @@ class _AddRewardBottomSheetState extends State<AddRewardBottomSheet> {
   final _formKey = GlobalKey<FormState>();
   bool _isSaving = false;
 
-  // New fields
   String _selectedCategory = RewardCategory.food;
   String _selectedEmoji = '🎁';
   String _selectedRecurrence = RecurrenceType.once;
@@ -93,6 +92,7 @@ class _AddRewardBottomSheetState extends State<AddRewardBottomSheet> {
     final bottomPadding = MediaQuery.of(context).viewInsets.bottom;
 
     return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
       padding: EdgeInsets.fromLTRB(
         AppSpacing.screenH,
         AppSpacing.lg,
@@ -119,38 +119,45 @@ class _AddRewardBottomSheetState extends State<AddRewardBottomSheet> {
 
             const SizedBox(height: AppSpacing.lg),
 
-            const Text('Tambah Reward', style: AppText.title),
+            Text(
+              'Tambah Wishlist Reward', 
+              style: AppText.title.copyWith(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: AppSpacing.xs),
-            const Text(
-              'Tentukan detail reward wishlist kamu.',
-              style: AppText.body,
+            Text(
+              'Tentukan detail reward impian yang ingin kamu raih.',
+              style: AppText.body.copyWith(fontSize: 12, color: AppColors.textSecondary),
             ),
 
             const SizedBox(height: AppSpacing.lg),
 
             // ─── Emoji Picker ─────────────────────────────────────────
-            _SectionLabel(label: 'Icon'),
+            const _SectionLabel(label: 'Icon Emoji'),
             const SizedBox(height: AppSpacing.xs),
             SizedBox(
-              height: 48,
+              height: 52,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
+                physics: const BouncingScrollPhysics(),
                 itemCount: _emojiOptions.length,
-                separatorBuilder: (_, __) => const SizedBox(width: 6),
+                separatorBuilder: (_, __) => const SizedBox(width: 8),
                 itemBuilder: (_, i) {
                   final emoji = _emojiOptions[i];
                   final isSelected = emoji == _selectedEmoji;
                   return GestureDetector(
-                    onTap: () => setState(() => _selectedEmoji = emoji),
+                    onTap: () {
+                      HapticFeedback.selectionClick();
+                      setState(() => _selectedEmoji = emoji);
+                    },
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 150),
-                      width: 44,
-                      height: 44,
+                      width: 48,
+                      height: 48,
                       decoration: BoxDecoration(
                         color: isSelected
                             ? AppColors.primary.withValues(alpha: 0.15)
-                            : AppColors.surfaceHigh,
-                        borderRadius: BorderRadius.circular(AppRadius.sm),
+                            : AppColors.surfaceHigh.withValues(alpha: 0.5),
+                        borderRadius: BorderRadius.circular(AppRadius.md),
                         border: Border.all(
                           color: isSelected
                               ? AppColors.primary
@@ -159,7 +166,7 @@ class _AddRewardBottomSheetState extends State<AddRewardBottomSheet> {
                         ),
                       ),
                       child: Center(
-                        child: Text(emoji, style: const TextStyle(fontSize: 20)),
+                        child: Text(emoji, style: const TextStyle(fontSize: 22)),
                       ),
                     ),
                   );
@@ -172,8 +179,9 @@ class _AddRewardBottomSheetState extends State<AddRewardBottomSheet> {
             // ─── Nama ─────────────────────────────────────────────────
             _InputField(
               label: 'Nama Reward',
-              hint: 'Contoh: Kopi Kenangan, Netflix 1 Bulan',
+              hint: 'Contoh: Kopi Susu Gula Aren, Beli Baju Baru',
               controller: _nameController,
+              icon: FontAwesomeIcons.gift,
               validator: (v) {
                 if (v == null || v.trim().isEmpty) return 'Nama tidak boleh kosong';
                 return null;
@@ -184,9 +192,10 @@ class _AddRewardBottomSheetState extends State<AddRewardBottomSheet> {
 
             // ─── Biaya ────────────────────────────────────────────────
             _InputField(
-              label: 'Biaya (poin)',
-              hint: 'Contoh: 100',
+              label: 'Biaya Poin',
+              hint: 'Contoh: 150',
               controller: _pointsController,
+              icon: FontAwesomeIcons.coins,
               keyboardType:
                   const TextInputType.numberWithOptions(decimal: true),
               inputFormatters: [
@@ -202,7 +211,7 @@ class _AddRewardBottomSheetState extends State<AddRewardBottomSheet> {
             const SizedBox(height: AppSpacing.md),
 
             // ─── Kategori ─────────────────────────────────────────────
-            _SectionLabel(label: 'Kategori'),
+            const _SectionLabel(label: 'Kategori Reward'),
             const SizedBox(height: AppSpacing.xs),
             Wrap(
               spacing: 6,
@@ -214,11 +223,11 @@ class _AddRewardBottomSheetState extends State<AddRewardBottomSheet> {
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 150),
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 6),
+                        horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
                       color: isSelected
                           ? AppColors.primary.withValues(alpha: 0.15)
-                          : AppColors.surfaceHigh,
+                          : AppColors.surfaceHigh.withValues(alpha: 0.5),
                       borderRadius: BorderRadius.circular(AppRadius.full),
                       border: Border.all(
                         color: isSelected
@@ -234,8 +243,9 @@ class _AddRewardBottomSheetState extends State<AddRewardBottomSheet> {
                             ? AppColors.primary
                             : AppColors.textSecondary,
                         fontWeight: isSelected
-                            ? FontWeight.w600
-                            : FontWeight.normal,
+                            ? FontWeight.bold
+                            : FontWeight.w500,
+                        fontSize: 11,
                       ),
                     ),
                   ),
@@ -246,42 +256,48 @@ class _AddRewardBottomSheetState extends State<AddRewardBottomSheet> {
             const SizedBox(height: AppSpacing.md),
 
             // ─── Recurrence ───────────────────────────────────────────
-            _SectionLabel(label: 'Tipe Reward'),
+            const _SectionLabel(label: 'Tipe Ketersediaan'),
             const SizedBox(height: AppSpacing.xs),
             Row(
               children: [
-                _RecurrenceChip(
-                  label: '1x Saja',
-                  icon: FontAwesomeIcons.one,
-                  isSelected: _selectedRecurrence == RecurrenceType.once,
-                  onTap: () =>
-                      setState(() => _selectedRecurrence = RecurrenceType.once),
+                Expanded(
+                  child: _RecurrenceChip(
+                    label: '1x Saja',
+                    icon: FontAwesomeIcons.one,
+                    isSelected: _selectedRecurrence == RecurrenceType.once,
+                    onTap: () =>
+                        setState(() => _selectedRecurrence = RecurrenceType.once),
+                  ),
                 ),
                 const SizedBox(width: 6),
-                _RecurrenceChip(
-                  label: 'Berulang',
-                  icon: FontAwesomeIcons.repeat,
-                  isSelected: _selectedRecurrence == RecurrenceType.recurring,
-                  onTap: () => setState(
-                      () => _selectedRecurrence = RecurrenceType.recurring),
+                Expanded(
+                  child: _RecurrenceChip(
+                    label: 'Berulang',
+                    icon: FontAwesomeIcons.repeat,
+                    isSelected: _selectedRecurrence == RecurrenceType.recurring,
+                    onTap: () => setState(
+                        () => _selectedRecurrence = RecurrenceType.recurring),
+                  ),
                 ),
                 const SizedBox(width: 6),
-                _RecurrenceChip(
-                  label: 'Terbatas',
-                  icon: FontAwesomeIcons.calendarDays,
-                  isSelected: _selectedRecurrence == RecurrenceType.limited,
-                  onTap: () => setState(
-                      () => _selectedRecurrence = RecurrenceType.limited),
+                Expanded(
+                  child: _RecurrenceChip(
+                    label: 'Terbatas',
+                    icon: FontAwesomeIcons.calendarDays,
+                    isSelected: _selectedRecurrence == RecurrenceType.limited,
+                    onTap: () => setState(
+                        () => _selectedRecurrence = RecurrenceType.limited),
+                  ),
                 ),
               ],
             ),
 
-            // Recurring interval
+            // Recurring interval stepper
             if (_selectedRecurrence == RecurrenceType.recurring) ...[
               const SizedBox(height: AppSpacing.sm),
               Row(
                 children: [
-                  Text('Interval: ', style: AppText.body),
+                  Text('Interval Redeem: ', style: AppText.body.copyWith(color: AppColors.textPrimary, fontSize: 13, fontWeight: FontWeight.w500)),
                   const Spacer(),
                   _StepperControl(
                     value: _intervalDays,
@@ -294,12 +310,12 @@ class _AddRewardBottomSheetState extends State<AddRewardBottomSheet> {
               ),
             ],
 
-            // Limited monthly count
+            // Limited monthly stepper
             if (_selectedRecurrence == RecurrenceType.limited) ...[
               const SizedBox(height: AppSpacing.sm),
               Row(
                 children: [
-                  Text('Maks per bulan: ', style: AppText.body),
+                  Text('Maks per bulan: ', style: AppText.body.copyWith(color: AppColors.textPrimary, fontSize: 13, fontWeight: FontWeight.w500)),
                   const Spacer(),
                   _StepperControl(
                     value: _monthlyLimit,
@@ -315,15 +331,15 @@ class _AddRewardBottomSheetState extends State<AddRewardBottomSheet> {
             const SizedBox(height: AppSpacing.md),
 
             // ─── Scheduling ───────────────────────────────────────────
-            _SectionLabel(label: 'Jadwalkan Redeem (opsional)'),
+            const _SectionLabel(label: 'Jadwalkan Penukaran (Opsional)'),
             const SizedBox(height: AppSpacing.xs),
             GestureDetector(
               onTap: _pickDate,
               child: Container(
                 padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.md, vertical: AppSpacing.sm + 2),
+                    horizontal: AppSpacing.md, vertical: 12),
                 decoration: BoxDecoration(
-                  color: AppColors.surfaceHigh,
+                  color: AppColors.surfaceHigh.withValues(alpha: 0.5),
                   borderRadius: BorderRadius.circular(AppRadius.md),
                   border: Border.all(
                     color: _scheduledFor != null
@@ -335,7 +351,7 @@ class _AddRewardBottomSheetState extends State<AddRewardBottomSheet> {
                   children: [
                     FaIcon(
                       FontAwesomeIcons.calendarDay,
-                      size: 18,
+                      size: 16,
                       color: _scheduledFor != null
                           ? AppColors.primary
                           : AppColors.textDisabled,
@@ -345,8 +361,9 @@ class _AddRewardBottomSheetState extends State<AddRewardBottomSheet> {
                       child: Text(
                         _scheduledFor != null
                             ? '${_scheduledFor!.day}/${_scheduledFor!.month}/${_scheduledFor!.year}'
-                            : 'Pilih tanggal...',
+                            : 'Pilih tanggal buka...',
                         style: AppText.body.copyWith(
+                          fontSize: 13,
                           color: _scheduledFor != null
                               ? AppColors.textPrimary
                               : AppColors.textDisabled,
@@ -356,8 +373,11 @@ class _AddRewardBottomSheetState extends State<AddRewardBottomSheet> {
                     if (_scheduledFor != null)
                       GestureDetector(
                         onTap: () => setState(() => _scheduledFor = null),
-                        child: const FaIcon(FontAwesomeIcons.xmark,
-                            size: 16, color: AppColors.textDisabled),
+                        child: const Padding(
+                          padding: EdgeInsets.all(2),
+                          child: FaIcon(FontAwesomeIcons.xmark,
+                              size: 14, color: AppColors.textDisabled),
+                        ),
                       ),
                   ],
                 ),
@@ -366,7 +386,7 @@ class _AddRewardBottomSheetState extends State<AddRewardBottomSheet> {
 
             const SizedBox(height: AppSpacing.lg),
 
-            GradientButton(label: 'Tambah Reward', onTap: _submit),
+            GradientButton(label: 'Tambah Ke Wishlist', onTap: _submit),
 
             const SizedBox(height: AppSpacing.sm),
           ],
@@ -383,8 +403,13 @@ class _SectionLabel extends StatelessWidget {
   const _SectionLabel({required this.label});
 
   @override
-  Widget build(BuildContext context) =>
-      Text(label, style: AppText.caption.copyWith(color: AppColors.textSecondary));
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.only(bottom: 2),
+        child: Text(
+          label, 
+          style: AppText.caption.copyWith(color: AppColors.textSecondary, fontWeight: FontWeight.bold, fontSize: 11),
+        ),
+      );
 }
 
 class _RecurrenceChip extends StatelessWidget {
@@ -406,29 +431,30 @@ class _RecurrenceChip extends StatelessWidget {
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
         decoration: BoxDecoration(
           color: isSelected
               ? AppColors.primary.withValues(alpha: 0.15)
-              : AppColors.surfaceHigh,
-          borderRadius: BorderRadius.circular(AppRadius.full),
+              : AppColors.surfaceHigh.withValues(alpha: 0.5),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           border: Border.all(
             color: isSelected ? AppColors.primary : AppColors.glassBorder,
             width: isSelected ? 1.5 : 1,
           ),
         ),
         child: Row(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             FaIcon(icon,
-                size: 12,
+                size: 11,
                 color: isSelected ? AppColors.primary : AppColors.textDisabled),
-            const SizedBox(width: 4),
+            const SizedBox(width: 5),
             Text(
               label,
               style: AppText.caption.copyWith(
                 color: isSelected ? AppColors.primary : AppColors.textSecondary,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                fontSize: 10,
               ),
             ),
           ],
@@ -464,15 +490,18 @@ class _StepperControl extends StatelessWidget {
         ),
         const SizedBox(width: 6),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
           decoration: BoxDecoration(
             color: AppColors.primary.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(AppRadius.sm),
+            border: Border.all(color: AppColors.primary.withValues(alpha: 0.15), width: 0.5),
           ),
           child: Text(
             '$value$suffix',
             style: AppText.body.copyWith(
-                color: AppColors.primary, fontWeight: FontWeight.w600),
+                fontSize: 13,
+                color: AppColors.primary, 
+                fontWeight: FontWeight.bold),
           ),
         ),
         const SizedBox(width: 6),
@@ -496,18 +525,19 @@ class _StepBtn extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 28,
-        height: 28,
+        width: 30,
+        height: 30,
         decoration: BoxDecoration(
           color: onTap == null
-              ? AppColors.textDisabled.withValues(alpha: 0.1)
+              ? AppColors.textDisabled.withValues(alpha: 0.05)
               : AppColors.surfaceHigh,
           borderRadius: BorderRadius.circular(AppRadius.sm),
           border: Border.all(color: AppColors.glassBorder),
         ),
+        alignment: Alignment.center,
         child: FaIcon(
           icon,
-          size: 14,
+          size: 11,
           color: onTap == null ? AppColors.textDisabled : AppColors.textPrimary,
         ),
       ),
@@ -519,6 +549,7 @@ class _InputField extends StatelessWidget {
   final String label;
   final String hint;
   final TextEditingController controller;
+  final IconData icon;
   final TextInputType? keyboardType;
   final List<TextInputFormatter>? inputFormatters;
   final String? Function(String?)? validator;
@@ -527,6 +558,7 @@ class _InputField extends StatelessWidget {
     required this.label,
     required this.hint,
     required this.controller,
+    required this.icon,
     this.keyboardType,
     this.inputFormatters,
     this.validator,
@@ -537,22 +569,34 @@ class _InputField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: AppText.caption),
+        Text(
+          label, 
+          style: AppText.caption.copyWith(color: AppColors.textSecondary, fontWeight: FontWeight.bold, fontSize: 11),
+        ),
         const SizedBox(height: AppSpacing.xs),
         TextFormField(
           controller: controller,
           keyboardType: keyboardType ?? TextInputType.text,
           inputFormatters: inputFormatters,
           validator: validator,
-          style: AppText.body.copyWith(color: AppColors.textPrimary),
+          style: AppText.body.copyWith(color: AppColors.textPrimary, fontSize: 13),
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: AppText.body.copyWith(color: AppColors.textDisabled),
+            hintStyle: AppText.body.copyWith(color: AppColors.textDisabled, fontSize: 13),
             filled: true,
-            fillColor: AppColors.surfaceHigh,
+            fillColor: AppColors.surfaceHigh.withValues(alpha: 0.5),
+            prefixIcon: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  FaIcon(icon, size: 14, color: AppColors.textDisabled),
+                ],
+              ),
+            ),
             contentPadding: const EdgeInsets.symmetric(
               horizontal: AppSpacing.md,
-              vertical: AppSpacing.sm + 2,
+              vertical: 12,
             ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(AppRadius.md),

@@ -26,24 +26,48 @@ class RewardCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isRedeemed = reward.isRedeemed;
-    // For recurring/limited: redeem is available if balance sufficient AND recurring ready
     final bool canRedeem = _canRedeem();
     final progress = reward.progressFractionForBalance(userBalance);
 
     return Container(
       padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
-        gradient: canRedeem ? AppGradients.glassOverlay : null,
-        color: canRedeem ? null : AppColors.surface,
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadius.md),
         border: Border.all(
           color: canRedeem
-              ? AppColors.primary.withValues(alpha: 0.5)
+              ? AppColors.primary.withValues(alpha: 0.6)
               : isRedeemed
                   ? AppColors.success.withValues(alpha: 0.3)
                   : AppColors.glassBorder,
           width: canRedeem ? 1.5 : 1,
         ),
+        gradient: canRedeem
+            ? LinearGradient(
+                colors: [
+                  AppColors.primary.withValues(alpha: 0.08),
+                  AppColors.surface.withValues(alpha: 0.8),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              )
+            : LinearGradient(
+                colors: [
+                  AppColors.surfaceHigh.withValues(alpha: 0.3),
+                  AppColors.surface.withValues(alpha: 0.6),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+        boxShadow: canRedeem
+            ? [
+                BoxShadow(
+                  color: AppColors.primary.withValues(alpha: 0.08),
+                  blurRadius: 12,
+                  spreadRadius: 1,
+                ),
+              ]
+            : null,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,18 +76,23 @@ class RewardCard extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Emoji icon
+              // Emoji icon container
               Container(
-                width: 42,
-                height: 42,
+                width: 44,
+                height: 44,
                 decoration: BoxDecoration(
                   color: _iconBgColor,
                   borderRadius: BorderRadius.circular(AppRadius.sm),
+                  border: Border.all(
+                    color: canRedeem
+                        ? AppColors.primary.withValues(alpha: 0.25)
+                        : Colors.transparent,
+                  ),
                 ),
                 child: Center(
                   child: Text(
                     reward.iconEmoji,
-                    style: const TextStyle(fontSize: 20),
+                    style: const TextStyle(fontSize: 22),
                   ),
                 ),
               ),
@@ -77,6 +106,8 @@ class RewardCard extends StatelessWidget {
                     Text(
                       reward.name,
                       style: AppText.title.copyWith(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
                         color: isRedeemed
                             ? AppColors.textSecondary
                             : AppColors.textPrimary,
@@ -127,18 +158,19 @@ class RewardCard extends StatelessWidget {
             children: [
               Text(
                 '${userBalance.clamp(0.0, reward.pointCost).toPointsLabel} / ${reward.pointCost.toPointsLabel} pts',
-                style: AppText.caption,
+                style: AppText.caption.copyWith(color: AppColors.textSecondary, fontWeight: FontWeight.w500),
               ),
               Text(
                 '${(progress * 100).toStringAsFixed(0)}%',
                 style: AppText.caption.copyWith(
                   color: canRedeem ? AppColors.primary : AppColors.textDisabled,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ],
           ),
 
-          const SizedBox(height: AppSpacing.xs),
+          const SizedBox(height: 6),
 
           if (!isRedeemed) _ProgressBar(fraction: progress),
 
@@ -148,12 +180,35 @@ class RewardCard extends StatelessWidget {
             GestureDetector(
               onTap: onRedeem,
               child: Container(
-                height: 40,
+                height: 38,
                 decoration: BoxDecoration(
                   gradient: AppGradients.primary,
                   borderRadius: BorderRadius.circular(AppRadius.full),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.primary.withValues(alpha: 0.25),
+                      blurRadius: 8,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
                 ),
-                child: const Center(child: Text('Redeem', style: AppText.title)),
+                child: Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      FaIcon(FontAwesomeIcons.gift, color: Colors.white, size: 12),
+                      SizedBox(width: 6),
+                      Text(
+                        'Redeem Reward',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
           ],
@@ -163,11 +218,11 @@ class RewardCard extends StatelessWidget {
             Row(
               children: [
                 const FaIcon(FontAwesomeIcons.circleCheck,
-                    size: 14, color: AppColors.success),
+                    size: 13, color: AppColors.success),
                 const SizedBox(width: 4),
                 Text('Redeemed',
                     style:
-                        AppText.caption.copyWith(color: AppColors.success)),
+                        AppText.caption.copyWith(color: AppColors.success, fontWeight: FontWeight.bold)),
               ],
             ),
           ],
@@ -178,11 +233,11 @@ class RewardCard extends StatelessWidget {
             const SizedBox(height: AppSpacing.xs),
             Row(
               children: [
-                const FaIcon(FontAwesomeIcons.clockRotateLeft, size: 12, color: AppColors.textDisabled),
+                const FaIcon(FontAwesomeIcons.clockRotateLeft, size: 10, color: AppColors.textDisabled),
                 const SizedBox(width: 4),
                 Text(
                   'Redeemed ${reward.timesRedeemed}x',
-                  style: AppText.caption,
+                  style: AppText.caption.copyWith(fontSize: 10),
                 ),
               ],
             ),
@@ -201,9 +256,9 @@ class RewardCard extends StatelessWidget {
   }
 
   Color get _iconBgColor {
-    if (reward.isRedeemed) return AppColors.success.withValues(alpha: 0.15);
+    if (reward.isRedeemed) return AppColors.success.withValues(alpha: 0.12);
     if (_canRedeem()) return AppColors.primary.withValues(alpha: 0.15);
-    return AppColors.surfaceHigh;
+    return AppColors.surfaceHigh.withValues(alpha: 0.6);
   }
 }
 
@@ -216,14 +271,15 @@ class _CategoryBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2.5),
       decoration: BoxDecoration(
-        color: _color.withValues(alpha: 0.15),
+        color: _color.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(AppRadius.sm),
+        border: Border.all(color: _color.withValues(alpha: 0.18), width: 0.5),
       ),
       child: Text(
         '${RewardCategory.emoji(category)} ${RewardCategory.label(category)}',
-        style: AppText.caption.copyWith(color: _color, fontSize: 10),
+        style: AppText.caption.copyWith(color: _color, fontSize: 9, fontWeight: FontWeight.w600),
       ),
     );
   }
@@ -244,16 +300,18 @@ class _RecurrenceBadge extends StatelessWidget {
       label = '📅 ≤${reward.monthlyLimit ?? 1}x/bln';
     }
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2.5),
       decoration: BoxDecoration(
         color: AppColors.warning.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(AppRadius.sm),
+        border: Border.all(color: AppColors.warning.withValues(alpha: 0.18), width: 0.5),
       ),
       child: Text(
         label,
         style: AppText.caption.copyWith(
           color: AppColors.warning,
-          fontSize: 10,
+          fontSize: 9,
+          fontWeight: FontWeight.w600,
         ),
       ),
     );
@@ -268,7 +326,7 @@ class _ScheduledBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.sm, vertical: AppSpacing.xs),
+          horizontal: AppSpacing.sm, vertical: 5),
       margin: const EdgeInsets.only(bottom: AppSpacing.xs),
       decoration: BoxDecoration(
         color: const Color(0xFF5EC4F0).withValues(alpha: 0.1),
@@ -280,15 +338,16 @@ class _ScheduledBanner extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const FaIcon(FontAwesomeIcons.calendarDay, size: 12, color: Color(0xFF5EC4F0)),
-          const SizedBox(width: 4),
+          const FaIcon(FontAwesomeIcons.calendarDay, size: 10, color: Color(0xFF5EC4F0)),
+          const SizedBox(width: 6),
           Text(
             daysLeft == 0
                 ? '🎉 Hari redeem tiba!'
                 : '⏰ $daysLeft hari lagi',
             style: AppText.caption.copyWith(
               color: const Color(0xFF5EC4F0),
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.bold,
+              fontSize: 10,
             ),
           ),
         ],
@@ -305,7 +364,7 @@ class _CooldownBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.sm, vertical: AppSpacing.xs),
+          horizontal: AppSpacing.sm, vertical: 5),
       margin: const EdgeInsets.only(bottom: AppSpacing.xs),
       decoration: BoxDecoration(
         color: AppColors.warning.withValues(alpha: 0.1),
@@ -315,13 +374,14 @@ class _CooldownBanner extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const FaIcon(FontAwesomeIcons.stopwatch, size: 12, color: AppColors.warning),
-          const SizedBox(width: 4),
+          const FaIcon(FontAwesomeIcons.stopwatch, size: 10, color: AppColors.warning),
+          const SizedBox(width: 6),
           Text(
             'Cooldown: $daysLeft hari lagi',
             style: AppText.caption.copyWith(
               color: AppColors.warning,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.bold,
+              fontSize: 10,
             ),
           ),
         ],
@@ -339,8 +399,8 @@ class _OverflowMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopupMenuButton<String>(
       padding: EdgeInsets.zero,
-      iconSize: 16,
-      icon: const FaIcon(FontAwesomeIcons.ellipsisVertical, size: 16, color: AppColors.textDisabled),
+      iconSize: 14,
+      icon: const FaIcon(FontAwesomeIcons.ellipsisVertical, size: 14, color: AppColors.textDisabled),
       color: AppColors.surfaceHigh,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md)),
       onSelected: (value) {
@@ -354,9 +414,9 @@ class _OverflowMenu extends StatelessWidget {
             child: Row(
               children: [
                 const FaIcon(FontAwesomeIcons.box,
-                    size: 16, color: AppColors.textSecondary),
+                    size: 14, color: AppColors.textSecondary),
                 const SizedBox(width: 8),
-                Text('Arsipkan', style: AppText.body),
+                Text('Arsipkan', style: AppText.body.copyWith(fontSize: 13)),
               ],
             ),
           ),
@@ -365,9 +425,9 @@ class _OverflowMenu extends StatelessWidget {
             value: 'delete',
             child: Row(
               children: [
-                const FaIcon(FontAwesomeIcons.trash, size: 16, color: AppColors.error),
+                const FaIcon(FontAwesomeIcons.trash, size: 14, color: AppColors.error),
                 const SizedBox(width: 8),
-                Text('Hapus', style: AppText.body.copyWith(color: AppColors.error)),
+                Text('Hapus', style: AppText.body.copyWith(color: AppColors.error, fontSize: 13)),
               ],
             ),
           ),
@@ -390,6 +450,7 @@ class _ProgressBar extends StatelessWidget {
           children: [
             Container(color: AppColors.primaryDim),
             FractionallySizedBox(
+              alignment: Alignment.centerLeft,
               widthFactor: fraction,
               child: Container(
                 decoration: const BoxDecoration(gradient: AppGradients.progressFill),
