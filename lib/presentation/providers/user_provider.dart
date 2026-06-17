@@ -1,4 +1,4 @@
-﻿import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart';
 
 import 'package:earnjoy/data/models/user.dart';
 import 'package:earnjoy/data/datasources/storage_service.dart';
@@ -18,9 +18,16 @@ class UserProvider extends ChangeNotifier {
   SeasonProvider? _seasonProvider;
 
   void setSeasonProvider(SeasonProvider seasonProvider) {
+    if (_seasonProvider == seasonProvider) return;
     _seasonProvider = seasonProvider;
-    if (_user.id != 0) {
-      _seasonProvider?.loadSeasonData(_user.id);
+    _loadSeasonData();
+  }
+
+  void _loadSeasonData() {
+    if (_seasonProvider != null && _user.id != 0) {
+      Future.microtask(() {
+        _seasonProvider?.loadSeasonData(_user.id);
+      });
     }
   }
 
@@ -38,6 +45,7 @@ class UserProvider extends ChangeNotifier {
     _checkAndResetStreak();
     _checkWeeklyAdjustment();
     notifyListeners();
+    _loadSeasonData();
   }
 
   /// Formula: 1.0 - (burnoutScore * 0.1) + (disciplineScore * 0.05)
