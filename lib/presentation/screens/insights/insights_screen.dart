@@ -119,17 +119,23 @@ class _InsightsScreenState extends State<InsightsScreen>
         indicatorSize: TabBarIndicatorSize.tab,
         labelColor: Colors.white,
         unselectedLabelColor: AppColors.textSecondary,
-        labelStyle: AppText.caption.copyWith(fontWeight: FontWeight.w700, fontSize: 12),
-        unselectedLabelStyle: AppText.caption.copyWith(fontSize: 12, fontWeight: FontWeight.w500),
+        labelStyle: AppText.caption.copyWith(fontWeight: FontWeight.w700, fontSize: 11),
+        unselectedLabelStyle: AppText.caption.copyWith(fontSize: 11, fontWeight: FontWeight.w500),
         padding: EdgeInsets.zero,
         tabs: _tabs.map((t) => Tab(
           height: 38,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              FaIcon(t.icon, size: 12),
-              const SizedBox(width: 6),
-              Text(t.label),
+              FaIcon(t.icon, size: 11),
+              const SizedBox(width: 4),
+              Flexible(
+                child: Text(
+                  t.label,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+              ),
             ],
           ),
         )).toList(),
@@ -564,35 +570,40 @@ class _SummaryTab extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildMonthLabels(firstDay),
-                const SizedBox(height: 6),
                 SizedBox(
-                  height: 94,
+                  height: 114,
                   child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     reverse: true,
                     physics: const BouncingScrollPhysics(),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 4),
-                      child: Row(
-                        children: List.generate(53, (weekIdx) {
-                          return Column(
-                            children: List.generate(7, (dayIdx) {
-                              final dayOffset = weekIdx * 7 + dayIdx;
-                              final dayDate = firstDay.add(Duration(days: dayOffset));
-                              if (dayDate.isAfter(today)) {
-                                return _HeatCell(intensity: -1);
-                              }
-                              final pts = heatmapData[dayDate] ?? 0.0;
-                              final intensity = maxVal == 0 ? 0.0 : (pts / maxVal).clamp(0.0, 1.0);
-                              return Tooltip(
-                                triggerMode: TooltipTriggerMode.tap,
-                                message: '${dayDate.day}/${dayDate.month}: ${pts.toStringAsFixed(0)} pts',
-                                child: _HeatCell(intensity: intensity),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildMonthLabels(firstDay),
+                          const SizedBox(height: 6),
+                          Row(
+                            children: List.generate(53, (weekIdx) {
+                              return Column(
+                                children: List.generate(7, (dayIdx) {
+                                  final dayOffset = weekIdx * 7 + dayIdx;
+                                  final dayDate = firstDay.add(Duration(days: dayOffset));
+                                  if (dayDate.isAfter(today)) {
+                                    return _HeatCell(intensity: -1);
+                                  }
+                                  final pts = heatmapData[dayDate] ?? 0.0;
+                                  final intensity = maxVal == 0 ? 0.0 : (pts / maxVal).clamp(0.0, 1.0);
+                                  return Tooltip(
+                                    triggerMode: TooltipTriggerMode.tap,
+                                    message: '${dayDate.day}/${dayDate.month}: ${pts.toStringAsFixed(0)} pts',
+                                    child: _HeatCell(intensity: intensity),
+                                  );
+                                }),
                               );
                             }),
-                          );
-                        }),
+                          ),
+                        ],
                       ),
                     ),
                   ),
