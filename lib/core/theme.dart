@@ -1,49 +1,105 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppColors {
   // Background
-  static const background = Color(0xFF0D0D12);
-  static const surface = Color(0xFF16161E);
-  static const surfaceHigh = Color(0xFF1F1F2C);
+  static const background = Color(0xFF0A0E1A); // deep navy
+  static const surface = Color(0xFF111827);
+  static const surfaceHigh = Color(0xFF1C2030);
 
-  // Primary
-  static const primary = Color(0xFF8B7FF5);
-  static const primaryLight = Color(0xFFB8B0FF);
-  static const primaryDim = Color(0x288B7FF5);
+  // Primary — Amber-Orange sunrise
+  static const primary = Color(0xFFF97316);
+  static const primaryLight = Color(0xFFFBBF24);
+  static const primaryDim = Color(0x1FF97316); // 12% opacity
 
-  // Accent pair untuk gradient — hanya dipakai via AppGradients
-  static const gradientStart = Color(0xFF8B7FF5);
-  static const gradientEnd = Color(0xFF5EC4F0);
+  // Accent pair — hanya dipakai via AppGradients
+  static const gradientStart = Color(0xFFF97316); // amber-orange
+  static const gradientEnd = Color(0xFFFBBF24);   // amber-gold
 
   // Text
-  static const textPrimary = Color(0xFFF2F2F7);
-  static const textSecondary = Color(0xFF8E8EA0);
-  static const textDisabled = Color(0xFF3D3D50);
+  static const textPrimary = Color(0xFFF5F6FA);
+  static const textSecondary = Color(0xFF8C8FA6);
+  static const textDisabled = Color(0xFF4E5169);
 
   // Semantic
-  static const success = Color(0xFF4ECFA0);
-  static const warning = Color(0xFFFFB547);
-  static const error = Color(0xFFFF6B6B);
+  static const success = Color(0xFF3EC193);
+  static const warning = Color(0xFFF5A623);
+  static const error = Color(0xFFEC5B5B);
 
   // Glass border
-  static const glassBorder = Color(0x1AFFFFFF);
+  static const glassBorder = Color(0x0DFFFFFF);
+
+  // Centralized Reward Category Colors — disesuaikan lebih warm & harmonis
+  static const rewardFood = Color(0xFFFF8C42);
+  static const rewardEntertainment = Color(0xFFF97316);
+  static const rewardShopping = Color(0xFFFF6B9D);
+  static const rewardExperience = Color(0xFF56CFE1);
+  static const rewardSelfGrowth = Color(0xFF3EC193);
+  static const rewardRest = Color(0xFFB5838D);
+
+  // Centralized Badge Rarity Colors
+  static const rarityCommon = Color(0xFF8E92A8);
+  static const rarityRare = Color(0xFF56CFE1);
+  static const rarityEpic = Color(0xFFF97316);
+  static const rarityLegendary = Color(0xFFFBBF24);
+
+  // Centralized level/tier colors
+  static const tierNovice = Color(0xFF8E92A8);
+  static const tierApprentice = Color(0xFF56CFE1);
+  static const tierPractitioner = Color(0xFF3EC193);
+  static const tierAchiever = Color(0xFFF97316);
+  static const tierExpert = Color(0xFFFBBF24);
+  static const tierMaster = Color(0xFFFF6B6B);
+  static const tierLegend = Color(0xFFFFD700);
+
+  static Color rewardColorForCategory(String category) {
+    return switch (category) {
+      'food' => rewardFood,
+      'entertainment' => rewardEntertainment,
+      'shopping' => rewardShopping,
+      'experience' => rewardExperience,
+      'self_growth' => rewardSelfGrowth,
+      'rest' => rewardRest,
+      _ => textSecondary,
+    };
+  }
+
+  static Color tierColorFor(String tier) {
+    return switch (tier) {
+      'Novice' => tierNovice,
+      'Apprentice' => tierApprentice,
+      'Practitioner' => tierPractitioner,
+      'Achiever' => tierAchiever,
+      'Expert' => tierExpert,
+      'Master' => tierMaster,
+      'Legend' => tierLegend,
+      _ => tierApprentice,
+    };
+  }
 }
 
 class AppGradients {
-  // Hero gradient — point balance, CTA button utama
+  // Hero gradient — soft diagonal amber ke gold, 75% opacity
   static const primary = LinearGradient(
-    colors: [AppColors.gradientStart, AppColors.gradientEnd],
+    colors: [Color(0xBFF97316), Color(0xBFFBBF24)], // 75% opacity
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
 
-  // Subtle glow background — di belakang angka besar
+  // Subtle gradient for chips/card backgrounds
+  static const subtle = LinearGradient(
+    colors: [Color(0x14F97316), Color(0x08FBBF24)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  // Subtle warm glow — di belakang angka besar
   static const heroGlow = RadialGradient(
-    colors: [Color(0x338B7FF5), Color(0x00000000)],
+    colors: [Color(0x18F97316), Color(0x00000000)],
     radius: 0.85,
   );
 
-  // Progress bar fill
+  // Progress bar fill — amber left-to-right
   static const progressFill = LinearGradient(
     colors: [AppColors.gradientStart, AppColors.gradientEnd],
     begin: Alignment.centerLeft,
@@ -52,7 +108,7 @@ class AppGradients {
 
   // Card glassmorphism overlay
   static const glassOverlay = LinearGradient(
-    colors: [Color(0x1AFFFFFF), Color(0x05FFFFFF)],
+    colors: [Color(0x0AFFFFFF), Color(0x02FFFFFF)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
@@ -113,6 +169,7 @@ class AppRadius {
 }
 
 ThemeData buildAppTheme() {
+  final fontFamily = GoogleFonts.plusJakartaSans().fontFamily;
   return ThemeData(
     scaffoldBackgroundColor: AppColors.background,
     colorScheme: const ColorScheme.dark(
@@ -120,6 +177,7 @@ ThemeData buildAppTheme() {
       primary: AppColors.primary,
       error: AppColors.error,
     ),
+    fontFamily: fontFamily,
     textTheme: const TextTheme(
       displayLarge: AppText.displayLarge,
       displaySmall: AppText.displaySmall,

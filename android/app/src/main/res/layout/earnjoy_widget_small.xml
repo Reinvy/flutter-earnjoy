@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="12dp"
+    android:background="@drawable/widget_background">
+
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="⚡"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/widget_app_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="EarnJoy"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:paddingStart="4dp" />
+
+    </LinearLayout>
+
+    <!-- Points -->
+    <TextView
+        android:id="@+id/widget_points"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="0 pts"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginTop="4dp" />
+
+    <!-- Streak -->
+    <TextView
+        android:id="@+id/widget_streak"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="🔥 Day 0"
+        android:textColor="#E0E0E0"
+        android:textSize="12sp" />
+
+    <!-- Log Button -->
+    <Button
+        android:id="@+id/widget_log_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="+ Log"
+        android:textColor="#FFFFFF"
+        android:textSize="11sp"
+        android:layout_marginTop="6dp"
+        android:background="@drawable/widget_btn_background"
+        android:padding="6dp" />
+
+</LinearLayout>

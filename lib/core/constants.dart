@@ -1,4 +1,4 @@
-// Category weights
+﻿// Category weights
 const Map<String, double> categoryWeights = {
   'Work': 1.3,
   'Study': 1.2,
@@ -16,11 +16,11 @@ const int cooldownMinutes = 30;
 
 // Motivation messages (placeholder {points} will be replaced at runtime)
 const List<String> motivationMessages = [
-  'Mantap! Kamu makin dekat ke reward 🎁',
-  'Kerja keras terbayar. +{points} poin! 🔥',
-  'Streak kamu bertambah. Jaga terus! ⚡',
-  'Konsisten adalah kunci. Terus semangat! 💪',
-  'Setiap langkah kecil membawa kamu lebih jauh! 🚀',
+  'Mantap! Kamu makin dekat ke reward',
+  'Kerja keras terbayar. +{points} poin!',
+  'Streak kamu bertambah. Jaga terus!',
+  'Konsisten adalah kunci. Terus semangat!',
+  'Setiap langkah kecil membawa kamu lebih jauh!',
 ];
 
 // Default monthly budget cap

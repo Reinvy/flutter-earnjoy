@@ -45,5 +45,7 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSUserNotificationUsageDescription</key>
+	<string>EarnJoy akan mengirimkan pengingat cerdas untuk membantu kamu menjaga streak dan menyelesaikan quest tepat waktu.</string>
 </dict>
 </plist>

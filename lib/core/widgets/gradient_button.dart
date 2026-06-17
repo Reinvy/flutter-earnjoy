@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../theme.dart';
 
@@ -19,16 +20,16 @@ class GradientButton extends StatelessWidget {
       child: Opacity(
         opacity: isEnabled ? 1.0 : 0.45,
         child: Container(
-          height: 56,
+          height: 52,
           decoration: BoxDecoration(
             gradient: AppGradients.primary,
-            borderRadius: BorderRadius.circular(AppRadius.full),
+            borderRadius: BorderRadius.circular(AppRadius.md),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               if (icon != null) ...[
-                Icon(icon, color: AppColors.textPrimary, size: 20),
+                FaIcon(icon, color: AppColors.textPrimary, size: 16),
                 const SizedBox(width: AppSpacing.sm),
               ],
               Text(label, style: AppText.title),

@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:8378760439597630669",
-      "lastPropertyId": "6:1403280911222085861",
+      "lastPropertyId": "9:5093011319530020782",
       "name": "Activity",
       "properties": [
         {
@@ -17,11 +17,6 @@
         {
           "id": "2:4080407065618840883",
           "name": "title",
-          "type": 9
-        },
-        {
-          "id": "3:4594496594359212475",
-          "name": "category",
           "type": 9
         },
         {
@@ -38,13 +33,31 @@
           "id": "6:1403280911222085861",
           "name": "createdAt",
           "type": 10
+        },
+        {
+          "id": "7:8269014644489575122",
+          "name": "categoryId",
+          "indexId": "1:3911332620656891733",
+          "type": 11,
+          "flags": 520,
+          "relationTarget": "Category"
+        },
+        {
+          "id": "8:6416702016967092831",
+          "name": "cloudId",
+          "type": 9
+        },
+        {
+          "id": "9:5093011319530020782",
+          "name": "updatedAt",
+          "type": 10
         }
       ],
       "relations": []
     },
     {
       "id": "2:5487446234309648229",
-      "lastPropertyId": "5:3914125864764322844",
+      "lastPropertyId": "17:7544684912431927037",
       "name": "Reward",
       "properties": [
         {
@@ -72,6 +85,66 @@
           "id": "5:3914125864764322844",
           "name": "status",
           "type": 9
+        },
+        {
+          "id": "6:1282077585155473386",
+          "name": "category",
+          "type": 9
+        },
+        {
+          "id": "7:1069163868834099856",
+          "name": "iconEmoji",
+          "type": 9
+        },
+        {
+          "id": "8:8618466584560608699",
+          "name": "recurrenceType",
+          "type": 9
+        },
+        {
+          "id": "9:7204818839221795198",
+          "name": "recurrenceIntervalDays",
+          "type": 6
+        },
+        {
+          "id": "10:7800174343127086709",
+          "name": "monthlyLimit",
+          "type": 6
+        },
+        {
+          "id": "11:5642445334576474994",
+          "name": "timesRedeemed",
+          "type": 6
+        },
+        {
+          "id": "12:842377422317441525",
+          "name": "lastRedeemedAt",
+          "type": 9
+        },
+        {
+          "id": "13:809781644067206420",
+          "name": "scheduledFor",
+          "type": 10
+        },
+        {
+          "id": "14:2462667693307869165",
+          "name": "isTemplate",
+          "type": 1
+        },
+        {
+          "id": "15:5373135433765886221",
+          "name": "isArchived",
+          "type": 1
+        },
+        {
+          "id": "16:1751728320634880815",
+          "name": "cloudId",
+          "type": 9
+        },
+        {
+          "id": "17:7544684912431927037",
+          "name": "updatedAt",
+          "type": 10
         }
       ],
       "relations": []
@@ -112,7 +185,7 @@
     },
     {
       "id": "4:2329469739092839643",
-      "lastPropertyId": "13:8683160586099615495",
+      "lastPropertyId": "29:65793368076452699",
       "name": "User",
       "properties": [
         {
@@ -180,20 +253,710 @@
           "id": "13:8683160586099615495",
           "name": "lastWeeklyAdjustmentDate",
           "type": 10
+        },
+        {
+          "id": "14:6799221967030747424",
+          "name": "xp",
+          "type": 8
+        },
+        {
+          "id": "15:4586355628929139878",
+          "name": "dailyPointTarget",
+          "type": 8
+        },
+        {
+          "id": "16:7455435355485559539",
+          "name": "notificationsEnabled",
+          "type": 1
+        },
+        {
+          "id": "17:2472654809828793826",
+          "name": "preferredReminderHour",
+          "type": 6
+        },
+        {
+          "id": "18:7775652137231328337",
+          "name": "quietHoursStart",
+          "type": 6
+        },
+        {
+          "id": "19:2220298126360873456",
+          "name": "quietHoursEnd",
+          "type": 6
+        },
+        {
+          "id": "20:6137839207692255229",
+          "name": "restDayCount",
+          "type": 6
+        },
+        {
+          "id": "21:4372895117579580195",
+          "name": "lastRestDayDate",
+          "type": 10
+        },
+        {
+          "id": "22:3516354642143857572",
+          "name": "socialEnabled",
+          "type": 1
+        },
+        {
+          "id": "23:143194841470961990",
+          "name": "inviteCode",
+          "type": 9
+        },
+        {
+          "id": "24:4863814854066431433",
+          "name": "selectedGoalsJson",
+          "type": 9
+        },
+        {
+          "id": "25:2063399413500247450",
+          "name": "dreamReward",
+          "type": 9
+        },
+        {
+          "id": "26:3681575303752930461",
+          "name": "dreamRewardEmoji",
+          "type": 9
+        },
+        {
+          "id": "27:7204685667463732488",
+          "name": "preferredActiveHour",
+          "type": 6
+        },
+        {
+          "id": "28:3395942877934358313",
+          "name": "cloudId",
+          "type": 9
+        },
+        {
+          "id": "29:65793368076452699",
+          "name": "updatedAt",
+          "type": 10
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "5:3322047366399380042",
+      "lastPropertyId": "12:8996141344280570116",
+      "name": "Badge",
+      "properties": [
+        {
+          "id": "1:8153145288076872618",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:2759936791084830019",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "3:1793264907511378251",
+          "name": "description",
+          "type": 9
+        },
+        {
+          "id": "4:1344440584892728241",
+          "name": "icon",
+          "type": 9
+        },
+        {
+          "id": "5:5874067951615650337",
+          "name": "unlockedAt",
+          "type": 10
+        },
+        {
+          "id": "6:2262233366461776302",
+          "name": "badgeKey",
+          "indexId": "3:3333553318397306036",
+          "type": 9,
+          "flags": 2080
+        },
+        {
+          "id": "7:6382925441357053053",
+          "name": "category",
+          "type": 9
+        },
+        {
+          "id": "8:7449654561980373721",
+          "name": "rarity",
+          "type": 6
+        },
+        {
+          "id": "9:781843219672483026",
+          "name": "isUnlocked",
+          "type": 1
+        },
+        {
+          "id": "10:966599234471453781",
+          "name": "conditionJson",
+          "type": 9
+        },
+        {
+          "id": "11:591605850584100022",
+          "name": "cloudId",
+          "type": 9
+        },
+        {
+          "id": "12:8996141344280570116",
+          "name": "updatedAt",
+          "type": 10
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "6:2640218046937028971",
+      "lastPropertyId": "5:7265396781866812993",
+      "name": "Category",
+      "properties": [
+        {
+          "id": "1:4352459434270688408",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:3149154721878129159",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "3:3431854584732876063",
+          "name": "weight",
+          "type": 8
+        },
+        {
+          "id": "4:7775013380014703493",
+          "name": "isNegative",
+          "type": 1
+        },
+        {
+          "id": "5:7265396781866812993",
+          "name": "icon",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "7:7567813523073515485",
+      "lastPropertyId": "17:2704529478127726545",
+      "name": "Quest",
+      "properties": [
+        {
+          "id": "1:7371158289919641552",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:6040200239087109432",
+          "name": "title",
+          "type": 9
+        },
+        {
+          "id": "3:2175402730683762936",
+          "name": "description",
+          "type": 9
+        },
+        {
+          "id": "6:3127731869596257500",
+          "name": "bonusPoints",
+          "type": 8
+        },
+        {
+          "id": "7:7426645031311613286",
+          "name": "isCompleted",
+          "type": 1
+        },
+        {
+          "id": "9:3731154141248843751",
+          "name": "type",
+          "type": 9
+        },
+        {
+          "id": "10:2267035780086213689",
+          "name": "conditionType",
+          "type": 9
+        },
+        {
+          "id": "11:7533677366773694261",
+          "name": "conditionJson",
+          "type": 9
+        },
+        {
+          "id": "12:8504469234203673709",
+          "name": "rewardBadgeId",
+          "type": 9
+        },
+        {
+          "id": "13:4949161896773739033",
+          "name": "expiresAt",
+          "type": 10
+        },
+        {
+          "id": "14:8721969685919625293",
+          "name": "createdAt",
+          "type": 10
+        },
+        {
+          "id": "15:1537780824442832454",
+          "name": "progress",
+          "type": 8
+        },
+        {
+          "id": "16:3464064420174967122",
+          "name": "cloudId",
+          "type": 9
+        },
+        {
+          "id": "17:2704529478127726545",
+          "name": "updatedAt",
+          "type": 10
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "8:5845437736512944696",
+      "lastPropertyId": "5:2134722590970084420",
+      "name": "ActivityPreset",
+      "properties": [
+        {
+          "id": "1:5495318047791083633",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:2676697481260441231",
+          "name": "title",
+          "type": 9
+        },
+        {
+          "id": "3:6768655033661243172",
+          "name": "durationMinutes",
+          "type": 6
+        },
+        {
+          "id": "4:4152633897801720380",
+          "name": "isDefault",
+          "type": 1
+        },
+        {
+          "id": "5:2134722590970084420",
+          "name": "categoryId",
+          "indexId": "2:3777624002170199725",
+          "type": 11,
+          "flags": 520,
+          "relationTarget": "Category"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "9:7808974247994837562",
+      "lastPropertyId": "7:4820018273641208428",
+      "name": "HabitStack",
+      "properties": [
+        {
+          "id": "1:4778114985009592970",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:3205921390749209001",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "3:4356225111457186785",
+          "name": "description",
+          "type": 9
+        },
+        {
+          "id": "4:3620418212218115576",
+          "name": "isTemplate",
+          "type": 1
+        },
+        {
+          "id": "5:8299000440384491623",
+          "name": "bonusPoints",
+          "type": 6
+        },
+        {
+          "id": "6:582442702901983559",
+          "name": "streakDays",
+          "type": 6
+        },
+        {
+          "id": "7:4820018273641208428",
+          "name": "lastCompletedAt",
+          "type": 10
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "10:7342917611015812829",
+      "lastPropertyId": "7:6203203611291167830",
+      "name": "StackItem",
+      "properties": [
+        {
+          "id": "1:5979955306093983416",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:322927633571149786",
+          "name": "activityTitle",
+          "type": 9
+        },
+        {
+          "id": "3:286723056455138777",
+          "name": "durationMinutes",
+          "type": 6
+        },
+        {
+          "id": "4:4688313266828945134",
+          "name": "order",
+          "type": 6
+        },
+        {
+          "id": "5:6550157265344477643",
+          "name": "isCompleted",
+          "type": 1
+        },
+        {
+          "id": "6:8747843462921719409",
+          "name": "stackId",
+          "indexId": "4:5598720275755946603",
+          "type": 11,
+          "flags": 520,
+          "relationTarget": "HabitStack"
+        },
+        {
+          "id": "7:6203203611291167830",
+          "name": "categoryId",
+          "indexId": "5:5555334313111654792",
+          "type": 11,
+          "flags": 520,
+          "relationTarget": "Category"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "11:2557365640441454112",
+      "lastPropertyId": "9:3180405990358567827",
+      "name": "GameEvent",
+      "properties": [
+        {
+          "id": "1:8193640348775864306",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:8151176896268184773",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "3:4020750977805384163",
+          "name": "description",
+          "type": 9
+        },
+        {
+          "id": "4:3721411005798409741",
+          "name": "type",
+          "type": 9
+        },
+        {
+          "id": "5:5147108500045417948",
+          "name": "multiplier",
+          "type": 8
+        },
+        {
+          "id": "6:4546513750729967413",
+          "name": "startAt",
+          "type": 10
+        },
+        {
+          "id": "7:1562960696349937423",
+          "name": "endAt",
+          "type": 10
+        },
+        {
+          "id": "8:5684525397656855590",
+          "name": "isActive",
+          "type": 1
+        },
+        {
+          "id": "9:3180405990358567827",
+          "name": "targetCategoryId",
+          "type": 6
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "12:3765060305610154998",
+      "lastPropertyId": "7:6917089895121272658",
+      "name": "Season",
+      "properties": [
+        {
+          "id": "1:3419207769211005338",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:7564926970231952667",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "3:8230430264770792831",
+          "name": "themeKey",
+          "type": 9
+        },
+        {
+          "id": "4:5923449641650617892",
+          "name": "startAt",
+          "type": 10
+        },
+        {
+          "id": "5:2229340776866562236",
+          "name": "endAt",
+          "type": 10
+        },
+        {
+          "id": "6:6652341584909128135",
+          "name": "isActive",
+          "type": 1
+        },
+        {
+          "id": "7:6917089895121272658",
+          "name": "milestonesJson",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "13:6555632522327042793",
+      "lastPropertyId": "6:1413626782031776680",
+      "name": "SeasonProgress",
+      "properties": [
+        {
+          "id": "1:3200192800114898439",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:8769422093713330127",
+          "name": "seasonId",
+          "indexId": "6:2854972863311880089",
+          "type": 11,
+          "flags": 520,
+          "relationTarget": "Season"
+        },
+        {
+          "id": "3:5562363865291043077",
+          "name": "userId",
+          "indexId": "7:4135129020907092117",
+          "type": 11,
+          "flags": 520,
+          "relationTarget": "User"
+        },
+        {
+          "id": "4:6257366229845059426",
+          "name": "xpEarned",
+          "type": 8
+        },
+        {
+          "id": "5:1074105798098028902",
+          "name": "rank",
+          "type": 6
+        },
+        {
+          "id": "6:1413626782031776680",
+          "name": "milestoneReached",
+          "type": 6
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "14:4771121499296661285",
+      "lastPropertyId": "7:2266163428532328737",
+      "name": "AccountabilityPartner",
+      "properties": [
+        {
+          "id": "1:2690369317291155034",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:5925550068509625837",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "3:6471769775493711925",
+          "name": "inviteCode",
+          "type": 9
+        },
+        {
+          "id": "4:338996050217604243",
+          "name": "weeklyPoints",
+          "type": 8
+        },
+        {
+          "id": "5:6411319051157729063",
+          "name": "streakDays",
+          "type": 6
+        },
+        {
+          "id": "6:2879241753413678543",
+          "name": "isPrivacyShared",
+          "type": 1
+        },
+        {
+          "id": "7:2266163428532328737",
+          "name": "joinedAt",
+          "type": 10
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "15:8119789101529714766",
+      "lastPropertyId": "8:6174759686280910793",
+      "name": "Duel",
+      "properties": [
+        {
+          "id": "1:8751106164668901798",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:5658836113706546489",
+          "name": "partnerId",
+          "type": 6
+        },
+        {
+          "id": "3:3788654925585036816",
+          "name": "partnerName",
+          "type": 9
+        },
+        {
+          "id": "4:15242784486613171",
+          "name": "myPoints",
+          "type": 8
+        },
+        {
+          "id": "5:6143090167269415803",
+          "name": "partnerPoints",
+          "type": 8
+        },
+        {
+          "id": "6:2293256541679491250",
+          "name": "status",
+          "type": 9
+        },
+        {
+          "id": "7:8904823213902718910",
+          "name": "startAt",
+          "type": 10
+        },
+        {
+          "id": "8:6174759686280910793",
+          "name": "endAt",
+          "type": 10
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "16:5520838262180234975",
+      "lastPropertyId": "9:6619569030273763527",
+      "name": "GroupChallenge",
+      "properties": [
+        {
+          "id": "1:123334468286380947",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:1131292142924940573",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "3:6177817723829552704",
+          "name": "description",
+          "type": 9
+        },
+        {
+          "id": "4:2847109328367152029",
+          "name": "targetPoints",
+          "type": 8
+        },
+        {
+          "id": "5:8602494779491237420",
+          "name": "currentPoints",
+          "type": 8
+        },
+        {
+          "id": "6:9217037127294234919",
+          "name": "status",
+          "type": 9
+        },
+        {
+          "id": "7:9004596005791427647",
+          "name": "membersJson",
+          "type": 9
+        },
+        {
+          "id": "8:8444298669077515836",
+          "name": "startAt",
+          "type": 10
+        },
+        {
+          "id": "9:6619569030273763527",
+          "name": "endAt",
+          "type": 10
         }
       ],
       "relations": []
     }
   ],
-  "lastEntityId": "4:2329469739092839643",
-  "lastIndexId": "0:0",
+  "lastEntityId": "16:5520838262180234975",
+  "lastIndexId": "7:4135129020907092117",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,
   "retiredEntityUids": [],
   "retiredIndexUids": [],
-  "retiredPropertyUids": [],
+  "retiredPropertyUids": [
+    4594496594359212475,
+    6070520624509161020,
+    2990638843911408226,
+    152670071877584968
+  ],
   "retiredRelationUids": [],
   "version": 1
 }
