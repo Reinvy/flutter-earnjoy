@@ -5,7 +5,7 @@ import 'package:earnjoy/core/extensions.dart';
 import 'package:earnjoy/core/theme.dart';
 import 'package:earnjoy/data/models/reward.dart';
 
-class RewardCard extends StatelessWidget {
+class RewardCard extends StatefulWidget {
   final Reward reward;
 
   /// The user's current point balance - used to compute progress and unlock state.
@@ -24,241 +24,273 @@ class RewardCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final isRedeemed = reward.isRedeemed;
-    final bool canRedeem = _canRedeem();
-    final progress = reward.progressFractionForBalance(userBalance);
+  State<RewardCard> createState() => _RewardCardState();
+}
 
-    return Container(
-      padding: const EdgeInsets.all(AppSpacing.md),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppRadius.md),
-        border: Border.all(
-          color: canRedeem
-              ? AppColors.primary.withValues(alpha: 0.6)
-              : isRedeemed
-                  ? AppColors.success.withValues(alpha: 0.3)
-                  : AppColors.glassBorder,
-          width: canRedeem ? 1.5 : 1,
-        ),
-        gradient: canRedeem
-            ? LinearGradient(
-                colors: [
-                  AppColors.primary.withValues(alpha: 0.08),
-                  AppColors.surface.withValues(alpha: 0.8),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              )
-            : LinearGradient(
-                colors: [
-                  AppColors.surfaceHigh.withValues(alpha: 0.3),
-                  AppColors.surface.withValues(alpha: 0.6),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-        boxShadow: canRedeem
-            ? [
-                BoxShadow(
-                  color: AppColors.primary.withValues(alpha: 0.08),
-                  blurRadius: 12,
-                  spreadRadius: 1,
-                ),
-              ]
-            : null,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // ─── Header row ───────────────────────────────────────────────
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Emoji icon container
-              Container(
-                width: 44,
-                height: 44,
-                decoration: BoxDecoration(
-                  color: _iconBgColor,
-                  borderRadius: BorderRadius.circular(AppRadius.sm),
-                  border: Border.all(
-                    color: canRedeem
-                        ? AppColors.primary.withValues(alpha: 0.25)
-                        : Colors.transparent,
-                  ),
-                ),
-                child: Center(
-                  child: Text(
-                    reward.iconEmoji,
-                    style: const TextStyle(fontSize: 22),
-                  ),
-                ),
-              ),
-              const SizedBox(width: AppSpacing.sm),
-
-              // Name + badges
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      reward.name,
-                      style: AppText.title.copyWith(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: isRedeemed
-                            ? AppColors.textSecondary
-                            : AppColors.textPrimary,
-                        decoration:
-                            isRedeemed ? TextDecoration.lineThrough : null,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 4),
-                    Row(
-                      children: [
-                        // Category badge
-                        _CategoryBadge(category: reward.category),
-                        const SizedBox(width: 6),
-                        // Recurrence badge
-                        if (reward.recurrenceType != RecurrenceType.once)
-                          _RecurrenceBadge(reward: reward),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-
-              // Delete/archive menu
-              if (!isRedeemed)
-                _OverflowMenu(onDelete: onDelete, onArchive: onArchive),
-            ],
-          ),
-
-          const SizedBox(height: AppSpacing.sm),
-
-          // ─── Scheduled countdown ───────────────────────────────────────
-          if (reward.scheduledFor != null && !isRedeemed)
-            _ScheduledBanner(daysLeft: reward.scheduledDaysLeft ?? 0),
-
-          // ─── Cooldown info for recurring ──────────────────────────────
-          if (reward.recurrenceType == RecurrenceType.recurring &&
-              !reward.isRecurringReady &&
-              !isRedeemed)
-            _CooldownBanner(daysLeft: reward.recurringCooldownDaysLeft),
-
-          const SizedBox(height: AppSpacing.sm),
-
-          // ─── Progress ─────────────────────────────────────────────────
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                '${userBalance.clamp(0.0, reward.pointCost).toPointsLabel} / ${reward.pointCost.toPointsLabel} pts',
-                style: AppText.caption.copyWith(color: AppColors.textSecondary, fontWeight: FontWeight.w500),
-              ),
-              Text(
-                '${(progress * 100).toStringAsFixed(0)}%',
-                style: AppText.caption.copyWith(
-                  color: canRedeem ? AppColors.primary : AppColors.textDisabled,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 6),
-
-          if (!isRedeemed) _ProgressBar(fraction: progress),
-
-          // ─── Actions ──────────────────────────────────────────────────
-          if (canRedeem) ...[
-            const SizedBox(height: AppSpacing.md),
-            GestureDetector(
-              onTap: onRedeem,
-              child: Container(
-                height: 38,
-                decoration: BoxDecoration(
-                  gradient: AppGradients.primary,
-                  borderRadius: BorderRadius.circular(AppRadius.full),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.primary.withValues(alpha: 0.25),
-                      blurRadius: 8,
-                      offset: const Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child: Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      FaIcon(FontAwesomeIcons.gift, color: Colors.white, size: 12),
-                      SizedBox(width: 6),
-                      Text(
-                        'Redeem Reward',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 13,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
-
-          if (isRedeemed && reward.recurrenceType == RecurrenceType.once) ...[
-            const SizedBox(height: AppSpacing.sm),
-            Row(
-              children: [
-                const FaIcon(FontAwesomeIcons.circleCheck,
-                    size: 13, color: AppColors.success),
-                const SizedBox(width: 4),
-                Text('Redeemed',
-                    style:
-                        AppText.caption.copyWith(color: AppColors.success, fontWeight: FontWeight.bold)),
-              ],
-            ),
-          ],
-
-          // Times redeemed counter for recurring/limited
-          if (reward.timesRedeemed > 0 &&
-              reward.recurrenceType != RecurrenceType.once) ...[
-            const SizedBox(height: AppSpacing.xs),
-            Row(
-              children: [
-                const FaIcon(FontAwesomeIcons.clockRotateLeft, size: 10, color: AppColors.textDisabled),
-                const SizedBox(width: 4),
-                Text(
-                  'Redeemed ${reward.timesRedeemed}x',
-                  style: AppText.caption.copyWith(fontSize: 10),
-                ),
-              ],
-            ),
-          ],
-        ],
-      ),
-    );
-  }
+class _RewardCardState extends State<RewardCard> {
+  bool _isPressed = false;
 
   bool _canRedeem() {
-    if (!reward.canRedeemWithBalance(userBalance)) return false;
-    if (reward.recurrenceType == RecurrenceType.recurring) {
-      return reward.isRecurringReady;
+    if (!widget.reward.canRedeemWithBalance(widget.userBalance)) return false;
+    if (widget.reward.recurrenceType == RecurrenceType.recurring) {
+      return widget.reward.isRecurringReady;
     }
     return true;
   }
 
   Color get _iconBgColor {
-    if (reward.isRedeemed) return AppColors.success.withValues(alpha: 0.12);
+    if (widget.reward.isRedeemed) return AppColors.success.withValues(alpha: 0.12);
     if (_canRedeem()) return AppColors.primary.withValues(alpha: 0.15);
     return AppColors.surfaceHigh.withValues(alpha: 0.6);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isRedeemed = widget.reward.isRedeemed;
+    final bool canRedeem = _canRedeem();
+    final progress = widget.reward.progressFractionForBalance(widget.userBalance);
+
+    final isClickable = canRedeem && widget.onRedeem != null;
+
+    return GestureDetector(
+      onTapDown: isClickable ? (_) => setState(() => _isPressed = true) : null,
+      onTapUp: isClickable ? (_) {
+        setState(() => _isPressed = false);
+        widget.onRedeem?.call();
+      } : null,
+      onTapCancel: isClickable ? () => setState(() => _isPressed = false) : null,
+      child: AnimatedScale(
+        scale: _isPressed ? 0.97 : 1.0,
+        duration: const Duration(milliseconds: 100),
+        curve: Curves.easeOut,
+        child: Container(
+          padding: const EdgeInsets.all(AppSpacing.md),
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(AppRadius.md),
+            border: Border.all(
+              color: canRedeem
+                  ? AppColors.primary.withValues(alpha: 0.6)
+                  : isRedeemed
+                      ? AppColors.success.withValues(alpha: 0.3)
+                      : AppColors.glassBorder,
+              width: canRedeem ? 1.5 : 1,
+            ),
+            gradient: canRedeem
+                ? LinearGradient(
+                    colors: [
+                      AppColors.primary.withValues(alpha: 0.08),
+                      AppColors.surface.withValues(alpha: 0.8),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  )
+                : LinearGradient(
+                    colors: [
+                      AppColors.surfaceHigh.withValues(alpha: 0.3),
+                      AppColors.surface.withValues(alpha: 0.6),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+            boxShadow: canRedeem
+                ? [
+                    BoxShadow(
+                      color: AppColors.primary.withValues(alpha: 0.08),
+                      blurRadius: 12,
+                      spreadRadius: 1,
+                    ),
+                  ]
+                : null,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // ─── Header row ───────────────────────────────────────────────
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Circular Progress around Emoji container
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      SizedBox(
+                        width: 48,
+                        height: 48,
+                        child: CircularProgressIndicator(
+                          value: isRedeemed ? 1.0 : progress,
+                          strokeWidth: 3.0,
+                          backgroundColor: AppColors.primaryDim.withValues(alpha: 0.15),
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            isRedeemed
+                                ? AppColors.success
+                                : canRedeem
+                                    ? AppColors.primary
+                                    : AppColors.primary.withValues(alpha: 0.6),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: 38,
+                        height: 38,
+                        decoration: BoxDecoration(
+                          color: _iconBgColor,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Center(
+                          child: Text(
+                            widget.reward.iconEmoji,
+                            style: const TextStyle(fontSize: 18),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(width: AppSpacing.sm),
+
+                  // Name + badges
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.reward.name,
+                          style: AppText.title.copyWith(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: isRedeemed
+                                ? AppColors.textSecondary
+                                : AppColors.textPrimary,
+                            decoration:
+                                isRedeemed ? TextDecoration.lineThrough : null,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            // Category badge
+                            _CategoryBadge(category: widget.reward.category),
+                            const SizedBox(width: 6),
+                            // Recurrence badge
+                            if (widget.reward.recurrenceType != RecurrenceType.once)
+                              _RecurrenceBadge(reward: widget.reward),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // Delete/archive menu
+                  if (!isRedeemed)
+                    _OverflowMenu(onDelete: widget.onDelete, onArchive: widget.onArchive),
+                ],
+              ),
+
+              const SizedBox(height: AppSpacing.sm),
+
+              // ─── Scheduled countdown ───────────────────────────────────────
+              if (widget.reward.scheduledFor != null && !isRedeemed)
+                _ScheduledBanner(daysLeft: widget.reward.scheduledDaysLeft ?? 0),
+
+              // ─── Cooldown info for recurring ──────────────────────────────
+              if (widget.reward.recurrenceType == RecurrenceType.recurring &&
+                  !widget.reward.isRecurringReady &&
+                  !isRedeemed)
+                _CooldownBanner(daysLeft: widget.reward.recurringCooldownDaysLeft),
+
+              const SizedBox(height: AppSpacing.xs),
+
+              // ─── Progress Label ───────────────────────────────────────────
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '${widget.userBalance.clamp(0.0, widget.reward.pointCost).toPointsLabel} / ${widget.reward.pointCost.toPointsLabel} pts',
+                    style: AppText.caption.copyWith(color: AppColors.textSecondary, fontWeight: FontWeight.w500),
+                  ),
+                  if (!isRedeemed)
+                    Text(
+                      '${(progress * 100).toStringAsFixed(0)}%',
+                      style: AppText.caption.copyWith(
+                        color: canRedeem ? AppColors.primary : AppColors.textDisabled,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                ],
+              ),
+
+              // ─── Actions / Redeemed Label ──────────────────────────────────
+              if (canRedeem) ...[
+                const SizedBox(height: AppSpacing.md),
+                Container(
+                  height: 38,
+                  decoration: BoxDecoration(
+                    gradient: AppGradients.primary,
+                    borderRadius: BorderRadius.circular(AppRadius.full),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.primary.withValues(alpha: 0.25),
+                        blurRadius: 8,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        FaIcon(FontAwesomeIcons.gift, color: Colors.white, size: 12),
+                        SizedBox(width: 6),
+                        Text(
+                          'Redeem Reward',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+
+              if (isRedeemed && widget.reward.recurrenceType == RecurrenceType.once) ...[
+                const SizedBox(height: AppSpacing.sm),
+                Row(
+                  children: [
+                    const FaIcon(FontAwesomeIcons.circleCheck,
+                        size: 13, color: AppColors.success),
+                    const SizedBox(width: 4),
+                    Text('Redeemed',
+                        style:
+                            AppText.caption.copyWith(color: AppColors.success, fontWeight: FontWeight.bold)),
+                  ],
+                ),
+              ],
+
+              // Times redeemed counter for recurring/limited
+              if (widget.reward.timesRedeemed > 0 &&
+                  widget.reward.recurrenceType != RecurrenceType.once) ...[
+                const SizedBox(height: AppSpacing.xs),
+                Row(
+                  children: [
+                    const FaIcon(FontAwesomeIcons.clockRotateLeft, size: 10, color: AppColors.textDisabled),
+                    const SizedBox(width: 4),
+                    Text(
+                      'Redeemed ${widget.reward.timesRedeemed}x',
+                      style: AppText.caption.copyWith(fontSize: 10),
+                    ),
+                  ],
+                ),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 
@@ -436,29 +468,3 @@ class _OverflowMenu extends StatelessWidget {
   }
 }
 
-class _ProgressBar extends StatelessWidget {
-  final double fraction;
-  const _ProgressBar({required this.fraction});
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(AppRadius.full),
-      child: SizedBox(
-        height: 6,
-        child: Stack(
-          children: [
-            Container(color: AppColors.primaryDim),
-            FractionallySizedBox(
-              alignment: Alignment.centerLeft,
-              widthFactor: fraction,
-              child: Container(
-                decoration: const BoxDecoration(gradient: AppGradients.progressFill),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}

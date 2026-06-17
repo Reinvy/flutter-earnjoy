@@ -451,115 +451,122 @@ class _WishlistTab extends StatelessWidget {
     final archived = provider.archivedRewards;
     final selectedFilter = provider.wishlistCategoryFilter;
 
-    return CustomScrollView(
-      physics: const BouncingScrollPhysics(),
-      slivers: [
-        // Category filter
-        SliverToBoxAdapter(
-          child: _CategoryFilter(
-            selectedCategory: selectedFilter,
-            onSelect: (cat) => context
-                .read<RewardProvider>()
-                .setWishlistCategoryFilter(cat),
-          ),
+    return Column(
+      children: [
+        _CategoryFilter(
+          selectedCategory: selectedFilter,
+          onSelect: (cat) => context
+              .read<RewardProvider>()
+              .setWishlistCategoryFilter(cat),
         ),
-
-        // Reward list
-        if (filtered.isEmpty)
-          const SliverFillRemaining(child: _EmptyWishlist())
-        else
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screenH),
-            sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (_, i) {
-                  final r = filtered[i];
-                  return _SlideUpFadeIn(
-                    index: i,
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-                      child: RewardCard(
-                        reward: r,
-                        userBalance: userBalance,
-                        onRedeem: r.canRedeemWithBalance(userBalance) ||
-                                (r.recurrenceType == RecurrenceType.recurring &&
-                                    r.isRecurringReady &&
-                                    r.canRedeemWithBalance(userBalance))
-                            ? () => onConfirmRedeem(r.id, r.name, r.pointCost)
-                            : null,
-                        onDelete: () =>
-                            context.read<RewardProvider>().deleteReward(r.id),
-                        onArchive: () =>
-                            context.read<RewardProvider>().archiveReward(r.id),
-                      ),
-                    ),
-                  );
-                },
-                childCount: filtered.length,
+        const SizedBox(height: AppSpacing.md),
+        Expanded(
+          child: ShaderMask(
+            shaderCallback: (Rect rect) {
+              return const LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Colors.purple, Colors.transparent],
+                stops: [0.0, 0.04],
+              ).createShader(rect);
+            },
+            blendMode: BlendMode.dstOut,
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.screenH,
+                0,
+                AppSpacing.screenH,
+                AppSpacing.xl,
               ),
-            ),
-          ),
-
-        // Archive toggle
-        if (archived.isNotEmpty) ...[
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.screenH, vertical: AppSpacing.sm),
-              child: GestureDetector(
-                onTap: onToggleArchive,
-                child: Row(
-                  children: [
-                    FaIcon(
-                      showArchive
-                          ? FontAwesomeIcons.chevronUp
-                          : FontAwesomeIcons.chevronDown,
-                      size: 14,
-                      color: AppColors.textDisabled,
-                    ),
-                    const SizedBox(width: 6),
-                    Text(
-                      '${archived.length} reward diarsipkan',
-                      style: AppText.caption.copyWith(fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-
-          if (showArchive)
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.screenH),
-              sliver: SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (_, i) {
-                    final r = archived[i];
-                    return _SlideUpFadeIn(
-                      index: i + 3,
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-                        child: Opacity(
-                          opacity: 0.55,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (filtered.isEmpty)
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.45,
+                      child: const _EmptyWishlist(),
+                    )
+                  else
+                    _DynamicGrid<Reward>(
+                      items: filtered,
+                      spacing: AppSpacing.sm,
+                      getColumnCount: (ctx) =>
+                          MediaQuery.of(ctx).size.width >= 600 ? 2 : 1,
+                      itemBuilder: (ctx, r, idx) {
+                        return _SlideUpFadeIn(
+                          index: idx,
                           child: RewardCard(
                             reward: r,
                             userBalance: userBalance,
-                            onDelete: () => context
-                                .read<RewardProvider>()
-                                .deleteReward(r.id),
+                            onRedeem: r.canRedeemWithBalance(userBalance) ||
+                                    (r.recurrenceType == RecurrenceType.recurring &&
+                                        r.isRecurringReady &&
+                                        r.canRedeemWithBalance(userBalance))
+                                ? () => onConfirmRedeem(r.id, r.name, r.pointCost)
+                                : null,
+                            onDelete: () =>
+                                context.read<RewardProvider>().deleteReward(r.id),
+                            onArchive: () =>
+                                context.read<RewardProvider>().archiveReward(r.id),
                           ),
+                        );
+                      },
+                    ),
+
+                  // Archive toggle
+                  if (archived.isNotEmpty) ...[
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+                      child: GestureDetector(
+                        onTap: onToggleArchive,
+                        child: Row(
+                          children: [
+                            FaIcon(
+                              showArchive
+                                  ? FontAwesomeIcons.chevronUp
+                                  : FontAwesomeIcons.chevronDown,
+                              size: 14,
+                              color: AppColors.textDisabled,
+                            ),
+                            const SizedBox(width: 6),
+                            Text(
+                              '${archived.length} reward diarsipkan',
+                              style: AppText.caption.copyWith(fontWeight: FontWeight.bold),
+                            ),
+                          ],
                         ),
                       ),
-                    );
-                  },
-                  childCount: archived.length,
-                ),
+                    ),
+
+                    if (showArchive)
+                      _DynamicGrid<Reward>(
+                        items: archived,
+                        spacing: AppSpacing.sm,
+                        getColumnCount: (ctx) =>
+                            MediaQuery.of(ctx).size.width >= 600 ? 2 : 1,
+                        itemBuilder: (ctx, r, idx) {
+                          return _SlideUpFadeIn(
+                            index: idx + 3,
+                            child: Opacity(
+                              opacity: 0.55,
+                              child: RewardCard(
+                                reward: r,
+                                userBalance: userBalance,
+                                onDelete: () => context
+                                    .read<RewardProvider>()
+                                    .deleteReward(r.id),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                  ],
+                ],
               ),
             ),
-        ],
-
-        const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.xxl)),
+          ),
+        ),
       ],
     );
   }
@@ -577,76 +584,92 @@ class _ShopTab extends StatelessWidget {
     final addedNames = provider.addedTemplateNames;
     final selectedFilter = provider.shopCategoryFilter;
 
-    return CustomScrollView(
-      physics: const BouncingScrollPhysics(),
-      slivers: [
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(
-                AppSpacing.screenH, AppSpacing.xs, AppSpacing.screenH, AppSpacing.sm),
-            child: Text(
-              'Template reward siap pakai — pilih dan langsung tambah ke Wishlist!',
-              style: AppText.body.copyWith(fontSize: 12, color: AppColors.textSecondary),
-            ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(
+              AppSpacing.screenH, AppSpacing.xs, AppSpacing.screenH, AppSpacing.sm),
+          child: Text(
+            'Template reward siap pakai — pilih dan langsung tambah ke Wishlist!',
+            style: AppText.body.copyWith(fontSize: 12, color: AppColors.textSecondary),
           ),
         ),
 
-        SliverToBoxAdapter(
-          child: _CategoryFilter(
-            selectedCategory: selectedFilter,
-            onSelect: (cat) =>
-                context.read<RewardProvider>().setShopCategoryFilter(cat),
-          ),
+        _CategoryFilter(
+          selectedCategory: selectedFilter,
+          onSelect: (cat) =>
+              context.read<RewardProvider>().setShopCategoryFilter(cat),
         ),
 
-        if (templates.isEmpty)
-          const SliverFillRemaining(child: _EmptyShop())
-        else
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screenH),
-            sliver: SliverGrid(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: AppSpacing.sm,
-                crossAxisSpacing: AppSpacing.sm,
-                childAspectRatio: 0.64,
+        const SizedBox(height: AppSpacing.md),
+
+        Expanded(
+          child: ShaderMask(
+            shaderCallback: (Rect rect) {
+              return const LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Colors.purple, Colors.transparent],
+                stops: [0.0, 0.04],
+              ).createShader(rect);
+            },
+            blendMode: BlendMode.dstOut,
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.screenH,
+                0,
+                AppSpacing.screenH,
+                AppSpacing.xl,
               ),
-              delegate: SliverChildBuilderDelegate(
-                (_, i) {
-                  final t = templates[i];
-                  return _SlideUpFadeIn(
-                    index: i,
-                    child: TemplateCard(
-                      template: t,
-                      isAdded: addedNames.contains(t.name),
-                      onAdd: () {
-                        context.read<RewardProvider>().addFromTemplate(t);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              '${t.name} ditambahkan ke Wishlist!',
-                              style: AppText.body.copyWith(color: Colors.white),
-                            ),
-                            backgroundColor:
-                                AppColors.success.withValues(alpha: 0.9),
-                            behavior: SnackBarBehavior.floating,
-                            duration: const Duration(seconds: 2),
-                            shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.circular(AppRadius.md),
-                            ),
+              child: Column(
+                children: [
+                  if (templates.isEmpty)
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.4,
+                      child: const _EmptyShop(),
+                    )
+                  else
+                    _DynamicGrid<Reward>(
+                      items: templates,
+                      spacing: AppSpacing.sm,
+                      getColumnCount: (ctx) =>
+                          MediaQuery.of(ctx).size.width >= 600 ? 3 : 2,
+                      itemBuilder: (ctx, t, idx) {
+                        return _SlideUpFadeIn(
+                          index: idx,
+                          child: TemplateCard(
+                            template: t,
+                            isAdded: addedNames.contains(t.name),
+                            onAdd: () {
+                              context.read<RewardProvider>().addFromTemplate(t);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    '${t.name} ditambahkan ke Wishlist!',
+                                    style: AppText.body.copyWith(color: Colors.white),
+                                  ),
+                                  backgroundColor:
+                                      AppColors.success.withValues(alpha: 0.9),
+                                  behavior: SnackBarBehavior.floating,
+                                  duration: const Duration(seconds: 2),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.circular(AppRadius.md),
+                                  ),
+                                ),
+                              );
+                            },
                           ),
                         );
                       },
                     ),
-                  );
-                },
-                childCount: templates.length,
+                ],
               ),
             ),
           ),
-
-        const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.xxl)),
+        ),
       ],
     );
   }
@@ -1453,6 +1476,69 @@ class _SlideUpFadeInState extends State<_SlideUpFadeIn>
         position: _slideAnimation,
         child: widget.child,
       ),
+    );
+  }
+}
+
+class _DynamicGrid<T> extends StatelessWidget {
+  final List<T> items;
+  final int Function(BuildContext context) getColumnCount;
+  final Widget Function(BuildContext context, T item, int index) itemBuilder;
+  final double spacing;
+
+  const _DynamicGrid({
+    super.key,
+    required this.items,
+    required this.getColumnCount,
+    required this.itemBuilder,
+    this.spacing = 10,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final int columnCount = getColumnCount(context);
+
+    if (columnCount <= 1) {
+      return Column(
+        children: List.generate(items.length, (index) {
+          return Padding(
+            padding: EdgeInsets.only(bottom: spacing),
+            child: itemBuilder(context, items[index], index),
+          );
+        }),
+      );
+    }
+
+    final List<List<T>> columns = List.generate(columnCount, (_) => []);
+    final List<List<int>> itemIndices = List.generate(columnCount, (_) => []);
+    for (int i = 0; i < items.length; i++) {
+      final colIndex = i % columnCount;
+      columns[colIndex].add(items[i]);
+      itemIndices[colIndex].add(i);
+    }
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: List.generate(columnCount, (colIdx) {
+        final colItems = columns[colIdx];
+        final colIndices = itemIndices[colIdx];
+        return Expanded(
+          child: Padding(
+            padding: EdgeInsets.only(
+              left: colIdx > 0 ? spacing / 2 : 0,
+              right: colIdx < columnCount - 1 ? spacing / 2 : 0,
+            ),
+            child: Column(
+              children: List.generate(colItems.length, (itemIdx) {
+                return Padding(
+                  padding: EdgeInsets.only(bottom: spacing),
+                  child: itemBuilder(context, colItems[itemIdx], colIndices[itemIdx]),
+                );
+              }),
+            ),
+          ),
+        );
+      }),
     );
   }
 }
