@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'package:earnjoy/core/supabase_config.dart';
 import 'package:earnjoy/data/datasources/supabase_service.dart';
 
 /// Manages authentication state (anonymous, email/password).
@@ -9,9 +10,11 @@ class AuthProvider extends ChangeNotifier {
 
   AuthProvider(this._supabase) {
     // Listen for auth state changes (e.g., session restore on app launch)
-    Supabase.instance.client.auth.onAuthStateChange.listen((_) {
-      notifyListeners();
-    });
+    if (SupabaseConfig.isConfigured) {
+      Supabase.instance.client.auth.onAuthStateChange.listen((_) {
+        notifyListeners();
+      });
+    }
   }
 
   /// The currently signed-in Supabase user, or null if not authenticated.

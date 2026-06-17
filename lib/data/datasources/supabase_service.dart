@@ -1,5 +1,6 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'package:earnjoy/core/supabase_config.dart';
 import 'package:earnjoy/data/models/activity.dart';
 import 'package:earnjoy/data/models/badge.dart';
 import 'package:earnjoy/data/models/quest.dart';
@@ -9,33 +10,46 @@ import 'package:earnjoy/data/models/user.dart' as ej_user;
 /// Thin wrapper around the Supabase client that provides typed CRUD methods
 /// for all syncable entities. Must call [SupabaseService.initialize()] before use.
 class SupabaseService {
-  SupabaseClient get _client => Supabase.instance.client;
+  SupabaseClient get _client {
+    if (!SupabaseConfig.isConfigured) {
+      throw StateError('Supabase is not configured.');
+    }
+    return Supabase.instance.client;
+  }
 
   // ─── Auth ─────────────────────────────────────────────────────────────────
 
   /// The currently signed-in Supabase user (from gotrue).
-  User? get currentAuthUser => _client.auth.currentUser;
-  bool get isSignedIn => currentAuthUser != null;
+  User? get currentAuthUser => SupabaseConfig.isConfigured ? _client.auth.currentUser : null;
+  bool get isSignedIn => SupabaseConfig.isConfigured && currentAuthUser != null;
   bool get isAnonymous =>
-      currentAuthUser?.isAnonymous ?? false;
+      SupabaseConfig.isConfigured && (currentAuthUser?.isAnonymous ?? false);
 
   /// Signs in anonymously — creates a temporary account tied to this device.
   Future<void> signInAnonymous() async {
+    if (!SupabaseConfig.isConfigured) return;
     await _client.auth.signInAnonymously();
   }
 
   /// Creates a new account with email and password.
   Future<AuthResponse> signUpWithEmail(String email, String password) async {
+    if (!SupabaseConfig.isConfigured) {
+      throw const AuthException('Supabase tidak dikonfigurasi');
+    }
     return _client.auth.signUp(email: email, password: password);
   }
 
   /// Signs in with existing email/password credentials.
   Future<AuthResponse> signInWithEmail(String email, String password) async {
+    if (!SupabaseConfig.isConfigured) {
+      throw const AuthException('Supabase tidak dikonfigurasi');
+    }
     return _client.auth.signInWithPassword(email: email, password: password);
   }
 
   /// Signs out the current user.
   Future<void> signOut() async {
+    if (!SupabaseConfig.isConfigured) return;
     await _client.auth.signOut();
   }
 

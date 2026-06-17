@@ -86,134 +86,254 @@ class _ProfileScreenState extends State<ProfileScreen> {
             children: [
               const SizedBox(height: AppSpacing.lg),
 
-              UserHeader(
-                user: user,
-                totalEarned: totalEarned,
-                editingName: _editingName,
-                nameController: _nameController,
-                level: context.watch<UserProvider>().currentLevel,
-                tierName: context.watch<UserProvider>().currentTierName,
-                xpProgress: context.watch<UserProvider>().xpProgress,
-                xpForNextLevel: context.watch<UserProvider>().xpForNextLevel,
-                onEditTap: () {
-                  setState(() {
-                    _editingName = true;
-                    _editingBudget = false;
-                  });
-                },
-                onSaveName: _saveName,
+              // ─── Kategori 1: Profil & Statistik ─────────────────────────────
+              ProfileSectionCard(
+                title: 'Profil & Statistik',
+                icon: FontAwesomeIcons.solidUser,
+                children: [
+                  UserHeader(
+                    user: user,
+                    totalEarned: totalEarned,
+                    editingName: _editingName,
+                    nameController: _nameController,
+                    level: context.watch<UserProvider>().currentLevel,
+                    tierName: context.watch<UserProvider>().currentTierName,
+                    xpProgress: context.watch<UserProvider>().xpProgress,
+                    xpForNextLevel: context.watch<UserProvider>().xpForNextLevel,
+                    onEditTap: () {
+                      setState(() {
+                        _editingName = true;
+                        _editingBudget = false;
+                      });
+                    },
+                    onSaveName: _saveName,
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  Text(
+                    'Ringkasan Mingguan',
+                    style: AppText.caption.copyWith(
+                      color: AppColors.textSecondary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  WeeklySummaryCard(
+                    activitiesCount: weeklyActivities,
+                    pointsEarned: weeklyPoints,
+                    redeemedCount: weeklyRedeemed,
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  Text(
+                    'Lencana & Pencapaian',
+                    style: AppText.caption.copyWith(
+                      color: AppColors.textSecondary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  const BadgeGrid(),
+                ],
               ),
 
               const SizedBox(height: AppSpacing.sectionGap),
 
-              const Text('Weekly Summary', style: AppText.title),
-              const SizedBox(height: AppSpacing.sm),
-              WeeklySummaryCard(
-                activitiesCount: weeklyActivities,
-                pointsEarned: weeklyPoints,
-                redeemedCount: weeklyRedeemed,
+              // ─── Kategori 2: Target & Kategori ─────────────────────────────
+              ProfileSectionCard(
+                title: 'Target & Kategori',
+                icon: FontAwesomeIcons.bullseye,
+                children: [
+                  Text(
+                    'Batas Budget Bulanan',
+                    style: AppText.caption.copyWith(
+                      color: AppColors.textSecondary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    'Batas poin yang bisa kamu redeem dalam satu bulan. Isi 0 untuk unlimited.',
+                    style: AppText.caption.copyWith(fontSize: 11),
+                  ),
+                  const SizedBox(height: 8),
+                  BudgetSetting(
+                    user: user,
+                    editing: _editingBudget,
+                    controller: _budgetController,
+                    onEditTap: () {
+                      setState(() {
+                        _editingBudget = true;
+                        _editingName = false;
+                      });
+                    },
+                    onSave: _saveBudget,
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  Text(
+                    'Kategori Aktivitas',
+                    style: AppText.caption.copyWith(
+                      color: AppColors.textSecondary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    'Kelola kategori aktivitasmu. Tekan lama preset di Log Aktivitas untuk menghapusnya.',
+                    style: AppText.caption.copyWith(fontSize: 11),
+                  ),
+                  const SizedBox(height: 8),
+                  ChangeNotifierProvider.value(
+                    value: context.read<ActivityProvider>(),
+                    child: const CategoryManager(),
+                  ),
+                ],
               ),
 
               const SizedBox(height: AppSpacing.sectionGap),
 
-              const Text('Badges & Achievements', style: AppText.title),
-              const SizedBox(height: AppSpacing.sm),
-              const BadgeGrid(),
-
-              const SizedBox(height: AppSpacing.sectionGap),
-
-              const Text('Smart Notifications', style: AppText.title),
-              const SizedBox(height: AppSpacing.xs),
-              const Text(
-                'Pengingat cerdas yang belajar dari pola aktivitasmu.',
-                style: AppText.body,
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              const NotificationSettingsCard(),
-
-              const SizedBox(height: AppSpacing.sectionGap),
-              const Text('Monthly Budget Cap', style: AppText.title),
-              const SizedBox(height: AppSpacing.xs),
-              const Text(
-                'Batas poin yang bisa kamu redeem dalam satu bulan. Isi 0 untuk unlimited.',
-                style: AppText.body,
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              BudgetSetting(
-                user: user,
-                editing: _editingBudget,
-                controller: _budgetController,
-                onEditTap: () {
-                  setState(() {
-                    _editingBudget = true;
-                    _editingName = false;
-                  });
-                },
-                onSave: _saveBudget,
-              ),
-
-              const SizedBox(height: AppSpacing.sectionGap),
-
-              const Text('Categories', style: AppText.title),
-              const SizedBox(height: AppSpacing.xs),
-              Text(
-                'Manage your categories. Long-press a preset in Log Activity to delete it.',
-                style: AppText.body,
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              ChangeNotifierProvider.value(
-                value: context.read<ActivityProvider>(),
-                child: const CategoryManager(),
-              ),
-
-              const SizedBox(height: AppSpacing.sectionGap),
-
-              const Text('Cloud Sync', style: AppText.title),
-              const SizedBox(height: AppSpacing.xs),
-              const Text(
-                'Simpan data ke cloud dan akses dari perangkat lain.',
-                style: AppText.body,
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              const CloudSyncCard(),
-
-              const SizedBox(height: AppSpacing.sectionGap),
-
-              const Text('Social & Friends', style: AppText.title),
-              const SizedBox(height: AppSpacing.xs),
-              const Text(
-                'Lihat progress partner dan challenge grup kamu.',
-                style: AppText.body,
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              ActionTile(
-                icon: FontAwesomeIcons.users,
-                label: 'Social',
-                subtitle: 'Partner, duel, dan group challenge',
-                iconColor: AppColors.primaryLight,
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const SocialScreen()),
-                ),
-              ),
-
-              const SizedBox(height: AppSpacing.sectionGap),
-
-              const Text('Data', style: AppText.title),
-              const SizedBox(height: AppSpacing.sm),
-
-              ActionTile(
-                icon: FontAwesomeIcons.fileExport,
-                label: 'Export Data',
-                subtitle: 'Simpan semua data sebagai JSON',
-                iconColor: AppColors.primary,
-                onTap: () => _exportData(context),
+              // ─── Kategori 3: Sistem & Cloud Sync ───────────────────────────
+              ProfileSectionCard(
+                title: 'Sistem & Cloud Sync',
+                icon: FontAwesomeIcons.sliders,
+                children: [
+                  Text(
+                    'Pengingat Pintar',
+                    style: AppText.caption.copyWith(
+                      color: AppColors.textSecondary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    'Pengingat cerdas yang belajar dari pola aktivitasmu.',
+                    style: AppText.caption.copyWith(fontSize: 11),
+                  ),
+                  const SizedBox(height: 8),
+                  const NotificationSettingsCard(),
+                  const SizedBox(height: AppSpacing.md),
+                  Text(
+                    'Sinkronisasi Cloud',
+                    style: AppText.caption.copyWith(
+                      color: AppColors.textSecondary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    'Simpan data ke cloud dan akses dari perangkat lain.',
+                    style: AppText.caption.copyWith(fontSize: 11),
+                  ),
+                  const SizedBox(height: 8),
+                  const CloudSyncCard(),
+                  const SizedBox(height: AppSpacing.md),
+                  Text(
+                    'Sosial & Teman',
+                    style: AppText.caption.copyWith(
+                      color: AppColors.textSecondary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  ActionTile(
+                    icon: FontAwesomeIcons.users,
+                    label: 'Sosial',
+                    subtitle: 'Partner, duel, dan group challenge',
+                    iconColor: AppColors.primaryLight,
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const SocialScreen()),
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  Text(
+                    'Pencadangan Data',
+                    style: AppText.caption.copyWith(
+                      color: AppColors.textSecondary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  ActionTile(
+                    icon: FontAwesomeIcons.fileExport,
+                    label: 'Ekspor Data',
+                    subtitle: 'Simpan semua data sebagai JSON',
+                    iconColor: AppColors.primary,
+                    onTap: () => _exportData(context),
+                  ),
+                ],
               ),
 
               const SizedBox(height: AppSpacing.xxl),
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class ProfileSectionCard extends StatelessWidget {
+  final String title;
+  final IconData icon;
+  final List<Widget> children;
+
+  const ProfileSectionCard({
+    super.key,
+    required this.title,
+    required this.icon,
+    required this.children,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(AppSpacing.md),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppRadius.lg),
+        border: Border.all(color: AppColors.glassBorder),
+        gradient: LinearGradient(
+          colors: [
+            AppColors.surfaceHigh.withValues(alpha: 0.15),
+            AppColors.surface.withValues(alpha: 0.45),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.15),
+            blurRadius: 16,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: FaIcon(icon, size: 12, color: AppColors.primary),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                title,
+                style: AppText.title.copyWith(
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 0.2,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+          ...children,
+        ],
       ),
     );
   }

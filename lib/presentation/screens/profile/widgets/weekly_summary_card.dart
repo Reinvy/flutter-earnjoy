@@ -25,6 +25,14 @@ class WeeklySummaryCard extends StatelessWidget {
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadius.md),
         border: Border.all(color: AppColors.glassBorder),
+        gradient: LinearGradient(
+          colors: [
+            AppColors.surfaceHigh.withValues(alpha: 0.3),
+            AppColors.surface.withValues(alpha: 0.7),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
       ),
       child: Row(
         children: [
