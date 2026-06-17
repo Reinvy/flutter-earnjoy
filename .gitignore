@@ -47,5 +47,3 @@ app.*.map.json
 # GitHub related
 .github/
 
-# Internal documentation
-docs/
