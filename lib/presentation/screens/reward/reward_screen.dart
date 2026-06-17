@@ -665,33 +665,44 @@ class _CategoryFilter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 42,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screenH, vertical: 2),
-        children: [
-          // "All" chip
-          _FilterChip(
-            label: 'Semua',
-            isSelected: selectedCategory == null,
-            onTap: () => onSelect(null),
-            emoji: '🌟',
-          ),
-          const SizedBox(width: 6),
-          ...RewardCategory.all.map((cat) {
-            return Padding(
-              padding: const EdgeInsets.only(right: 6),
-              child: _FilterChip(
-                label: RewardCategory.label(cat),
-                isSelected: selectedCategory == cat,
-                onTap: () => onSelect(selectedCategory == cat ? null : cat),
-                emoji: RewardCategory.emoji(cat),
-              ),
-            );
-          }),
-        ],
+    return ShaderMask(
+      shaderCallback: (Rect rect) {
+        return const LinearGradient(
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+          colors: [Colors.purple, Colors.transparent, Colors.transparent, Colors.purple],
+          stops: [0.0, 0.04, 0.96, 1.0],
+        ).createShader(rect);
+      },
+      blendMode: BlendMode.dstOut,
+      child: SizedBox(
+        height: 42,
+        child: ListView(
+          scrollDirection: Axis.horizontal,
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screenH, vertical: 2),
+          children: [
+            // "All" chip
+            _FilterChip(
+              label: 'Semua',
+              isSelected: selectedCategory == null,
+              onTap: () => onSelect(null),
+              emoji: '🌟',
+            ),
+            const SizedBox(width: 6),
+            ...RewardCategory.all.map((cat) {
+              return Padding(
+                padding: const EdgeInsets.only(right: 6),
+                child: _FilterChip(
+                  label: RewardCategory.label(cat),
+                  isSelected: selectedCategory == cat,
+                  onTap: () => onSelect(selectedCategory == cat ? null : cat),
+                  emoji: RewardCategory.emoji(cat),
+                ),
+              );
+            }),
+          ],
+        ),
       ),
     );
   }
@@ -754,15 +765,34 @@ class _EmptyWishlist extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('🎁', style: TextStyle(fontSize: 44)),
-            const SizedBox(height: AppSpacing.sm),
-            const Text('Wishlist masih kosong.',
-                style: AppText.title, textAlign: TextAlign.center),
-            const SizedBox(height: AppSpacing.xs),
-            Text(
-              'Tambahkan reward impianmu atau pilih dari Shop!',
-              style: AppText.body.copyWith(fontSize: 12),
-              textAlign: TextAlign.center,
+            Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                color: AppColors.surfaceHigh.withValues(alpha: 0.5),
+                shape: BoxShape.circle,
+                border: Border.all(color: AppColors.glassBorder),
+              ),
+              alignment: Alignment.center,
+              child: const Text('🎁', style: TextStyle(fontSize: 36)),
+            ),
+            const SizedBox(height: AppSpacing.md),
+            const Text(
+              'Wishlist Kosong',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: AppColors.textPrimary,
+              ),
+            ),
+            const SizedBox(height: 6),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+              child: Text(
+                'Tambahkan reward impianmu secara kustom atau pilih dari daftar template di tab Shop!',
+                style: AppText.body.copyWith(fontSize: 12, height: 1.4, color: AppColors.textSecondary),
+                textAlign: TextAlign.center,
+              ),
             ),
           ],
         ),
@@ -782,12 +812,31 @@ class _EmptyShop extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('🛍️', style: TextStyle(fontSize: 44)),
-            const SizedBox(height: AppSpacing.sm),
+            Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                color: AppColors.surfaceHigh.withValues(alpha: 0.5),
+                shape: BoxShape.circle,
+                border: Border.all(color: AppColors.glassBorder),
+              ),
+              alignment: Alignment.center,
+              child: const Text('🛍️', style: TextStyle(fontSize: 36)),
+            ),
+            const SizedBox(height: AppSpacing.md),
             Text(
-              'Tidak ada template di kategori ini.',
-              style: AppText.title.copyWith(fontSize: 14),
+              'Shop Kosong',
+              style: AppText.title.copyWith(fontSize: 16, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 6),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+              child: Text(
+                'Tidak ada template reward yang tersedia dalam kategori ini.',
+                style: AppText.body.copyWith(fontSize: 12, height: 1.4, color: AppColors.textSecondary),
+                textAlign: TextAlign.center,
+              ),
             ),
           ],
         ),
@@ -867,6 +916,22 @@ class _RedeemConfirmSheet extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: AppSpacing.lg),
+
+          // Visual points flow indicator
+          Padding(
+            padding: const EdgeInsets.only(bottom: AppSpacing.md),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _buildPointIndicator(userBalance.toPointsLabel, AppColors.textSecondary),
+                const SizedBox(width: 12),
+                const FaIcon(FontAwesomeIcons.arrowRightLong, size: 14, color: AppColors.textDisabled),
+                const SizedBox(width: 12),
+                _buildPointIndicator(balanceAfter.toPointsLabel, AppColors.success),
+              ],
+            ),
+          ),
+
           Container(
             padding: const EdgeInsets.all(AppSpacing.md),
             decoration: BoxDecoration(
@@ -934,6 +999,32 @@ class _RedeemConfirmSheet extends StatelessWidget {
                     style: AppText.body
                         .copyWith(color: AppColors.textSecondary, fontWeight: FontWeight.w500)),
               ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPointIndicator(String value, Color color) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceHigh,
+        borderRadius: BorderRadius.circular(AppRadius.sm),
+        border: Border.all(color: AppColors.glassBorder),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const FaIcon(FontAwesomeIcons.coins, color: AppColors.primaryLight, size: 12),
+          const SizedBox(width: 6),
+          Text(
+            '$value pts',
+            style: TextStyle(
+              color: color,
+              fontWeight: FontWeight.bold,
+              fontSize: 12,
             ),
           ),
         ],
