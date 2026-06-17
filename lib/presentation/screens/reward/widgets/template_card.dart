@@ -114,118 +114,114 @@ class _TemplateCardState extends State<TemplateCard> {
               ),
 
               // Info section
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(AppSpacing.sm),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Category badge
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 2,
-                        ),
-                        decoration: BoxDecoration(
-                          color: _categoryColor.withValues(alpha: 0.12),
-                          borderRadius: BorderRadius.circular(AppRadius.sm),
-                          border: Border.all(color: _categoryColor.withValues(alpha: 0.18), width: 0.5),
-                        ),
-                        child: Text(
-                          RewardCategory.label(widget.template.category),
-                          style: AppText.caption.copyWith(
-                            color: _categoryColor,
-                            fontSize: 9,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+              Padding(
+                padding: const EdgeInsets.all(AppSpacing.sm),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Category badge
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 2,
                       ),
-
-                      const SizedBox(height: AppSpacing.xs),
-
-                      // Name
-                      Expanded(
-                        child: Text(
-                          widget.template.name,
-                          style: AppText.title.copyWith(fontSize: 13, fontWeight: FontWeight.bold),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                      decoration: BoxDecoration(
+                        color: _categoryColor.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(AppRadius.sm),
+                        border: Border.all(color: _categoryColor.withValues(alpha: 0.18), width: 0.5),
                       ),
-
-                      const SizedBox(height: 2),
-
-                      // Cost
-                      Text(
-                        '${widget.template.pointCost.toPointsLabel} pts',
+                      child: Text(
+                        RewardCategory.label(widget.template.category),
                         style: AppText.caption.copyWith(
-                          color: AppColors.primary,
+                          color: _categoryColor,
+                          fontSize: 9,
                           fontWeight: FontWeight.bold,
-                          fontSize: 11,
                         ),
                       ),
+                    ),
 
-                      // Recurrence info
-                      if (widget.template.recurrenceType != RecurrenceType.once) ...[
-                        const SizedBox(height: 2),
-                        Text(
-                          _recurrenceLabel,
-                          style: AppText.caption.copyWith(fontSize: 9, color: AppColors.textSecondary, fontWeight: FontWeight.w500),
-                        ),
-                      ],
+                    const SizedBox(height: AppSpacing.xs),
 
-                      const SizedBox(height: AppSpacing.sm),
+                    // Name
+                    Text(
+                      widget.template.name,
+                      style: AppText.title.copyWith(fontSize: 13, fontWeight: FontWeight.bold),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
 
-                      // Add button container
-                      Container(
-                        height: 32,
-                        decoration: BoxDecoration(
-                          gradient: widget.isAdded ? null : AppGradients.primary,
-                          color: widget.isAdded ? AppColors.surfaceHigh.withValues(alpha: 0.6) : null,
-                          borderRadius: BorderRadius.circular(AppRadius.full),
-                          boxShadow: widget.isAdded
-                              ? null
-                              : [
-                                  BoxShadow(
-                                    color: AppColors.primary.withValues(alpha: 0.2),
-                                    blurRadius: 4,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ],
-                        ),
-                        child: Center(
-                          child: widget.isAdded
-                              ? Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    FaIcon(
-                                      FontAwesomeIcons.check,
-                                      size: 11,
-                                      color: AppColors.success,
-                                    ),
-                                    const SizedBox(width: 4),
-                                    Text(
-                                      'Added',
-                                      style: AppText.caption.copyWith(
-                                        color: AppColors.success,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 11,
-                                      ),
-                                    ),
-                                  ],
-                                )
-                              : Text(
-                                  '+ Add',
-                                  style: AppText.caption.copyWith(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 11,
-                                  ),
-                                ),
-                        ),
+                    const SizedBox(height: 6),
+
+                    // Cost
+                    Text(
+                      '${widget.template.pointCost.toPointsLabel} pts',
+                      style: AppText.caption.copyWith(
+                        color: AppColors.primary,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 11,
+                      ),
+                    ),
+
+                    // Recurrence info
+                    if (widget.template.recurrenceType != RecurrenceType.once) ...[
+                      const SizedBox(height: 2),
+                      Text(
+                        _recurrenceLabel,
+                        style: AppText.caption.copyWith(fontSize: 9, color: AppColors.textSecondary, fontWeight: FontWeight.w500),
                       ),
                     ],
-                  ),
+
+                    const SizedBox(height: AppSpacing.sm),
+
+                    // Add button container
+                    Container(
+                      height: 32,
+                      decoration: BoxDecoration(
+                        gradient: widget.isAdded ? null : AppGradients.primary,
+                        color: widget.isAdded ? AppColors.surfaceHigh.withValues(alpha: 0.6) : null,
+                        borderRadius: BorderRadius.circular(AppRadius.full),
+                        boxShadow: widget.isAdded
+                            ? null
+                            : [
+                                BoxShadow(
+                                  color: AppColors.primary.withValues(alpha: 0.2),
+                                  blurRadius: 4,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                      ),
+                      child: Center(
+                        child: widget.isAdded
+                            ? Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  FaIcon(
+                                    FontAwesomeIcons.check,
+                                    size: 11,
+                                    color: AppColors.success,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    'Added',
+                                    style: AppText.caption.copyWith(
+                                      color: AppColors.success,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 11,
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : Text(
+                                '+ Add',
+                                style: AppText.caption.copyWith(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 11,
+                                ),
+                              ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
