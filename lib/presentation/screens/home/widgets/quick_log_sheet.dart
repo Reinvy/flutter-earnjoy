@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'package:earnjoy/core/theme.dart';
@@ -154,8 +155,8 @@ class _QuickLogSheetState extends State<QuickLogSheet> {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Icon(Icons.add_circle_outline,
-                                color: AppColors.textDisabled, size: 40),
+                            const FaIcon(FontAwesomeIcons.circlePlus,
+                                color: AppColors.textDisabled, size: 36),
                             const SizedBox(height: 8),
                             Text(
                               'No presets yet.\nCreate presets on the Home screen.',
@@ -259,10 +260,10 @@ class _PresetTile extends StatelessWidget {
                   ),
                 ),
                 Icon(
-                  isLogged ? Icons.check_circle_rounded : Icons.bolt_rounded,
+                  isLogged ? FontAwesomeIcons.solidCircleCheck : FontAwesomeIcons.bolt,
                   color:
                       isLogged ? AppColors.primary : AppColors.textDisabled,
-                  size: 22,
+                  size: 20,
                 ),
               ],
             ),

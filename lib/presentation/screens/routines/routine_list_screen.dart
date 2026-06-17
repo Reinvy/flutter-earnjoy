@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:earnjoy/core/theme.dart';
 import 'package:earnjoy/presentation/providers/habit_stack_provider.dart';
@@ -40,7 +41,7 @@ class RoutineListScreen extends StatelessWidget {
             const SnackBar(content: Text('Custom Stack Builder coming soon!')),
           );
         },
-        icon: const Icon(Icons.add),
+        icon: const FaIcon(FontAwesomeIcons.plus, size: 16),
         label: const Text('Create Routine'),
       ),
     );
@@ -94,7 +95,7 @@ class _RoutineCard extends StatelessWidget {
                       ),
                       child: Row(
                         children: [
-                          const Icon(Icons.bolt, size: 16, color: AppColors.primary),
+                          const FaIcon(FontAwesomeIcons.bolt, size: 14, color: AppColors.primary),
                           Text(
                             '+${stack.bonusPoints}',
                             style: const TextStyle(

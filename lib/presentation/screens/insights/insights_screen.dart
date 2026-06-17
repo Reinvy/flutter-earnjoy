@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'package:earnjoy/core/theme.dart';
@@ -22,13 +23,13 @@ class _InsightsScreenState extends State<InsightsScreen>
   late final TabController _tabController;
 
   static const _tabs = [
-    (icon: Icons.grid_view_rounded, label: 'Heatmap'),
-    (icon: Icons.trending_up_rounded, label: 'Trend'),
-    (icon: Icons.donut_large_rounded, label: 'Kategori'),
-    (icon: Icons.bar_chart_rounded, label: 'Peak Hours'),
-    (icon: Icons.local_fire_department_rounded, label: 'Streak'),
-    (icon: Icons.flag_rounded, label: 'Target'),
-    (icon: Icons.favorite_rounded, label: 'Wellbeing'),
+    (icon: FontAwesomeIcons.tableCells, label: 'Heatmap'),
+    (icon: FontAwesomeIcons.chartLine, label: 'Trend'),
+    (icon: FontAwesomeIcons.chartPie, label: 'Kategori'),
+    (icon: FontAwesomeIcons.chartBar, label: 'Peak Hours'),
+    (icon: FontAwesomeIcons.fire, label: 'Streak'),
+    (icon: FontAwesomeIcons.flag, label: 'Target'),
+    (icon: FontAwesomeIcons.solidHeart, label: 'Wellbeing'),
   ];
 
   @override
@@ -81,7 +82,7 @@ class _InsightsScreenState extends State<InsightsScreen>
         children: [
           ShaderMask(
             shaderCallback: (r) => AppGradients.primary.createShader(r),
-            child: const Icon(Icons.insights_rounded, color: Colors.white, size: 26),
+            child: const FaIcon(FontAwesomeIcons.chartLine, color: Colors.white, size: 26),
           ),
           const SizedBox(width: AppSpacing.sm),
           Text('Insights', style: AppText.displaySmall.copyWith(fontSize: 22)),
@@ -118,7 +119,7 @@ class _InsightsScreenState extends State<InsightsScreen>
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(t.icon, size: 14),
+                FaIcon(t.icon, size: 14),
                 const SizedBox(width: 4),
                 Text(t.label),
               ],
@@ -142,7 +143,7 @@ class _RefreshButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(AppRadius.sm),
           border: Border.all(color: AppColors.glassBorder),
         ),
-        child: const Icon(Icons.refresh_rounded, size: 18, color: AppColors.textSecondary),
+        child: const FaIcon(FontAwesomeIcons.arrowsRotate, size: 18, color: AppColors.textSecondary),
       ),
     );
   }
@@ -1199,7 +1200,7 @@ class _EmptyState extends StatelessWidget {
         children: [
           ShaderMask(
             shaderCallback: (r) => AppGradients.primary.createShader(r),
-            child: const Icon(Icons.bar_chart_rounded, size: 48, color: Colors.white),
+            child: const FaIcon(FontAwesomeIcons.chartBar, size: 48, color: Colors.white),
           ),
           const SizedBox(height: AppSpacing.sm),
           Text(message, style: AppText.body, textAlign: TextAlign.center),
@@ -1334,8 +1335,8 @@ class _WellbeingPanel extends StatelessWidget {
                             }
                           }
                         : null,
-                    icon: Icon(
-                      canDeclare ? Icons.self_improvement_rounded : Icons.lock_clock_rounded,
+                    icon: FaIcon(
+                      canDeclare ? FontAwesomeIcons.personArrowUpFromLine : FontAwesomeIcons.clockRotateLeft,
                       size: 18,
                     ),
                     label: Text(

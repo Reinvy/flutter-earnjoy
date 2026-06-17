@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:earnjoy/core/theme.dart';
 import 'package:earnjoy/presentation/providers/badge_provider.dart';
@@ -47,15 +48,15 @@ class _BadgeItem extends StatelessWidget {
   IconData _getIconData(String iconName) {
     switch (iconName) {
       case 'local_fire_department':
-        return Icons.local_fire_department_rounded;
+        return FontAwesomeIcons.fire;
       case 'emoji_events':
-        return Icons.emoji_events_rounded;
+        return FontAwesomeIcons.trophy;
       case 'military_tech':
-        return Icons.military_tech_rounded;
+        return FontAwesomeIcons.medal;
       case 'redeem':
-        return Icons.redeem_rounded;
+        return FontAwesomeIcons.gift;
       default:
-        return Icons.star_rounded;
+        return FontAwesomeIcons.star;
     }
   }
 
@@ -93,10 +94,12 @@ class _BadgeItem extends StatelessWidget {
               width: 2,
             ),
           ),
-          child: Icon(
-            _getIconData(badge.icon),
-            size: 32,
-            color: isUnlocked ? color : AppColors.textDisabled,
+          child: Center(
+            child: FaIcon(
+              _getIconData(badge.icon),
+              size: 28,
+              color: isUnlocked ? color : AppColors.textDisabled,
+            ),
           ),
         ),
         const SizedBox(height: 8),

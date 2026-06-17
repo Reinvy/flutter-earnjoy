@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:earnjoy/core/theme.dart';
@@ -7,7 +7,7 @@ import 'package:earnjoy/core/theme.dart';
 class OnboardingTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hint;
-  final IconData icon;
+  final Widget? prefixIconWidget;
   final TextInputType keyboardType;
   final List<TextInputFormatter> inputFormatters;
 
@@ -15,7 +15,7 @@ class OnboardingTextField extends StatelessWidget {
     super.key,
     required this.controller,
     required this.hint,
-    required this.icon,
+    this.prefixIconWidget,
     this.keyboardType = TextInputType.text,
     this.inputFormatters = const [],
   });
@@ -30,7 +30,12 @@ class OnboardingTextField extends StatelessWidget {
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: AppText.body,
-        prefixIcon: Icon(icon, color: AppColors.textSecondary, size: 20),
+        prefixIcon: prefixIconWidget != null
+            ? SizedBox(
+                width: 48,
+                child: Center(child: prefixIconWidget),
+              )
+            : null,
         filled: true,
         fillColor: AppColors.surface,
         contentPadding: const EdgeInsets.symmetric(

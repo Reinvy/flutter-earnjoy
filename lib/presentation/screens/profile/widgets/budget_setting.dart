@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/services.dart';
 
 import 'package:earnjoy/core/extensions.dart';
@@ -40,8 +41,8 @@ class BudgetSetting extends StatelessWidget {
               color: AppColors.warning.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(AppRadius.sm),
             ),
-            child: const Icon(
-              Icons.account_balance_wallet_outlined,
+            child: const FaIcon(
+              FontAwesomeIcons.wallet,
               size: 18,
               color: AppColors.warning,
             ),
@@ -91,7 +92,7 @@ class BudgetSetting extends StatelessWidget {
                       const SizedBox(width: AppSpacing.xs),
                       GestureDetector(
                         onTap: onSave,
-                        child: const Icon(Icons.check, color: AppColors.success, size: 22),
+                        child: const FaIcon(FontAwesomeIcons.check, color: AppColors.success, size: 22),
                       ),
                     ],
                   )
@@ -108,7 +109,7 @@ class BudgetSetting extends StatelessWidget {
                           style: AppText.title,
                         ),
                         const SizedBox(width: 6),
-                        const Icon(Icons.edit_outlined, size: 14, color: AppColors.textDisabled),
+                        const FaIcon(FontAwesomeIcons.penToSquare, size: 14, color: AppColors.textDisabled),
                       ],
                     ),
                   ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/services.dart';
 
 import 'package:earnjoy/core/extensions.dart';
@@ -129,8 +130,8 @@ class TemplateCard extends StatelessWidget {
                           ? Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(
-                                  Icons.check,
+                                FaIcon(
+                                  FontAwesomeIcons.check,
                                   size: 12,
                                   color: AppColors.success,
                                 ),

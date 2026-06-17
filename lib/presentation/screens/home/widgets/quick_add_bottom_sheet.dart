@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
@@ -63,7 +64,7 @@ class QuickAddBottomSheet extends StatelessWidget {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.add, color: AppColors.primary, size: 16),
+                        const FaIcon(FontAwesomeIcons.plus, color: AppColors.primary, size: 14),
                         const SizedBox(width: 4),
                         Text(
                           'Add Activity',
@@ -157,10 +158,12 @@ class _PresetTile extends StatelessWidget {
                 color: AppColors.primaryDim,
                 borderRadius: BorderRadius.circular(AppRadius.sm),
               ),
-              child: Icon(
-                _iconForCategory(preset.category.target?.icon ?? ''),
-                color: AppColors.primary,
-                size: 20,
+              child: Center(
+                child: FaIcon(
+                  _iconForCategory(preset.category.target?.icon ?? ''),
+                  color: AppColors.primary,
+                  size: 18,
+                ),
               ),
             ),
             const SizedBox(width: AppSpacing.md),
@@ -196,7 +199,7 @@ class _PresetTile extends StatelessWidget {
                 ],
               ),
             ),
-            const Icon(Icons.chevron_right, color: AppColors.textSecondary, size: 20),
+            const FaIcon(FontAwesomeIcons.chevronRight, color: AppColors.textSecondary, size: 16),
           ],
         ),
       ),
@@ -252,19 +255,19 @@ class _PresetTile extends StatelessWidget {
   IconData _iconForCategory(String icon) {
     switch (icon) {
       case 'work':
-        return Icons.work_outline;
+        return FontAwesomeIcons.briefcase;
       case 'menu_book':
-        return Icons.menu_book_outlined;
+        return FontAwesomeIcons.bookOpen;
       case 'fitness_center':
-        return Icons.fitness_center;
+        return FontAwesomeIcons.dumbbell;
       case 'palette':
-        return Icons.palette_outlined;
+        return FontAwesomeIcons.paintbrush;
       case 'sports_esports':
-        return Icons.sports_esports_outlined;
+        return FontAwesomeIcons.gamepad;
       case 'phone_android':
-        return Icons.phone_android;
+        return FontAwesomeIcons.mobileScreen;
       default:
-        return Icons.star_outline;
+        return FontAwesomeIcons.star;
     }
   }
 }

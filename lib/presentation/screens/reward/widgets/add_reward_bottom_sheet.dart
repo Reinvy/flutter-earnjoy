@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
@@ -251,7 +252,7 @@ class _AddRewardBottomSheetState extends State<AddRewardBottomSheet> {
               children: [
                 _RecurrenceChip(
                   label: '1x Saja',
-                  icon: Icons.looks_one_outlined,
+                  icon: FontAwesomeIcons.one,
                   isSelected: _selectedRecurrence == RecurrenceType.once,
                   onTap: () =>
                       setState(() => _selectedRecurrence = RecurrenceType.once),
@@ -259,7 +260,7 @@ class _AddRewardBottomSheetState extends State<AddRewardBottomSheet> {
                 const SizedBox(width: 6),
                 _RecurrenceChip(
                   label: 'Berulang',
-                  icon: Icons.repeat,
+                  icon: FontAwesomeIcons.repeat,
                   isSelected: _selectedRecurrence == RecurrenceType.recurring,
                   onTap: () => setState(
                       () => _selectedRecurrence = RecurrenceType.recurring),
@@ -267,7 +268,7 @@ class _AddRewardBottomSheetState extends State<AddRewardBottomSheet> {
                 const SizedBox(width: 6),
                 _RecurrenceChip(
                   label: 'Terbatas',
-                  icon: Icons.calendar_month_outlined,
+                  icon: FontAwesomeIcons.calendarDays,
                   isSelected: _selectedRecurrence == RecurrenceType.limited,
                   onTap: () => setState(
                       () => _selectedRecurrence = RecurrenceType.limited),
@@ -332,8 +333,8 @@ class _AddRewardBottomSheetState extends State<AddRewardBottomSheet> {
                 ),
                 child: Row(
                   children: [
-                    Icon(
-                      Icons.event,
+                    FaIcon(
+                      FontAwesomeIcons.calendarDay,
                       size: 18,
                       color: _scheduledFor != null
                           ? AppColors.primary
@@ -355,7 +356,7 @@ class _AddRewardBottomSheetState extends State<AddRewardBottomSheet> {
                     if (_scheduledFor != null)
                       GestureDetector(
                         onTap: () => setState(() => _scheduledFor = null),
-                        child: const Icon(Icons.close,
+                        child: const FaIcon(FontAwesomeIcons.xmark,
                             size: 16, color: AppColors.textDisabled),
                       ),
                   ],
@@ -419,7 +420,7 @@ class _RecurrenceChip extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon,
+            FaIcon(icon,
                 size: 12,
                 color: isSelected ? AppColors.primary : AppColors.textDisabled),
             const SizedBox(width: 4),
@@ -458,7 +459,7 @@ class _StepperControl extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         _StepBtn(
-          icon: Icons.remove,
+          icon: FontAwesomeIcons.minus,
           onTap: value > min ? () => onChanged(value - 1) : null,
         ),
         const SizedBox(width: 6),
@@ -476,7 +477,7 @@ class _StepperControl extends StatelessWidget {
         ),
         const SizedBox(width: 6),
         _StepBtn(
-          icon: Icons.add,
+          icon: FontAwesomeIcons.plus,
           onTap: value < max ? () => onChanged(value + 1) : null,
         ),
       ],
@@ -504,7 +505,7 @@ class _StepBtn extends StatelessWidget {
           borderRadius: BorderRadius.circular(AppRadius.sm),
           border: Border.all(color: AppColors.glassBorder),
         ),
-        child: Icon(
+        child: FaIcon(
           icon,
           size: 14,
           color: onTap == null ? AppColors.textDisabled : AppColors.textPrimary,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:earnjoy/core/theme.dart';
 import 'package:earnjoy/core/widgets/gradient_button.dart';
@@ -49,7 +50,7 @@ class OnboardingPage4 extends StatelessWidget {
                 gradient: AppGradients.primary,
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.notifications_active_outlined, color: Colors.white, size: 36),
+              child: const FaIcon(FontAwesomeIcons.bell, color: Colors.white, size: 36),
             ),
           ),
           const SizedBox(height: AppSpacing.lg),
@@ -119,7 +120,7 @@ class OnboardingPage4 extends StatelessWidget {
 
           GradientButton(
             label: 'Lanjut',
-            icon: Icons.arrow_forward_rounded,
+            icon: FontAwesomeIcons.arrowRight,
             onTap: selectedSlotIndex >= 0 ? onNext : null,
           ),
 

@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:earnjoy/core/theme.dart';
 import 'package:earnjoy/data/models/user.dart';
@@ -31,26 +32,7 @@ class UserHeader extends StatelessWidget {
     required this.xpForNextLevel,
   });
 
-  Color _getTierColor(String tier) {
-    switch (tier) {
-      case 'Novice':
-        return Colors.grey.shade400;
-      case 'Apprentice':
-        return Colors.blue.shade400;
-      case 'Practitioner':
-        return Colors.green.shade500;
-      case 'Achiever':
-        return Colors.orange.shade500;
-      case 'Expert':
-        return Colors.purple.shade400;
-      case 'Master':
-        return Colors.red.shade500;
-      case 'Legend':
-        return Colors.amber.shade500;
-      default:
-        return Colors.grey.shade400;
-    }
-  }
+  Color _getTierColor(String tier) => AppColors.tierColorFor(tier);
 
   @override
   Widget build(BuildContext context) {
@@ -122,7 +104,7 @@ class UserHeader extends StatelessWidget {
                     const SizedBox(width: AppSpacing.xs),
                     GestureDetector(
                       onTap: onSaveName,
-                      child: const Icon(Icons.check, color: AppColors.success, size: 22),
+                      child: const FaIcon(FontAwesomeIcons.check, color: AppColors.success, size: 18),
                     ),
                   ],
                 )
@@ -134,7 +116,7 @@ class UserHeader extends StatelessWidget {
                     children: [
                       Text(user.name, style: AppText.title),
                       const SizedBox(width: 6),
-                      const Icon(Icons.edit_outlined, size: 14, color: AppColors.textDisabled),
+                      const FaIcon(FontAwesomeIcons.penToSquare, size: 12, color: AppColors.textDisabled),
                     ],
                   ),
                 ),

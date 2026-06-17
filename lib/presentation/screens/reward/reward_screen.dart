@@ -1,5 +1,6 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'package:earnjoy/core/extensions.dart';
@@ -218,7 +219,7 @@ class _RewardScreenState extends State<RewardScreen>
                   ),
                   child: GradientButton(
                     label: 'Tambah Reward',
-                    icon: Icons.add,
+                    icon: FontAwesomeIcons.plus,
                     onTap: () => _openAddReward(context),
                   ),
                 ),
@@ -281,7 +282,7 @@ class _ScreenHeader extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.lock_open, size: 14, color: AppColors.primary),
+                const FaIcon(FontAwesomeIcons.lockOpen, size: 14, color: AppColors.primary),
                 const SizedBox(width: 4),
                 Text('Ready!',
                     style: AppText.caption
@@ -371,10 +372,10 @@ class _WishlistTab extends StatelessWidget {
                 onTap: onToggleArchive,
                 child: Row(
                   children: [
-                    Icon(
+                    FaIcon(
                       showArchive
-                          ? Icons.keyboard_arrow_up
-                          : Icons.keyboard_arrow_down,
+                          ? FontAwesomeIcons.chevronUp
+                          : FontAwesomeIcons.chevronDown,
                       size: 16,
                       color: AppColors.textDisabled,
                     ),
@@ -697,7 +698,7 @@ class _RedeemConfirmSheet extends StatelessWidget {
               gradient: AppGradients.primary,
               borderRadius: BorderRadius.circular(AppRadius.md),
             ),
-            child: const Icon(Icons.redeem, color: Colors.white, size: 32),
+            child: const FaIcon(FontAwesomeIcons.gift, color: Colors.white, size: 32),
           ),
 
           const SizedBox(height: AppSpacing.md),
@@ -836,7 +837,7 @@ class _CelebrationOverlay extends StatelessWidget {
                 color: Colors.white.withValues(alpha: 0.15),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.celebration,
+              child: const FaIcon(FontAwesomeIcons.champagneGlasses,
                   color: Colors.white, size: 64),
             ),
 

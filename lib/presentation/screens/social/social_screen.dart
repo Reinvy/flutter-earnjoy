@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
@@ -107,7 +108,7 @@ class _ProfileCard extends StatelessWidget {
                   color: AppColors.primaryDim,
                   borderRadius: BorderRadius.circular(AppRadius.sm),
                 ),
-                child: const Icon(Icons.shield_outlined, color: AppColors.primary, size: 20),
+                child: const FaIcon(FontAwesomeIcons.shield, color: AppColors.primary, size: 20),
               ),
               const SizedBox(width: AppSpacing.md),
               Expanded(
@@ -174,7 +175,7 @@ class _ProfileCard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: AppSpacing.sm),
-                    const Icon(Icons.copy_outlined, color: AppColors.primary, size: 16),
+                    const FaIcon(FontAwesomeIcons.copy, color: AppColors.primary, size: 16),
                   ],
                 ),
               ),
@@ -202,7 +203,7 @@ class _SocialDisabledBanner extends StatelessWidget {
       ),
       child: Column(
         children: [
-          const Icon(Icons.people_outline, color: AppColors.textDisabled, size: 48),
+          const FaIcon(FontAwesomeIcons.users, color: AppColors.textDisabled, size: 48),
           const SizedBox(height: AppSpacing.md),
           const Text(
             'Aktifkan Mode Sosial',
@@ -224,7 +225,7 @@ class _SocialDisabledBanner extends StatelessWidget {
             ),
             child: const Row(
               children: [
-                Icon(Icons.lock_outlined, color: AppColors.primary, size: 16),
+                FaIcon(FontAwesomeIcons.lock, color: AppColors.primary, size: 16),
                 SizedBox(width: AppSpacing.sm),
                 Expanded(
                   child: Text(
@@ -266,7 +267,7 @@ class _PartnersSection extends StatelessWidget {
                 ),
                 child: const Row(
                   children: [
-                    Icon(Icons.add, color: Colors.white, size: 14),
+                    FaIcon(FontAwesomeIcons.plus, color: Colors.white, size: 14),
                     SizedBox(width: 4),
                     Text('Tambah', style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600)),
                   ],
@@ -302,7 +303,7 @@ class _PartnersSection extends StatelessWidget {
         ] else ...[
           const SizedBox(height: AppSpacing.md),
           _EmptyState(
-            icon: Icons.people_outline,
+            icon: const FaIcon(FontAwesomeIcons.users, color: AppColors.textDisabled, size: 28),
             message: 'Tap "+ Tambah" untuk undang teman pertamamu',
           ),
         ],
@@ -368,7 +369,7 @@ class _DuelSection extends StatelessWidget {
           if (social.partners.isEmpty) ...[
             const SizedBox(height: AppSpacing.md),
             _EmptyState(
-              icon: Icons.sports_kabaddi_outlined,
+              icon: const FaIcon(FontAwesomeIcons.personRunning, color: AppColors.textDisabled, size: 28),
               message: 'Tambah partner dulu untuk mulai duel',
             ),
           ] else ...[
@@ -382,7 +383,7 @@ class _DuelSection extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.sports_kabaddi_outlined, color: AppColors.textSecondary, size: 28),
+                  const FaIcon(FontAwesomeIcons.personRunning, color: AppColors.textSecondary, size: 28),
                   const SizedBox(width: AppSpacing.md),
                   const Expanded(
                     child: Text(
@@ -428,7 +429,7 @@ class _GroupChallengeSection extends StatelessWidget {
                   ),
                   child: const Row(
                     children: [
-                      Icon(Icons.add, color: Colors.white, size: 14),
+                      FaIcon(FontAwesomeIcons.plus, color: Colors.white, size: 14),
                       SizedBox(width: 4),
                       Text('Buat', style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600)),
                     ],
@@ -449,7 +450,7 @@ class _GroupChallengeSection extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.md),
           _EmptyState(
-            icon: Icons.groups_outlined,
+            icon: const FaIcon(FontAwesomeIcons.users, color: AppColors.textDisabled, size: 28),
             message: 'Tap "+ Buat" untuk mulai challenge tim',
           ),
         ],
@@ -554,7 +555,7 @@ class _GroupChallengeCard extends StatelessWidget {
             const SizedBox(height: AppSpacing.sm),
             Row(
               children: [
-                const Icon(Icons.people_outline, size: 14, color: AppColors.textDisabled),
+                const FaIcon(FontAwesomeIcons.users, size: 14, color: AppColors.textDisabled),
                 const SizedBox(width: 4),
                 Text(
                   members.take(3).join(', ') + (members.length > 3 ? ' +${members.length - 3}' : ''),
@@ -570,7 +571,7 @@ class _GroupChallengeCard extends StatelessWidget {
                 social.syncGroupChallengeProgress();
                 HapticFeedback.selectionClick();
               },
-              icon: const Icon(Icons.sync, size: 16),
+              icon: const FaIcon(FontAwesomeIcons.arrowsRotate, size: 16),
               label: const Text('Sync Progres'),
               style: OutlinedButton.styleFrom(
                 foregroundColor: AppColors.primary,
@@ -588,7 +589,7 @@ class _GroupChallengeCard extends StatelessWidget {
 // ─── Empty State ──────────────────────────────────────────────────────────────
 
 class _EmptyState extends StatelessWidget {
-  final IconData icon;
+  final Widget icon;
   final String message;
   const _EmptyState({required this.icon, required this.message});
 
@@ -603,7 +604,7 @@ class _EmptyState extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(icon, color: AppColors.textDisabled, size: 28),
+          icon,
           const SizedBox(width: AppSpacing.md),
           Expanded(
             child: Text(message, style: AppText.body),

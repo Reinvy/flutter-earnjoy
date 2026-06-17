@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:earnjoy/core/extensions.dart';
 
@@ -30,21 +31,21 @@ class WeeklySummaryCard extends StatelessWidget {
           _StatItem(
             label: 'Activities',
             value: '$activitiesCount',
-            icon: Icons.directions_run,
+            icon: FontAwesomeIcons.personRunning,
             color: AppColors.primary,
           ),
           _VerticalDivider(),
           _StatItem(
             label: 'Points',
             value: pointsEarned.toPointsLabel,
-            icon: Icons.star_outline,
+            icon: FontAwesomeIcons.star,
             color: AppColors.warning,
           ),
           _VerticalDivider(),
           _StatItem(
             label: 'Redeemed',
             value: '$redeemedCount',
-            icon: Icons.redeem,
+            icon: FontAwesomeIcons.gift,
             color: AppColors.success,
           ),
         ],
@@ -83,7 +84,7 @@ class _StatItem extends StatelessWidget {
     return Expanded(
       child: Column(
         children: [
-          Icon(icon, size: 20, color: color),
+          FaIcon(icon, size: 20, color: color),
           const SizedBox(height: 4),
           Text(
             value,

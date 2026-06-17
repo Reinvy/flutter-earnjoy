@@ -1,5 +1,6 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:earnjoy/core/theme.dart';
 import 'package:earnjoy/core/widgets/gradient_button.dart';
@@ -13,11 +14,11 @@ class _Goal {
 }
 
 const _goals = [
-  _Goal(Icons.work_outline_rounded, 'Work', 'Produktivitas & karier'),
-  _Goal(Icons.school_outlined, 'Study', 'Belajar & akademik'),
-  _Goal(Icons.fitness_center, 'Health', 'Kesehatan & olahraga'),
-  _Goal(Icons.savings_outlined, 'Finance', 'Kontrol pengeluaran'),
-  _Goal(Icons.self_improvement, 'Balance', 'Membangun kebiasaan baik'),
+  _Goal(FontAwesomeIcons.briefcase, 'Work', 'Produktivitas & karier'),
+  _Goal(FontAwesomeIcons.graduationCap, 'Study', 'Belajar & akademik'),
+  _Goal(FontAwesomeIcons.dumbbell, 'Health', 'Kesehatan & olahraga'),
+  _Goal(FontAwesomeIcons.coins, 'Finance', 'Kontrol pengeluaran'),
+  _Goal(FontAwesomeIcons.spa, 'Balance', 'Membangun kebiasaan baik'),
 ];
 
 /// Page 2 — Name input + multi-select goals (up to 3).
@@ -66,7 +67,7 @@ class _OnboardingPage2State extends State<OnboardingPage2> {
                 gradient: AppGradients.primary,
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.person_outline_rounded, color: Colors.white, size: 36),
+              child: const FaIcon(FontAwesomeIcons.user, color: Colors.white, size: 36),
             ),
           ),
           const SizedBox(height: AppSpacing.lg),
@@ -88,7 +89,7 @@ class _OnboardingPage2State extends State<OnboardingPage2> {
           OnboardingTextField(
             controller: widget.nameController,
             hint: 'Contoh: Rizky',
-            icon: Icons.badge_outlined,
+            prefixIconWidget: const FaIcon(FontAwesomeIcons.idBadge, color: AppColors.textSecondary, size: 20),
           ),
 
           const SizedBox(height: AppSpacing.sectionGap),
@@ -142,7 +143,7 @@ class _OnboardingPage2State extends State<OnboardingPage2> {
                   ),
                   child: Row(
                     children: [
-                      Icon(
+                      FaIcon(
                         g.icon,
                         color: isSelected ? AppColors.primary : AppColors.textSecondary,
                         size: 22,
@@ -166,7 +167,7 @@ class _OnboardingPage2State extends State<OnboardingPage2> {
                       AnimatedOpacity(
                         opacity: isSelected ? 1 : 0,
                         duration: const Duration(milliseconds: 180),
-                        child: const Icon(Icons.check_circle_rounded, color: AppColors.primary, size: 20),
+                        child: const FaIcon(FontAwesomeIcons.solidCircleCheck, color: AppColors.primary, size: 20),
                       ),
                     ],
                   ),
@@ -179,7 +180,7 @@ class _OnboardingPage2State extends State<OnboardingPage2> {
 
           GradientButton(
             label: 'Lanjut',
-            icon: Icons.arrow_forward_rounded,
+            icon: FontAwesomeIcons.arrowRight,
             onTap: _canProceed ? widget.onNext : null,
           ),
           const SizedBox(height: AppSpacing.lg),

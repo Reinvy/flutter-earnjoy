@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'package:earnjoy/core/theme.dart';
@@ -44,7 +45,7 @@ class SeasonScreen extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               const SizedBox(height: 20),
-                              Icon(Icons.military_tech_rounded, size: 64, color: AppColors.primary),
+                              const FaIcon(FontAwesomeIcons.medal, size: 56, color: AppColors.primary),
                               Text(
                                 '${activeSeason.endAt.difference(DateTime.now()).inDays} days remaining',
                                 style: AppText.caption,
@@ -165,8 +166,9 @@ class _MilestonesList extends StatelessWidget {
           child: Row(
             children: [
               Icon(
-                isUnlocked ? Icons.check_circle_rounded : Icons.lock_outline_rounded,
+                isUnlocked ? FontAwesomeIcons.solidCircleCheck : FontAwesomeIcons.lock,
                 color: isUnlocked ? AppColors.success : AppColors.textDisabled,
+                size: 18,
               ),
               const SizedBox(width: AppSpacing.md),
               Expanded(

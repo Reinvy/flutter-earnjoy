@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -15,6 +16,7 @@ import 'widgets/weekly_summary_card.dart';
 import 'widgets/badge_grid.dart';
 import 'widgets/notification_settings_card.dart';
 import 'widgets/cloud_sync_card.dart';
+import 'package:earnjoy/presentation/screens/social/social_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -177,11 +179,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
               const SizedBox(height: AppSpacing.sectionGap),
 
+              const Text('Social & Friends', style: AppText.title),
+              const SizedBox(height: AppSpacing.xs),
+              const Text(
+                'Lihat progress partner dan challenge grup kamu.',
+                style: AppText.body,
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              ActionTile(
+                icon: FontAwesomeIcons.users,
+                label: 'Social',
+                subtitle: 'Partner, duel, dan group challenge',
+                iconColor: AppColors.primaryLight,
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const SocialScreen()),
+                ),
+              ),
+
+              const SizedBox(height: AppSpacing.sectionGap),
+
               const Text('Data', style: AppText.title),
               const SizedBox(height: AppSpacing.sm),
 
               ActionTile(
-                icon: Icons.upload_outlined,
+                icon: FontAwesomeIcons.fileExport,
                 label: 'Export Data',
                 subtitle: 'Simpan semua data sebagai JSON',
                 iconColor: AppColors.primary,

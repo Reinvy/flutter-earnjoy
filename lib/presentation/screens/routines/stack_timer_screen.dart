@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:earnjoy/core/theme.dart';
 import 'package:earnjoy/data/models/habit_stack.dart';
@@ -121,7 +122,7 @@ class _StackTimerScreenState extends State<StackTimerScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(widget.stack.name),
-          leading: IconButton(icon: const Icon(Icons.close), onPressed: _cancelStack),
+          leading: IconButton(icon: const FaIcon(FontAwesomeIcons.xmark, size: 18), onPressed: _cancelStack),
         ),
         body: Consumer<HabitStackProvider>(
           builder: (context, provider, child) {
@@ -166,9 +167,9 @@ class _StackTimerScreenState extends State<StackTimerScreen> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(
-                            IconData(int.parse('e871', radix: 16), fontFamily: 'MaterialIcons'),
-                            size: 48,
+                          const FaIcon(
+                            FontAwesomeIcons.stopwatch,
+                            size: 44,
                             color: AppColors.textSecondary,
                           ),
                           const SizedBox(height: 16),
@@ -199,12 +200,12 @@ class _StackTimerScreenState extends State<StackTimerScreen> {
                       FloatingActionButton.large(
                         onPressed: _isRunning ? _pauseTimer : _startTimer,
                         backgroundColor: _isRunning ? AppColors.warning : AppColors.primary,
-                        child: Icon(_isRunning ? Icons.pause : Icons.play_arrow),
+                        child: FaIcon(_isRunning ? FontAwesomeIcons.pause : FontAwesomeIcons.play, size: 22),
                       ),
                       FloatingActionButton.large(
                         onPressed: _completeItem,
                         backgroundColor: AppColors.success,
-                        child: const Icon(Icons.check),
+                        child: const FaIcon(FontAwesomeIcons.check, size: 22),
                       ),
                     ],
                   ),

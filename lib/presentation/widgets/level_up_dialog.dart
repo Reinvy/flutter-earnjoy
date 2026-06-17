@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:earnjoy/core/theme.dart';
 
 class LevelUpDialog extends StatefulWidget {
@@ -86,10 +87,12 @@ class _LevelUpDialogState extends State<LevelUpDialog> with SingleTickerProvider
                     color: color.withValues(alpha: 0.2),
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(
-                    Icons.military_tech,
-                    size: 48,
-                    color: color,
+                  child: Center(
+                    child: FaIcon(
+                      FontAwesomeIcons.medal,
+                      size: 40,
+                      color: color,
+                    ),
                   ),
                 ),
                 const SizedBox(height: AppSpacing.md),

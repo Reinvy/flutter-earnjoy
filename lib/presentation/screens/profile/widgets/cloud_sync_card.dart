@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'package:earnjoy/core/theme.dart';
@@ -78,7 +79,7 @@ class _CloudSyncCardState extends State<CloudSyncCard> {
                     color: _statusColor(auth, sync, configured).withAlpha(30),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Icon(
+                  child: FaIcon(
                     _statusIcon(auth, sync, configured),
                     color: _statusColor(auth, sync, configured),
                     size: 20,
@@ -177,8 +178,8 @@ class _CloudSyncCardState extends State<CloudSyncCard> {
                       style: const TextStyle(color: AppColors.textPrimary),
                       decoration: _inputDecoration('Password').copyWith(
                         suffixIcon: IconButton(
-                          icon: Icon(
-                            _obscurePass ? Icons.visibility_off : Icons.visibility,
+                          icon: FaIcon(
+                            _obscurePass ? FontAwesomeIcons.eyeSlash : FontAwesomeIcons.eye,
                             color: AppColors.textSecondary,
                             size: 18,
                           ),
@@ -234,12 +235,12 @@ class _CloudSyncCardState extends State<CloudSyncCard> {
   }
 
   IconData _statusIcon(AuthProvider auth, SyncProvider sync, bool configured) {
-    if (!configured) return Icons.settings_outlined;
-    if (!auth.isSignedIn) return Icons.cloud_off_outlined;
-    if (sync.hasError) return Icons.sync_problem_outlined;
-    if (sync.isSyncing) return Icons.sync;
-    if (sync.hasSynced) return Icons.cloud_done_outlined;
-    return Icons.cloud_outlined;
+    if (!configured) return FontAwesomeIcons.gear;
+    if (!auth.isSignedIn) return FontAwesomeIcons.cloudArrowUp;
+    if (sync.hasError) return FontAwesomeIcons.triangleExclamation;
+    if (sync.isSyncing) return FontAwesomeIcons.arrowsRotate;
+    if (sync.hasSynced) return FontAwesomeIcons.cloudArrowDown;
+    return FontAwesomeIcons.cloud;
   }
 
   String _statusLabel(AuthProvider auth, SyncProvider sync, bool configured) {
@@ -337,7 +338,7 @@ class _SignedInRow extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const Icon(Icons.account_circle, size: 16, color: AppColors.textSecondary),
+          const FaIcon(FontAwesomeIcons.circleUser, size: 16, color: AppColors.textSecondary),
           const SizedBox(width: 6),
           Expanded(
             child: Text(
@@ -377,7 +378,7 @@ class _ErrorBanner extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const Icon(Icons.error_outline, size: 14, color: AppColors.error),
+          const FaIcon(FontAwesomeIcons.circleExclamation, size: 14, color: AppColors.error),
           const SizedBox(width: 6),
           Expanded(
             child: Text(
@@ -411,7 +412,7 @@ class _ConfigWarning extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Icon(Icons.info_outline, size: 14, color: AppColors.warning),
+              const FaIcon(FontAwesomeIcons.circleInfo, size: 14, color: AppColors.warning),
               const SizedBox(width: 6),
               Text(
                 'Setup Diperlukan',

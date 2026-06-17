@@ -3,18 +3,18 @@ import 'package:google_fonts/google_fonts.dart';
 
 class AppColors {
   // Background
-  static const background = Color(0xFF090A0E);
-  static const surface = Color(0xFF13151D);
-  static const surfaceHigh = Color(0xFF1C1E29);
+  static const background = Color(0xFF0A0E1A); // deep navy
+  static const surface = Color(0xFF111827);
+  static const surfaceHigh = Color(0xFF1C2030);
 
-  // Primary
-  static const primary = Color(0xFF7C74EE);
-  static const primaryLight = Color(0xFFB9B2FF);
-  static const primaryDim = Color(0x1F7C74EE);
+  // Primary — Amber-Orange sunrise
+  static const primary = Color(0xFFF97316);
+  static const primaryLight = Color(0xFFFBBF24);
+  static const primaryDim = Color(0x1FF97316); // 12% opacity
 
-  // Accent pair untuk gradient - hanya dipakai via AppGradients
-  static const gradientStart = Color(0xFF7C74EE);
-  static const gradientEnd = Color(0xFFB9B2FF);
+  // Accent pair — hanya dipakai via AppGradients
+  static const gradientStart = Color(0xFFF97316); // amber-orange
+  static const gradientEnd = Color(0xFFFBBF24);   // amber-gold
 
   // Text
   static const textPrimary = Color(0xFFF5F6FA);
@@ -29,28 +29,28 @@ class AppColors {
   // Glass border
   static const glassBorder = Color(0x0DFFFFFF);
 
-  // Centralized Reward Category Colors
-  static const rewardFood = Color(0xFFFFAA5A);
-  static const rewardEntertainment = Color(0xFF7C74EE);
-  static const rewardShopping = Color(0xFFFF8EAD);
-  static const rewardExperience = Color(0xFF7CD1F9);
+  // Centralized Reward Category Colors — disesuaikan lebih warm & harmonis
+  static const rewardFood = Color(0xFFFF8C42);
+  static const rewardEntertainment = Color(0xFFF97316);
+  static const rewardShopping = Color(0xFFFF6B9D);
+  static const rewardExperience = Color(0xFF56CFE1);
   static const rewardSelfGrowth = Color(0xFF3EC193);
-  static const rewardRest = Color(0xFFB9B2FF);
+  static const rewardRest = Color(0xFFB5838D);
 
   // Centralized Badge Rarity Colors
   static const rarityCommon = Color(0xFF8E92A8);
-  static const rarityRare = Color(0xFF5ABCF6);
-  static const rarityEpic = Color(0xFF7C74EE);
-  static const rarityLegendary = Color(0xFFF5A623);
+  static const rarityRare = Color(0xFF56CFE1);
+  static const rarityEpic = Color(0xFFF97316);
+  static const rarityLegendary = Color(0xFFFBBF24);
 
   // Centralized level/tier colors
   static const tierNovice = Color(0xFF8E92A8);
-  static const tierApprentice = Color(0xFF5ABCF6);
+  static const tierApprentice = Color(0xFF56CFE1);
   static const tierPractitioner = Color(0xFF3EC193);
-  static const tierAchiever = Color(0xFFFF9E43);
-  static const tierExpert = Color(0xFFB287FF);
-  static const tierMaster = Color(0xFFEE5B5B);
-  static const tierLegend = Color(0xFFF5A623);
+  static const tierAchiever = Color(0xFFF97316);
+  static const tierExpert = Color(0xFFFBBF24);
+  static const tierMaster = Color(0xFFFF6B6B);
+  static const tierLegend = Color(0xFFFFD700);
 
   static Color rewardColorForCategory(String category) {
     return switch (category) {
@@ -79,27 +79,27 @@ class AppColors {
 }
 
 class AppGradients {
-  // Hero gradient — point balance, CTA button utama
+  // Hero gradient — soft diagonal amber ke gold, 75% opacity
   static const primary = LinearGradient(
-    colors: [AppColors.gradientStart, AppColors.gradientEnd],
+    colors: [Color(0xBFF97316), Color(0xBFFBBF24)], // 75% opacity
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
 
   // Subtle gradient for chips/card backgrounds
   static const subtle = LinearGradient(
-    colors: [Color(0x147C74EE), Color(0x08B9B2FF)],
+    colors: [Color(0x14F97316), Color(0x08FBBF24)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
 
-  // Subtle glow background - di belakang angka besar
+  // Subtle warm glow — di belakang angka besar
   static const heroGlow = RadialGradient(
-    colors: [Color(0x137C74EE), Color(0x00000000)],
+    colors: [Color(0x18F97316), Color(0x00000000)],
     radius: 0.85,
   );
 
-  // Progress bar fill
+  // Progress bar fill — amber left-to-right
   static const progressFill = LinearGradient(
     colors: [AppColors.gradientStart, AppColors.gradientEnd],
     begin: Alignment.centerLeft,

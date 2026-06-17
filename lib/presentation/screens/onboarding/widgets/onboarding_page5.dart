@@ -1,6 +1,7 @@
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'package:earnjoy/core/constants.dart';
@@ -118,7 +119,7 @@ class _OnboardingPage5State extends State<OnboardingPage5> {
                     gradient: AppGradients.primary,
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.rocket_launch_rounded, color: Colors.white, size: 36),
+                  child: FaIcon(FontAwesomeIcons.rocket, color: Colors.white, size: 36),
                 ),
               ),
               const SizedBox(height: AppSpacing.lg),
@@ -170,7 +171,7 @@ class _OnboardingPage5State extends State<OnboardingPage5> {
                                   color: AppColors.primaryDim,
                                   borderRadius: BorderRadius.circular(AppRadius.sm),
                                 ),
-                                child: const Icon(Icons.flash_on_rounded, color: AppColors.primary, size: 20),
+                                child: const FaIcon(FontAwesomeIcons.bolt, color: AppColors.primary, size: 20),
                               ),
                               const SizedBox(width: AppSpacing.sm),
                               Expanded(
@@ -237,7 +238,7 @@ class _OnboardingPage5State extends State<OnboardingPage5> {
                             gradient: AppGradients.primary,
                             shape: BoxShape.circle,
                           ),
-                          child: const Icon(Icons.check_rounded, color: Colors.white, size: 52),
+                          child: const FaIcon(FontAwesomeIcons.check, color: Colors.white, size: 52),
                         ),
                       ),
                       const SizedBox(height: AppSpacing.lg),
@@ -255,7 +256,7 @@ class _OnboardingPage5State extends State<OnboardingPage5> {
                       const Spacer(),
                       GradientButton(
                         label: 'Mulai EarnJoy!',
-                        icon: Icons.rocket_launch_rounded,
+                        icon: FontAwesomeIcons.rocket,
                         onTap: widget.onComplete,
                       ),
                       const SizedBox(height: AppSpacing.lg),

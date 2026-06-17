@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:earnjoy/core/extensions.dart';
 import 'package:earnjoy/core/theme.dart';
@@ -161,7 +162,7 @@ class RewardCard extends StatelessWidget {
             const SizedBox(height: AppSpacing.sm),
             Row(
               children: [
-                const Icon(Icons.check_circle_outline,
+                const FaIcon(FontAwesomeIcons.circleCheck,
                     size: 14, color: AppColors.success),
                 const SizedBox(width: 4),
                 Text('Redeemed',
@@ -177,7 +178,7 @@ class RewardCard extends StatelessWidget {
             const SizedBox(height: AppSpacing.xs),
             Row(
               children: [
-                const Icon(Icons.history, size: 12, color: AppColors.textDisabled),
+                const FaIcon(FontAwesomeIcons.clockRotateLeft, size: 12, color: AppColors.textDisabled),
                 const SizedBox(width: 4),
                 Text(
                   'Redeemed ${reward.timesRedeemed}x',
@@ -279,7 +280,7 @@ class _ScheduledBanner extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.event, size: 12, color: Color(0xFF5EC4F0)),
+          const FaIcon(FontAwesomeIcons.calendarDay, size: 12, color: Color(0xFF5EC4F0)),
           const SizedBox(width: 4),
           Text(
             daysLeft == 0
@@ -314,7 +315,7 @@ class _CooldownBanner extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.timer_outlined, size: 12, color: AppColors.warning),
+          const FaIcon(FontAwesomeIcons.stopwatch, size: 12, color: AppColors.warning),
           const SizedBox(width: 4),
           Text(
             'Cooldown: $daysLeft hari lagi',
@@ -339,7 +340,7 @@ class _OverflowMenu extends StatelessWidget {
     return PopupMenuButton<String>(
       padding: EdgeInsets.zero,
       iconSize: 16,
-      icon: const Icon(Icons.more_vert, size: 16, color: AppColors.textDisabled),
+      icon: const FaIcon(FontAwesomeIcons.ellipsisVertical, size: 16, color: AppColors.textDisabled),
       color: AppColors.surfaceHigh,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md)),
       onSelected: (value) {
@@ -352,7 +353,7 @@ class _OverflowMenu extends StatelessWidget {
             value: 'archive',
             child: Row(
               children: [
-                const Icon(Icons.archive_outlined,
+                const FaIcon(FontAwesomeIcons.box,
                     size: 16, color: AppColors.textSecondary),
                 const SizedBox(width: 8),
                 Text('Arsipkan', style: AppText.body),
@@ -364,7 +365,7 @@ class _OverflowMenu extends StatelessWidget {
             value: 'delete',
             child: Row(
               children: [
-                const Icon(Icons.delete_outline, size: 16, color: AppColors.error),
+                const FaIcon(FontAwesomeIcons.trash, size: 16, color: AppColors.error),
                 const SizedBox(width: 8),
                 Text('Hapus', style: AppText.body.copyWith(color: AppColors.error)),
               ],

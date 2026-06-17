@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:earnjoy/core/theme.dart';
 
@@ -38,7 +39,7 @@ class ActionTile extends StatelessWidget {
                 color: iconColor.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(AppRadius.sm),
               ),
-              child: Icon(icon, size: 18, color: iconColor),
+              child: Center(child: FaIcon(icon, size: 16, color: iconColor)),
             ),
             const SizedBox(width: AppSpacing.sm),
             Expanded(
@@ -51,7 +52,7 @@ class ActionTile extends StatelessWidget {
                 ],
               ),
             ),
-            const Icon(Icons.chevron_right, color: AppColors.textDisabled, size: 20),
+            const FaIcon(FontAwesomeIcons.chevronRight, color: AppColors.textDisabled, size: 14),
           ],
         ),
       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
@@ -35,7 +36,7 @@ class CategoryManager extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.add, color: AppColors.primary, size: 18),
+                const FaIcon(FontAwesomeIcons.plus, color: AppColors.primary, size: 18),
                 const SizedBox(width: AppSpacing.xs),
                 Text('Add Category', style: AppText.body.copyWith(color: AppColors.primary)),
               ],
@@ -88,7 +89,7 @@ class _CategoryTile extends StatelessWidget {
                   : AppColors.primaryDim,
               borderRadius: BorderRadius.circular(AppRadius.sm),
             ),
-            child: Icon(
+            child: FaIcon(
               _iconData(category.icon),
               color: category.isNegative ? AppColors.error : AppColors.primary,
               size: 18,
@@ -126,7 +127,7 @@ class _CategoryTile extends StatelessWidget {
             onTap: () => _confirmDelete(context),
             child: const Padding(
               padding: EdgeInsets.all(AppSpacing.xs),
-              child: Icon(Icons.delete_outline, color: AppColors.textDisabled, size: 20),
+              child: FaIcon(FontAwesomeIcons.trash, color: AppColors.textDisabled, size: 20),
             ),
           ),
         ],
@@ -164,19 +165,19 @@ class _CategoryTile extends StatelessWidget {
   IconData _iconData(String icon) {
     switch (icon) {
       case 'work':
-        return Icons.work_outline;
+        return FontAwesomeIcons.briefcase;
       case 'menu_book':
-        return Icons.menu_book_outlined;
+        return FontAwesomeIcons.bookOpen;
       case 'fitness_center':
-        return Icons.fitness_center;
+        return FontAwesomeIcons.dumbbell;
       case 'palette':
-        return Icons.palette_outlined;
+        return FontAwesomeIcons.paintbrush;
       case 'sports_esports':
-        return Icons.sports_esports_outlined;
+        return FontAwesomeIcons.gamepad;
       case 'phone_android':
-        return Icons.phone_android;
+        return FontAwesomeIcons.mobileScreen;
       default:
-        return Icons.label_outline;
+        return FontAwesomeIcons.tag;
     }
   }
 }
@@ -197,18 +198,18 @@ class _AddCategorySheetState extends State<_AddCategorySheet> {
   String _selectedIcon = 'label_outline';
 
   static const _icons = [
-    ('label_outline', Icons.label_outline),
-    ('work', Icons.work_outline),
-    ('menu_book', Icons.menu_book_outlined),
-    ('fitness_center', Icons.fitness_center),
-    ('palette', Icons.palette_outlined),
-    ('sports_esports', Icons.sports_esports_outlined),
-    ('phone_android', Icons.phone_android),
-    ('music_note', Icons.music_note_outlined),
-    ('school', Icons.school_outlined),
-    ('local_cafe', Icons.local_cafe_outlined),
-    ('directions_walk', Icons.directions_walk),
-    ('code', Icons.code),
+    ('label_outline', FontAwesomeIcons.tag),
+    ('work', FontAwesomeIcons.briefcase),
+    ('menu_book', FontAwesomeIcons.bookOpen),
+    ('fitness_center', FontAwesomeIcons.dumbbell),
+    ('palette', FontAwesomeIcons.paintbrush),
+    ('sports_esports', FontAwesomeIcons.gamepad),
+    ('phone_android', FontAwesomeIcons.mobileScreen),
+    ('music_note', FontAwesomeIcons.music),
+    ('school', FontAwesomeIcons.graduationCap),
+    ('local_cafe', FontAwesomeIcons.mugHot),
+    ('directions_walk', FontAwesomeIcons.personWalking),
+    ('code', FontAwesomeIcons.code),
   ];
 
   @override
@@ -270,8 +271,8 @@ class _AddCategorySheetState extends State<_AddCategorySheet> {
               ),
               child: Row(
                 children: [
-                  Icon(
-                    _isNegative ? Icons.remove_circle : Icons.add_circle_outline,
+                  FaIcon(
+                    _isNegative ? FontAwesomeIcons.circleMinus : FontAwesomeIcons.circlePlus,
                     color: _isNegative ? AppColors.error : AppColors.textSecondary,
                     size: 20,
                   ),
@@ -284,8 +285,8 @@ class _AddCategorySheetState extends State<_AddCategorySheet> {
                       ),
                     ),
                   ),
-                  Icon(
-                    _isNegative ? Icons.toggle_on : Icons.toggle_off,
+                  FaIcon(
+                    _isNegative ? FontAwesomeIcons.toggleOn : FontAwesomeIcons.toggleOff,
                     color: _isNegative ? AppColors.error : AppColors.textDisabled,
                     size: 28,
                   ),
@@ -314,7 +315,7 @@ class _AddCategorySheetState extends State<_AddCategorySheet> {
                     borderRadius: BorderRadius.circular(AppRadius.sm),
                     border: Border.all(color: selected ? AppColors.primary : AppColors.glassBorder),
                   ),
-                  child: Icon(
+                  child: FaIcon(
                     entry.$2,
                     color: selected ? AppColors.primary : AppColors.textSecondary,
                     size: 20,

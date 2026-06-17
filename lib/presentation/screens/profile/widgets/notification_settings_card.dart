@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'package:earnjoy/core/theme.dart';
@@ -30,7 +31,7 @@ class NotificationSettingsCard extends StatelessWidget {
         children: [
           // ─── Toggle ────────────────────────────────────────────────────
           _buildRow(
-            icon: Icons.notifications_outlined,
+            icon: FontAwesomeIcons.bell,
             iconColor: AppColors.primary,
             title: 'Smart Notifications',
             subtitle: 'Pengingat cerdas berdasarkan pola aktivitasmu',
@@ -48,7 +49,7 @@ class NotificationSettingsCard extends StatelessWidget {
 
             // ─── Best reminder time (read-only) ──────────────────────
             _buildRow(
-              icon: Icons.schedule_outlined,
+              icon: FontAwesomeIcons.clock,
               iconColor: AppColors.success,
               title: 'Waktu Terbaik',
               subtitle: 'Berdasarkan pola loggingmu: $bestLabel',
@@ -59,13 +60,13 @@ class NotificationSettingsCard extends StatelessWidget {
 
             // ─── Quiet hours ─────────────────────────────────────────
             _buildRow(
-              icon: Icons.bedtime_outlined,
+              icon: FontAwesomeIcons.moon,
               iconColor: AppColors.warning,
               title: 'Quiet Hours',
               subtitle:
                   '${_fmtHour(provider.quietHoursStart)} – ${_fmtHour(provider.quietHoursEnd)} (tidak ada notif)',
-              trailing: const Icon(
-                Icons.chevron_right,
+              trailing: const FaIcon(
+                FontAwesomeIcons.chevronRight,
                 color: AppColors.textSecondary,
                 size: 20,
               ),
@@ -102,7 +103,7 @@ class NotificationSettingsCard extends StatelessWidget {
                 color: iconColor.withAlpha(30),
                 borderRadius: BorderRadius.circular(AppRadius.sm),
               ),
-              child: Icon(icon, color: iconColor, size: 18),
+              child: FaIcon(icon, color: iconColor, size: 18),
             ),
             const SizedBox(width: AppSpacing.md),
             Expanded(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
@@ -92,12 +93,12 @@ class _GroupChallengeSheetState extends State<GroupChallengeSheet> {
             style: AppText.body,
           ),
           const SizedBox(height: AppSpacing.lg),
-          _buildInput('Nama challenge', _nameController, icon: Icons.flag_outlined),
+          _buildInput('Nama challenge', _nameController, icon: const FaIcon(FontAwesomeIcons.flag, color: AppColors.textSecondary, size: 20)),
           const SizedBox(height: AppSpacing.sm),
-          _buildInput('Deskripsi (opsional)', _descController, icon: Icons.notes),
+          _buildInput('Deskripsi (opsional)', _descController, icon: const FaIcon(FontAwesomeIcons.noteSticky, color: AppColors.textSecondary, size: 20)),
           const SizedBox(height: AppSpacing.sm),
           _buildInput('Target poin kolektif', _targetController,
-              icon: Icons.bolt, keyboardType: TextInputType.number),
+              icon: const FaIcon(FontAwesomeIcons.bolt, color: AppColors.textSecondary, size: 20), keyboardType: TextInputType.number),
           const SizedBox(height: AppSpacing.md),
           // Duration picker
           const Text('Durasi', style: AppText.title),
@@ -143,7 +144,7 @@ class _GroupChallengeSheetState extends State<GroupChallengeSheet> {
                   decoration: InputDecoration(
                     hintText: 'Nama anggota',
                     hintStyle: AppText.body.copyWith(color: AppColors.textDisabled),
-                    prefixIcon: const Icon(Icons.person_add_outlined, color: AppColors.textSecondary, size: 20),
+                    prefixIcon: const FaIcon(FontAwesomeIcons.userPlus, color: AppColors.textSecondary, size: 20),
                     filled: true,
                     fillColor: AppColors.surfaceHigh,
                     border: OutlineInputBorder(
@@ -157,7 +158,7 @@ class _GroupChallengeSheetState extends State<GroupChallengeSheet> {
               const SizedBox(width: 8),
               IconButton(
                 onPressed: _addMember,
-                icon: const Icon(Icons.add_circle, color: AppColors.primary),
+                icon: const FaIcon(FontAwesomeIcons.circlePlus, color: AppColors.primary),
               ),
             ],
           ),
@@ -170,7 +171,7 @@ class _GroupChallengeSheetState extends State<GroupChallengeSheet> {
                 return Chip(
                   label: Text(name, style: const TextStyle(fontSize: 12, color: AppColors.textPrimary)),
                   backgroundColor: AppColors.surfaceHigh,
-                  deleteIcon: const Icon(Icons.close, size: 14, color: AppColors.textDisabled),
+                  deleteIcon: const FaIcon(FontAwesomeIcons.xmark, size: 14, color: AppColors.textDisabled),
                   onDeleted: () => setState(() => _memberNames.remove(name)),
                   padding: EdgeInsets.zero,
                 );
@@ -200,7 +201,7 @@ class _GroupChallengeSheetState extends State<GroupChallengeSheet> {
   Widget _buildInput(
     String hint,
     TextEditingController controller, {
-    required IconData icon,
+    required Widget icon,
     TextInputType? keyboardType,
   }) {
     return TextField(
@@ -209,7 +210,7 @@ class _GroupChallengeSheetState extends State<GroupChallengeSheet> {
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: AppText.body.copyWith(color: AppColors.textDisabled),
-        prefixIcon: Icon(icon, color: AppColors.textSecondary, size: 20),
+        prefixIcon: icon,
         filled: true,
         fillColor: AppColors.surfaceHigh,
         border: OutlineInputBorder(

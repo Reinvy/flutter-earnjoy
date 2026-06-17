@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:earnjoy/core/theme.dart';
 import 'package:earnjoy/core/widgets/gradient_button.dart';
@@ -57,7 +58,7 @@ class _OnboardingPage1State extends State<OnboardingPage1>
                   gradient: AppGradients.primary,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.bolt_rounded, color: Colors.white, size: 60),
+                child: const FaIcon(FontAwesomeIcons.bolt, color: Colors.white, size: 60),
               ),
             ),
           ),
@@ -98,17 +99,17 @@ class _OnboardingPage1State extends State<OnboardingPage1>
             child: Column(
               children: [
                 _FeatureHint(
-                  icon: Icons.emoji_events_rounded,
+                  icon: const FaIcon(FontAwesomeIcons.trophy, color: AppColors.primary, size: 16),
                   text: 'Log aktivitas → dapatkan poin',
                 ),
                 const SizedBox(height: AppSpacing.sm),
                 _FeatureHint(
-                  icon: Icons.redeem_rounded,
+                  icon: const FaIcon(FontAwesomeIcons.gift, color: AppColors.primary, size: 16),
                   text: 'Tukar poin dengan reward impianmu',
                 ),
                 const SizedBox(height: AppSpacing.sm),
                 _FeatureHint(
-                  icon: Icons.local_fire_department_rounded,
+                  icon: const FaIcon(FontAwesomeIcons.fire, color: AppColors.primary, size: 16),
                   text: 'Bangun streak & tingkatkan level',
                 ),
               ],
@@ -119,7 +120,7 @@ class _OnboardingPage1State extends State<OnboardingPage1>
 
           GradientButton(
             label: 'Mulai Setup',
-            icon: Icons.arrow_forward_rounded,
+            icon: FontAwesomeIcons.arrowRight,
             onTap: widget.onNext,
           ),
 
@@ -131,7 +132,7 @@ class _OnboardingPage1State extends State<OnboardingPage1>
 }
 
 class _FeatureHint extends StatelessWidget {
-  final IconData icon;
+  final Widget icon;
   final String text;
 
   const _FeatureHint({required this.icon, required this.text});
@@ -148,7 +149,7 @@ class _FeatureHint extends StatelessWidget {
             color: AppColors.primaryDim,
             borderRadius: BorderRadius.circular(AppRadius.sm),
           ),
-          child: Icon(icon, color: AppColors.primary, size: 16),
+          child: Center(child: icon),
         ),
         const SizedBox(width: AppSpacing.sm),
         Text(text, style: AppText.body),

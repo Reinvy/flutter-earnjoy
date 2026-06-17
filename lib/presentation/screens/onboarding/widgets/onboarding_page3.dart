@@ -1,5 +1,6 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:earnjoy/core/theme.dart';
 import 'package:earnjoy/core/widgets/gradient_button.dart';
@@ -65,7 +66,7 @@ class _OnboardingPage3State extends State<OnboardingPage3> {
                 gradient: AppGradients.primary,
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.redeem_rounded, color: Colors.white, size: 36),
+              child: const FaIcon(FontAwesomeIcons.gift, color: Colors.white, size: 36),
             ),
           ),
           const SizedBox(height: AppSpacing.lg),
@@ -87,7 +88,7 @@ class _OnboardingPage3State extends State<OnboardingPage3> {
           OnboardingTextField(
             controller: widget.dreamRewardController,
             hint: 'Contoh: Makan di Restoran Favorit',
-            icon: Icons.favorite_outline_rounded,
+            prefixIconWidget: const FaIcon(FontAwesomeIcons.solidHeart, color: AppColors.textSecondary, size: 20),
           ),
 
           const SizedBox(height: AppSpacing.sectionGap),
@@ -181,7 +182,7 @@ class _OnboardingPage3State extends State<OnboardingPage3> {
 
           GradientButton(
             label: 'Lanjut',
-            icon: Icons.arrow_forward_rounded,
+            icon: FontAwesomeIcons.arrowRight,
             onTap: _canProceed ? widget.onNext : null,
           ),
 

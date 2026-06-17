@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
@@ -70,12 +71,12 @@ class _AddPartnerSheetState extends State<AddPartnerSheet> {
             style: AppText.body,
           ),
           const SizedBox(height: AppSpacing.lg),
-          _buildInput('Nama partner', _nameController, icon: Icons.person_outline),
+          _buildInput('Nama partner', _nameController, icon: const FaIcon(FontAwesomeIcons.user, color: AppColors.textSecondary, size: 20)),
           const SizedBox(height: AppSpacing.sm),
           _buildInput(
             'Invite code (contoh: AB3H72XK)',
             _codeController,
-            icon: Icons.key_outlined,
+            icon: const FaIcon(FontAwesomeIcons.key, color: AppColors.textSecondary, size: 20),
             uppercase: true,
           ),
           const SizedBox(height: AppSpacing.lg),
@@ -103,7 +104,7 @@ class _AddPartnerSheetState extends State<AddPartnerSheet> {
   Widget _buildInput(
     String hint,
     TextEditingController controller, {
-    required IconData icon,
+    required Widget icon,
     bool uppercase = false,
   }) {
     return TextField(
@@ -112,7 +113,7 @@ class _AddPartnerSheetState extends State<AddPartnerSheet> {
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: AppText.body.copyWith(color: AppColors.textDisabled),
-        prefixIcon: Icon(icon, color: AppColors.textSecondary, size: 20),
+        prefixIcon: icon,
         filled: true,
         fillColor: AppColors.surfaceHigh,
         border: OutlineInputBorder(

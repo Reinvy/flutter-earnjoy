@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:earnjoy/core/theme.dart';
 import 'package:earnjoy/data/models/accountability_partner.dart';
@@ -59,14 +60,14 @@ class PartnerCard extends StatelessWidget {
                 const SizedBox(height: 2),
                 Row(
                   children: [
-                    Icon(Icons.bolt, size: 12, color: AppColors.warning),
+                    FaIcon(FontAwesomeIcons.bolt, size: 12, color: AppColors.warning),
                     const SizedBox(width: 2),
                     Text(
                       '${partner.weeklyPoints.toStringAsFixed(0)} pts this week',
                       style: AppText.caption,
                     ),
                     const SizedBox(width: AppSpacing.sm),
-                    Icon(Icons.local_fire_department, size: 12, color: AppColors.error),
+                    FaIcon(FontAwesomeIcons.fire, size: 12, color: AppColors.error),
                     const SizedBox(width: 2),
                     Text('${partner.streakDays} day streak', style: AppText.caption),
                   ],
@@ -93,7 +94,7 @@ class PartnerCard extends StatelessWidget {
           const SizedBox(width: AppSpacing.sm),
           GestureDetector(
             onTap: onRemoveTap,
-            child: Icon(Icons.close, size: 18, color: AppColors.textDisabled),
+            child: FaIcon(FontAwesomeIcons.xmark, size: 18, color: AppColors.textDisabled),
           ),
         ],
       ),
@@ -224,7 +225,7 @@ class DuelProgressCard extends StatelessWidget {
               Expanded(
                 child: OutlinedButton.icon(
                   onPressed: onSync,
-                  icon: const Icon(Icons.sync, size: 16),
+                  icon: const FaIcon(FontAwesomeIcons.arrowsRotate, size: 16),
                   label: const Text('Sync'),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: AppColors.primary,
